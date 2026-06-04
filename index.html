@@ -281,7 +281,7 @@
 <div class="container">
     <header>
         <h1>حاسبة التوطين الذكية</h1>
-        <p>نظام ذكي لمتابعة نسبة الامتثال لتوطين المهن</p>
+        <p>نظام ذكي لمتابعة نسبة الامتثال للمهن</p>
     </header>
 
     <div class="dashboard-grid">
@@ -310,7 +310,7 @@
             </select>
 
             <div class="display-box" id="targetBox" style="background-color: var(--blue-light-bg); border-color: #bae6fd;">
-                <span style="font-size: 0.75rem; opacity: 0.95; color: var(--blue-main-text); font-weight: 700;">نسبة التوطين المستهدفة نظاماً</span>
+                <span style="font-size: 0.75rem; opacity: 0.95; color: var(--blue-main-text); font-weight: 700;">النسبة المراد تحقيقها نظاماً</span>
                 <strong id="targetDisplay" class="big-val" style="color: var(--blue-main-text);">0%</strong>
             </div>
         </div>
@@ -408,9 +408,9 @@
         tech_eng: { rates: {"default":0.3}, salaries: ["الحد الأدنى: 5000 ريال"], note: "عضوية SEC إلزامية." },
         it_pro: { rates: {"default":0.25}, salaries: ["الحد الأدنى: 7000 ريال"], note: "تشمل المبرمجين والتقنيين." },
         it_support: { rates: {"default":0.25}, salaries: ["الحد الأدنى: 5000 ريال"], note: "الدعم الفني والمساندة والاتصالات." },
-        marketing: { rates: {"default":0.6}, salaries: ["الحد الأدنى: 5500 ريال"], note: "قرار توطين مهن التسويق." },
-        sales: { rates: {"default":0.6}, salaries: ["وفقاً للنظام والتوجيهات المعتمدة."], note: "قرار توطين مهن المبيعات." }, 
-        procurement: { rates: {"default":0.7}, salaries: ["وفقاً للنظام والتوجيهات المعتمدة."], note: "قرار توطين المشتريات." },
+        marketing: { rates: {"default":0.6}, salaries: ["الحد الأدنى: 5500 ريال"], note: "توطين مهن التسويق." },
+        sales: { rates: {"default":0.6}, salaries: ["وفقاً للنظام والتوجيهات المعتمدة."], note: "توطين مهن المبيعات." },
+        procurement: { rates: {"default":0.7}, salaries: ["وفقاً للنظام والتوجيهات المعتمدة."], note: "توطين المشتريات." },
         legal: { rates: {"default":0.7}, salaries: ["الحد الأدنى: 5500 ريال"], note: "المهن القانونية والاستشارية." }
     };
 
@@ -497,7 +497,7 @@
             document.getElementById("neededCount").innerText = "0";
             document.getElementById("neededCount").style.color = "#16a34a";
             document.getElementById("actionLabel").innerText = "الاحتياج الحالي بالتوظيف:";
-            document.getElementById("subLabel").innerText = "المنشأة ملتزمة تماماً ومحققة لنسبة التوطين النظامية";
+            document.getElementById("subLabel").innerText = "المنشأة ملتزمة تماماً ومحققة للنسبة النظامية";
             
             directHireCard.style.display = "none";
         } else {
@@ -515,7 +515,7 @@
             document.getElementById("neededCount").innerText = finalReplacement;
             document.getElementById("neededCount").style.color = "#dc2626";
             document.getElementById("actionLabel").innerText = "الاحتياج بالتوظيف للالتزام (حسب الجبر):";
-            document.getElementById("subLabel").innerText = "موظف سعودي مطلوب تعيينه كبديل لأجنبي للالتزام بنسبة توطين المهن";
+            document.getElementById("subLabel").innerText = "موظف سعودي مطلوب تعيينه كبديل لأجنبي للالتزام بالعدد الحالي";
             
             directHireCard.style.display = "flex";
             document.getElementById("directHireCount").innerText = finalDirectHire;
