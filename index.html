@@ -1,4 +1,416 @@
-<!-- ================= الدفعة الثانية والأخيرة: العمليات البرمجية والنظام الذكي ================= -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الموارد البشرية الذكية الموحدة | HR Portal</title>
+    <style>
+        :root {
+            /* باليتة الألوان المعتمدة والمثبتة */
+            --bg-page: #f1f5f9;        
+            --gray-dark: #334155;      
+            --gray-light: #f8fafc;     
+            --gray-medium: #cbd5e1;    
+            
+            --green-light-bg: #e8fced; 
+            --red-light-bg: #fee2e2;   
+            
+            --green-emblem-soft: #86efac; 
+            --green-emblem-text: #166534; 
+            
+            --red-emblem-soft: #fca5a5;   
+            --red-emblem-text: #991b1b;   
+
+            --green-main-text: #15803d;
+            --blue-light-bg: #e0f2fe;  
+            --blue-main-text: #0369a1;
+            
+            /* ألوان أزرار التواصل المعتمدة */
+            --contact-green-light: #bbf7d0;
+            --contact-icon-green: #22c55e;
+            
+            --primary-tab: #0284c7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            background-color: var(--bg-page);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 20px;
+            direction: rtl;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: auto; 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+
+        header {
+            background: var(--gray-dark);
+            padding: 15px; border-radius: 16px; text-align: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); width: 100%;
+            border: 1px solid #1e293b;
+        }
+
+        header h1 { font-size: 1.6rem; margin-bottom: 2px; color: #ffffff; font-weight: 800; }
+        header p { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
+
+        /* نظام التبويب المطور لـ 4 خانات */
+        .dashboard-tabs {
+            display: flex;
+            gap: 8px;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            background: var(--gray-light);
+            color: #475569;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover { background: #f1f5f9; color: #1e293b; }
+        .tab-btn.active { background: var(--gray-dark); color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        .tab-content { display: none; flex-direction: column; gap: 15px; animation: fadeIn 0.4s ease-out; }
+        .tab-content.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* البطاقات والجداول المعيارية */
+        .card, .bottom-card {
+            border-radius: 16px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+            border: 1px solid #e2e8f0; background-color: #ffffff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover, .bottom-card:hover {
+            animation: cardPulseHover 1.8s infinite ease-in-out; border-color: #cbd5e1;
+        }
+
+        @keyframes cardPulseHover {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+            50% { transform: scale(1.015); box-shadow: 0 12px 25px rgba(0,0,0,0.06); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 15px; }
+
+        .settings-card { background-color: var(--gray-light); border-top: 5px solid #94a3b8; }
+        .stats-card { background-color: var(--gray-light); border-top: 5px solid #64748b; }
+        .result-card-style { border: 1px solid #cbd5e1; }
+
+        h3 { font-size: 1.05rem; margin-bottom: 10px; text-align: center; padding-bottom: 6px; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--gray-dark); }
+        label { display: block; margin-top: 8px; font-weight: 700; font-size: 0.8rem; color: #475569; }
+        
+        select, input {
+            width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #cbd5e1;
+            border-radius: 8px; font-size: 0.9rem; background: #ffffff; color: #0f172a; font-weight: 700; outline: none;
+        }
+
+        .display-box { margin-top: auto; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; border: 1px solid #cbd5e1; }
+        .big-val { font-size: 1.8rem; font-weight: 900; display: block; margin-top: 2px; }
+
+        /* جداول استعراض البيانات (الموظفين والإجازات) */
+        .table-wrapper { width: 100%; overflow-x: auto; margin-top: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.85rem; background: #ffffff; }
+        th { background-color: var(--gray-dark); color: #ffffff; padding: 10px; font-weight: 700; }
+        td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #334155; }
+        tr:nth-child(even) { background-color: var(--gray-light); }
+
+        .status-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+        .badge-active { background-color: var(--green-light-bg); color: var(--green-main-text); }
+        .badge-probation { background-color: var(--blue-light-bg); color: var(--blue-main-text); }
+
+        /* الأزرار والتنبيهات */
+        .calc-btn { background-color: var(--gray-dark); color: white; padding: 10px; border: none; border-radius: 8px; font-weight: 700; width: 100%; margin-top: 12px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+        .calc-btn:hover { background-color: #1e293b; }
+        .info-cell { background: #ffffff; padding: 8px; border-radius: 8px; margin-bottom: 6px; font-weight: 700; font-size: 0.85rem; color: var(--gray-dark); border-right: 5px solid var(--gray-dark); border-left: 1px solid #cbd5e1; border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; }
+        .condition-cell { background: #ffffff; padding: 10px; border-radius: 8px; font-size: 0.8rem; color: var(--gray-dark); border: 1px solid #cbd5e1; line-height: 1.4; font-weight: 600; border-right: 5px solid var(--gray-dark); }
+        
+        .status-emblem-box { width: 95%; padding: 10px; border-radius: 12px; margin: 4px auto 8px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); animation: emblemPulse 2.4s infinite ease-in-out; }
+        .status-emblem-box.ok { background-color: var(--green-emblem-soft); color: var(--green-emblem-text) !important; }
+        .status-emblem-box.no { background-color: var(--red-emblem-soft); color: var(--red-emblem-text) !important; }
+        @keyframes emblemPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+
+        /* الدائرة العائمة للتواصل والدعم */
+        .contact-trigger { position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px; background-color: var(--contact-green-light); color: var(--green-emblem-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border: 2px solid #a7f3d0; z-index: 999; transition: all 0.3s ease; }
+        .contact-trigger:hover { transform: scale(1.1) rotate(15deg); background-color: #a7f3d0; }
+        .contact-popup { position: fixed; bottom: 85px; left: 25px; width: 290px; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 1000; display: none; flex-direction: column; gap: 12px; }
+        .contact-row { background-color: var(--bg-page); padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; display: flex; flex-direction: column; gap: 4px; border-right: 4px solid var(--blue-main-text); }
+        .contact-link { text-decoration: none; display: block; }
+
+        @media (max-width: 900px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } .dashboard-tabs { justify-content: flex-start; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>بوابة الموارد البشرية الذكية الموحدة</h1>
+        <p>المنصة المتكاملة لإدارة التوطين، المخالصات، بيانات الموظفين، وأرصدة الإجازات لعام 2026</p>
+    </header>
+
+    <!-- نظام التبويبات الرباعي الجديد -->
+    <div class="dashboard-tabs">
+        <button class="tab-btn active" onclick="switchTab('saudizationTab', this)">📊 حاسبة التوطين</button>
+        <button class="tab-btn" onclick="switchTab('settlementTab', this)">📑 حاسبة المخالصة</button>
+        <button class="tab-btn" onclick="switchTab('employeesTab', this)">👥 بيانات الموظفين</button>
+        <button class="tab-btn" onclick="switchTab('leavesTab', this)">📅 إدارة الإجازات</button>
+    </div>
+
+    <!-- ================= الخانة 1: حاسبة التوطين ================= -->
+    <div id="saudizationTab" class="tab-content active">
+        <div class="grid-3">
+            <div class="card settings-card">
+                <h3>📋 معايير المهنة</h3>
+                <label>السنة المستهدفة:</label>
+                <select id="yearSelect" onchange="runSaudization()">
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                </select>
+                <label>التخصص المهني المطلوب:</label>
+                <select id="jobSelect" onchange="runSaudization()">
+                    <option value="">-- اختر المهنة --</option>
+                    <option value="accounting">المحاسبة</option>
+                    <option value="engineering">الهندسية</option>
+                    <option value="tech_eng">الفنية الهندسية</option>
+                    <option value="it_pro">تقنية المعلومات (مبرمج)</option>
+                    <option value="it_support">تقنية المعلومات (دعم)</option>
+                    <option value="marketing">التسويق</option>
+                    <option value="sales">المبيعات</option>
+                    <option value="procurement">المشتريات</option>
+                    <option value="legal">القانونية</option>
+                </select>
+                <div class="display-box" style="background-color: var(--blue-light-bg); border-color: #bae6fd;">
+                    <span style="font-size: 0.75rem; color: var(--blue-main-text); font-weight: 700;">النسبة المطلوبة نظاماً</span>
+                    <strong id="targetDisplay" class="big-val" style="color: var(--blue-main-text);">0%</strong>
+                </div>
+            </div>
+
+            <div class="card stats-card">
+                <h3>👥 موظفي المنشأة الحاليين</h3>
+                <label>عدد الأجانب الحالي:</label>
+                <input type="number" id="expats" value="0" min="0" oninput="runSaudization()">
+                <label>عدد السعوديين الحالي:</label>
+                <input type="number" id="saudis" value="0" min="0" oninput="runSaudization()">
+                <div class="display-box" id="currentBox">
+                    <span id="currentLabel" style="font-size: 0.75rem; font-weight: 700;">نسبة التوطين المحققة</span>
+                    <strong id="currentDisplay" class="big-val">0%</strong>
+                </div>
+            </div>
+
+            <div id="mainResultCard" class="card result-card-style" style="display:none;">
+                <h3>📑 حالة الامتثال والالتزام</h3>
+                <div id="statusEmblem" class="status-emblem-box"></div>
+                <div class="needed-alert">
+                    <div style="margin-bottom: 4px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b;">العدد المطلوب الفعلي:</span>
+                        <strong id="rawNeededCount" style="font-size: 1rem; color: #1e293b;">0.00</strong>
+                    </div>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #475569;" id="actionLabel">الاحتياج بالتوظيف (الاستبدال):</span>
+                    <strong id="neededCount" style="font-size: 2.1rem; font-weight: 900; display: block; margin: 1px 0;">0</strong>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: #94a3b8;" id="subLabel">موظف سعودي مطلوب للالتزام</span>
+                </div>
+            </div>
+        </div>
+        <div class="grid-2">
+            <div id="directHireCard" class="card direct-hire-card" style="display:none;">
+                <h3>💡 خيار التوظيف المباشر (صافي زيادة)</h3>
+                <div style="text-align: center; margin: auto; width: 100%;">
+                    <span style="font-size: 0.8rem; font-weight: 700; display: block; color: var(--green-main-text);">الموظفين السعوديين المطلوب تعيينهم فوراً (دون استغناء عن أجنبي):</span>
+                    <strong id="directHireCount" class="direct-hire-val" style="font-size: 2.4rem; font-weight: 900; display: block; margin: 4px 0;">0</strong>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--green-main-text);">موظف سعودي إضافي صافي للتطابق</span>
+                </div>
+            </div>
+            <div id="detailsArea" class="card details-card" style="display:none; background-color: var(--gray-medium);">
+                <h3>📌 الأجور والاشتراطات المهنية المعتمدة</h3>
+                <div id="salaryStack" style="width: 100%;"></div>
+                <div id="conditionInfo" class="condition-cell" style="margin-top: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الخانة 2: حاسبة المخالصة ================= -->
+    <div id="settlementTab" class="tab-content">
+        <div class="grid-2">
+            <div class="card settings-card">
+                <h3>📝 بيانات عقد الموظف والمستحقات</h3>
+                <label>الراتب الأساسي (ريال):</label>
+                <input type="number" id="basicSalary" value="0" min="0">
+                <label>بدل السكن الفعلي (ريال):</label>
+                <input type="number" id="housingAllowance" value="0" min="0">
+                <label>البدلات الثابتة الأخرى (ريال):</label>
+                <input type="number" id="otherAllowances" value="0" min="0">
+                <label>مدة الخدمة الإجمالية (بالسنوات):</label>
+                <input type="number" id="serviceYears" value="0" min="0" step="0.01" placeholder="مثال: 3.5">
+                <label>سبب إنهاء العلاقة التعاقدية:</label>
+                <select id="terminationReason">
+                    <option value="employer_end">إنهاء من طرف صاحب العمل (المادة 74)</option>
+                    <option value="resignation_less_2">استقالة - الخدمة أقل من سنتين</option>
+                    <option value="resignation_2_5">استقالة - الخدمة من سنتين إلى 5 سنوات</option>
+                    <option value="resignation_5_10">استقالة - الخدمة من 5 سنوات إلى أقل من 10</option>
+                    <option value="resignation_10_more">استقالة - الخدمة 10 سنوات فأكثر</option>
+                    <option value="force_majeure">ترك العمل بقوة قاهرة (المادة 74/أو مادة 87 للمرأة)</option>
+                    <option value="article_80">فصل بموجب المادة 80 (سقوط مكافأة نهاية الخدمة)</option>
+                </select>
+                <label>أيام الإجازات المتبقية (الرصيد):</label>
+                <input type="number" id="vacationDays" value="0" min="0">
+                <button class="calc-btn" onclick="calculateSettlement()">🧮 احسب مستحقات المخالصة</button>
+            </div>
+
+            <div id="settlementResultCard" class="card result-card-style" style="display:none; flex-direction: column;">
+                <h3>📑 كشف مستحقات نهاية الخدمة التفصيلي</h3>
+                <div class="info-cell" style="border-right-color: #0284c7; background: #f0f9ff;">
+                    <span>💵 الأجر الفعلي الإجمالي (الخاضع للمكافأة):</span>
+                    <strong id="totalSalaryDisplay" style="display:block; font-size: 1.1rem; color: #0369a1;">0.00 ريال</strong>
+                </div>
+                <div class="info-cell" style="border-right-color: #16a34a;">
+                    <span>💰 مكافأة نهاية الخدمة المستحقة:</span>
+                    <strong id="esbDisplay" style="display:block; font-size: 1.1rem; color: #15803d;">0.00 ريال</strong>
+                </div>
+                <div class="info-cell" style="border-right-color: #eab308;">
+                    <span>📅 تعويض رصيد الإجازات:</span>
+                    <strong id="vacationCompensationDisplay" style="display:block; font-size: 1.1rem; color: #a16207;">0.00 ريال</strong>
+                </div>
+                <div class="display-box" style="background-color: var(--green-light-bg); border-color: #bbf7d0; margin-top: 10px; padding: 10px;">
+                    <span style="font-size: 0.85rem; color: var(--green-emblem-text); font-weight: 800; display:block;">صافي مبلغ المخالصة الإجمالي المستحق</span>
+                    <strong id="finalNetDisplay" style="color: var(--green-emblem-text); font-size: 2rem; font-weight: 900;">0.00 ريال</strong>
+                </div>
+                <div class="condition-cell" id="lawNote" style="margin-top: 10px; background-color: #f8fafc;">
+                    السند القانوني وطريقة الحسبة يظهر هنا فور الحساب.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الخانة 3: بيانات الموظفين والأرشيف ================= -->
+    <div id="employeesTab" class="tab-content">
+        <div class="grid-2">
+            <div class="card settings-card">
+                <h3>📝 إضافة / تحديث موظف</h3>
+                <label>اسم الموظف:</label>
+                <input type="text" id="empName" placeholder="مثال: أحمد محمد">
+                <label>الجنسية:</label>
+                <select id="empNationality">
+                    <option value="سعودي">سعودي</option>
+                    <option value="أجنبي">أجنبي</option>
+                </select>
+                <label>تاريخ بدء العمل:</label>
+                <input type="date" id="empStartDate">
+                <label>المسمى الوظيفي / القسم:</label>
+                <input type="text" id="empPosition" placeholder="مثال: محاسب عمالي">
+                <button class="calc-btn" onclick="addEmployee()">➕ حفظ في أرشيف الموظفين</button>
+            </div>
+            
+            <div class="card result-card-style" style="flex: 1.5;">
+                <h3>👥 أرشيف سجلات الموظفين وفترات التجربة</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الجنسية</th>
+                                <th>تاريخ البدء</th>
+                                <th>انتهاء فترة التجربة (90 يوم)</th>
+                                <th>الحالة التعاقدية</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTableBody">
+                            <!-- تعبئة البيانات برمجياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الخانة 4: إدارة الإجازات ================= -->
+    <div id="leavesTab" class="tab-content">
+        <div class="grid-2">
+            <div class="card settings-card">
+                <h3>📝 تسجيل حركة إجازة</h3>
+                <label>اختر الموظف:</label>
+                <select id="leaveEmpSelect">
+                    <option value="">-- اختر الموظف --</option>
+                </select>
+                <label>نوع الإجازة:</label>
+                <select id="leaveType">
+                    <option value="annual">سنوية اعتيادية</option>
+                    <option value="sick">مرضية</option>
+                    <option value="emergency">اضطرارية</option>
+                </select>
+                <label>عدد الأيام المستهلكة في هذه الحركة:</label>
+                <input type="number" id="leaveDays" value="0" min="1">
+                <button class="calc-btn" onclick="deductLeave()">📉 تسجيل وخصم من الرصيد</button>
+            </div>
+
+            <div class="card result-card-style" style="flex: 1.5;">
+                <h3>📊 كشف أرصدة الإجازات السنوية للموظفين (مستحق/متبقي)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم الموظف</th>
+                                <th>الرصيد السنوي المستحق</th>
+                                <th>المستهلك حتى الآن</th>
+                                <th>الرصيد المتبقي الفعلي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaveTableBody">
+                            <!-- تعبئة البيانات برمجياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- عناصر الدعم والتواصل العائمة -->
+<div class="contact-trigger" onclick="toggleContactPopup()">📞</div>
+<div class="contact-popup" id="contactPopup">
+    <h4>📞 للتواصل والدعم الفني</h4>
+    <a href="https://wa.me/966532219777" target="_blank" class="contact-link">
+        <div class="contact-row" style="border-right-color: #25d366;">
+            <span style="color: var(--contact-icon-green); font-weight: 800;">📞 WhatsApp:</span>
+            <span>0532219777</span>
+        </div>
+    </a>
+    <a href="https://www.linkedin.com/in/majed-alharbi-shrm-cp-2651071b6" target="_blank" class="contact-link">
+        <div class="contact-row" style="border-right-color: #0077b5;">
+            <span style="color: #0077b5; font-weight: 800;">🌐 LinkedIn:</span>
+            <span>majed-alharbi-shrm-cp-2651071b6</span>
+        </div>
+    </a>
+</div>
 <script>
     // 1. بنك البيانات المعياري للمهن والتوطين المستهدف لعام 2026 والسنوات القادمة
     const dataBank = {
