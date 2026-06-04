@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة التوطين الذكية</title>
+    <title>لوحة تحكم الموارد البشرية الذكية | HR Dashboard</title>
     <style>
         :root {
             /* باليتة الألوان المعتمدة والمثبتة */
@@ -28,6 +28,10 @@
             /* ألوان أزرار التواصل المعتمدة */
             --contact-green-light: #bbf7d0;
             --contact-icon-green: #22c55e;
+            
+            /* ألوان مخصصة للمخالصة المستوحاة من الهوية */
+            --primary-tab: #0284c7;
+            --primary-tab-hover: #0369a1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,17 +39,16 @@
         body { 
             background-color: var(--bg-page);
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            padding: 30px 20px;
+            padding: 20px;
             direction: rtl;
             color: #1e293b;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; 
         }
 
         .container { 
-            max-width: 1080px; 
+            max-width: 1100px; 
             margin: auto; 
             width: 100%; 
             display: flex; 
@@ -55,20 +58,78 @@
 
         header {
             background: var(--gray-dark);
-            padding: 12px; border-radius: 16px; text-align: center; 
+            padding: 15px; border-radius: 16px; text-align: center; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.02); width: 100%;
             border: 1px solid #1e293b;
         }
 
-        header h1 { font-size: 1.5rem; margin-bottom: 2px; color: #ffffff; font-weight: 800; }
+        header h1 { font-size: 1.6rem; margin-bottom: 2px; color: #ffffff; font-weight: 800; }
         header p { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
 
-        .dashboard-grid {
+        /* نظام التبويب (Tabs Navigation) */
+        .dashboard-tabs {
+            display: flex;
+            gap: 10px;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: var(--gray-light);
+            color: #475569;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .tab-btn.active {
+            background: var(--gray-dark);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* محتوى التبويبات */
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* شبكات العرض والبطاقات المشتركة */
+        .dashboard-grid, .settlement-grid {
             display: flex;
             gap: 15px;
             justify-content: center;
             align-items: stretch;
             flex-wrap: nowrap;
+            width: 100%;
         }
 
         .card, .bottom-card {
@@ -77,9 +138,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.01);
             border: 1px solid #e2e8f0;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #ffffff;
         }
 
-        /* تأثير النبض التفاعلي عند وضع الماوس */
         .card:hover, .bottom-card:hover {
             animation: cardPulseHover 1.8s infinite ease-in-out;
             border-color: #cbd5e1;
@@ -107,7 +168,7 @@
 
         .bottom-card {
             flex: 1;
-            max-width: 440px; 
+            max-width: 540px; 
             min-width: 280px;
             display: flex;
             flex-direction: column;
@@ -134,20 +195,11 @@
         }
         .big-val { font-size: 1.8rem; font-weight: 900; display: block; margin-top: 2px; }
 
-        /* الشعار المربع الملموم */
         .status-emblem-box {
-            width: 95%;
-            padding: 10px;
-            border-radius: 12px;
-            margin: 4px auto 8px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            animation: emblemPulse 2.4s infinite ease-in-out;
+            width: 95%; padding: 10px; border-radius: 12px; margin: 4px auto 8px auto;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02); animation: emblemPulse 2.4s infinite ease-in-out;
         }
-        
         .status-emblem-box.ok { background-color: var(--green-emblem-soft); color: var(--green-emblem-text) !important; }
         .status-emblem-box.no { background-color: var(--red-emblem-soft); color: var(--red-emblem-text) !important; }
 
@@ -164,114 +216,54 @@
             background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px;
             padding: 8px; text-align: center; margin-top: auto; width: 100%;
         }
-        
         .big-number-display { font-size: 2.1rem; font-weight: 900; display: block; margin: 1px 0; color: #0f172a; }
         .direct-hire-val { font-size: 2.4rem; font-weight: 900; display: block; color: var(--green-main-text); margin: 4px 0; }
 
         .info-cell {
-            background: #ffffff; padding: 8px; border-radius: 8px;
-            margin-bottom: 6px; font-weight: 700; font-size: 0.85rem;
+            background: #ffffff; padding: 8px; border-radius: 8px; margin-bottom: 6px; font-weight: 700; font-size: 0.85rem;
             color: var(--gray-dark); border-right: 5px solid var(--gray-dark); width: 100%;
             border-left: 1px solid #cbd5e1; border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1;
         }
 
         .condition-cell {
-            background: #ffffff; padding: 10px; border-radius: 8px;
-            font-size: 0.8rem; color: var(--gray-dark); border: 1px solid #cbd5e1;
-            line-height: 1.4; width: 100%; font-weight: 600;
-            border-right: 5px solid var(--gray-dark);
+            background: #ffffff; padding: 10px; border-radius: 8px; font-size: 0.8rem; color: var(--gray-dark); border: 1px solid #cbd5e1;
+            line-height: 1.4; width: 100%; font-weight: 600; border-right: 5px solid var(--gray-dark);
         }
 
-        /* الدائرة العائمة باللون الأخضر الفاتح والناعم المتناسق */
+        /* زر الإجراءات الخاص بالمخالصة */
+        .calc-btn {
+            background-color: var(--gray-dark); color: white; padding: 10px; border: none;
+            border-radius: 8px; font-weight: 700; width: 100%; margin-top: 12px; cursor: pointer;
+            transition: background 0.2s; font-size: 0.95rem;
+        }
+        .calc-btn:hover { background-color: #1e293b; }
+
+        /* الدائرة العائمة للتواصل والدعم */
         .contact-trigger {
-            position: fixed;
-            bottom: 25px;
-            left: 25px; 
-            width: 50px;
-            height: 50px;
-            background-color: var(--contact-green-light);
-            color: var(--green-emblem-text); 
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border: 2px solid #a7f3d0;
-            z-index: 999;
-            transition: all 0.3s ease;
+            position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px;
+            background-color: var(--contact-green-light); color: var(--green-emblem-text); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 2px solid #a7f3d0; z-index: 999; transition: all 0.3s ease;
         }
-        .contact-trigger:hover {
-            transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 6px 18px rgba(34, 197, 94, 0.25);
-            background-color: #a7f3d0;
-        }
+        .contact-trigger:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 6px 18px rgba(34, 197, 94, 0.25); background-color: #a7f3d0; }
 
         .contact-popup {
-            position: fixed;
-            bottom: 85px;
-            left: 25px;
-            width: 290px;
-            background-color: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            z-index: 1000;
-            display: none; 
-            flex-direction: column;
-            gap: 12px;
-            animation: popupFade 0.3s ease-out;
+            position: fixed; bottom: 85px; left: 25px; width: 290px; background-color: #ffffff;
+            border: 1px solid #cbd5e1; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 1000; display: none; flex-direction: column; gap: 12px; animation: popupFade 0.3s ease-out;
         }
 
-        @keyframes popupFade {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .contact-popup h4 {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--gray-dark);
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 6px;
-            text-align: center;
-        }
-
-        .contact-link {
-            text-decoration: none;
-            display: block;
-            transition: transform 0.2s;
-        }
-        .contact-link:hover {
-            transform: translateX(-3px);
-        }
-
-        .contact-row {
-            background-color: var(--bg-page);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #475569;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            border-right: 4px solid var(--blue-main-text);
-        }
-
-        .contact-row span:last-child {
-            color: #0f172a;
-            font-size: 0.9rem;
-            direction: ltr;
-            text-align: right;
-            word-break: break-all;
-        }
+        @keyframes popupFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .contact-popup h4 { font-size: 0.95rem; font-weight: 800; color: var(--gray-dark); border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; text-align: center; }
+        .contact-link { text-decoration: none; display: block; transition: transform 0.2s; }
+        .contact-link:hover { transform: translateX(-3px); }
+        .contact-row { background-color: var(--bg-page); padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; display: flex; flex-direction: column; gap: 4px; border-right: 4px solid var(--blue-main-text); }
+        .contact-row span:last-child { color: #0f172a; font-size: 0.9rem; direction: ltr; text-align: right; word-break: break-all; }
 
         @media (max-width: 1100px) { 
-            body { overflow: auto; height: auto; }
-            .dashboard-grid, .bottom-grid { flex-wrap: wrap; } 
+            body { overflow: auto; min-height: auto; }
+            .dashboard-grid, .settlement-grid, .bottom-grid { flex-wrap: wrap; } 
             .card, .bottom-card { min-width: 100%; max-width: 100%; } 
         }
     </style>
@@ -280,102 +272,168 @@
 
 <div class="container">
     <header>
-        <h1>حاسبة التوطين الذكية</h1>
-        <p>نظام ذكي لمتابعة نسبة الامتثال للمهن</p>
+        <h1>لوحة تحكم الموارد البشرية الذكية</h1>
+        <p>المنصة الموحدة للامتثال العمالي وحسابات الموظفين مخصصة لعام 2026</p>
     </header>
 
-    <div class="dashboard-grid">
-        <div class="card settings-card">
-            <h3>📋 معايير المهنة</h3>
-            <label>السنة المستهدفة للمنشأة:</label>
-            <select id="yearSelect" onchange="run()">
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-            </select>
+    <div class="dashboard-tabs">
+        <button class="tab-btn active" onclick="switchTab('saudizationTab', this)">📊 حاسبة التوطين الذكية</button>
+        <button class="tab-btn" onclick="switchTab('settlementTab', this)">📑 حاسبة المخالصة ونهاية الخدمة</button>
+    </div>
 
-            <label>التخصص المهني المطلوب:</label>
-            <select id="jobSelect" onchange="run()">
-                <option value="">-- اختر المهنة --</option>
-                <option value="accounting">المحاسبة</option>
-                <option value="engineering">الهندسية</option>
-                <option value="tech_eng">الفنية الهندسية</option>
-                <option value="it_pro">تقنية المعلومات (مبرمج)</option>
-                <option value="it_support">تقنية المعلومات (دعم)</option>
-                <option value="marketing">التسويق</option>
-                <option value="sales">المبيعات</option>
-                <option value="procurement">المشتريات</option>
-                <option value="legal">القانونية</option>
-            </select>
+    <div id="saudizationTab" class="tab-content active">
+        <div class="dashboard-grid">
+            <div class="card settings-card">
+                <h3>📋 معايير المهنة</h3>
+                <label>السنة المستهدفة للمنشأة:</label>
+                <select id="yearSelect" onchange="runSaudization()">
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                </select>
 
-            <div class="display-box" id="targetBox" style="background-color: var(--blue-light-bg); border-color: #bae6fd;">
-                <span style="font-size: 0.75rem; opacity: 0.95; color: var(--blue-main-text); font-weight: 700;">النسبة المراد تحقيقها نظاماً</span>
-                <strong id="targetDisplay" class="big-val" style="color: var(--blue-main-text);">0%</strong>
-            </div>
-        </div>
+                <label>التخصص المهني المطلوب:</label>
+                <select id="jobSelect" onchange="runSaudization()">
+                    <option value="">-- اختر المهنة --</option>
+                    <option value="accounting">المحاسبة</option>
+                    <option value="engineering">الهندسية</option>
+                    <option value="tech_eng">الفنية الهندسية</option>
+                    <option value="it_pro">تقنية المعلومات (مبرمج)</option>
+                    <option value="it_support">تقنية المعلومات (دعم)</option>
+                    <option value="marketing">التسويق</option>
+                    <option value="sales">المبيعات</option>
+                    <option value="procurement">المشتريات</option>
+                    <option value="legal">القانونية</option>
+                </select>
 
-        <div class="card stats-card">
-            <h3>👥 موظفي المنشأة الحالية</h3>
-            <label>عدد الأجانب الحالي:</label>
-            <input type="number" id="expats" value="0" min="0" oninput="run()">
-            
-            <label>عدد السعوديين الحالي:</label>
-            <input type="number" id="saudis" value="0" min="0" oninput="run()">
-
-            <div class="display-box" id="currentBox">
-                <span id="currentLabel" style="font-size: 0.75rem; opacity: 0.95; font-weight: 700;">نسبة التوطين الحالية المحققة</span>
-                <strong id="currentDisplay" class="big-val">0%</strong>
-            </div>
-        </div>
-
-        <div id="mainResultCard" class="card result-card-style" style="display:none;">
-            <h3>📑 حالة الامتثال والالتزام</h3>
-            
-            <div id="statusEmblem" class="status-emblem-box"></div>
-
-            <div id="neededArea" class="needed-alert">
-                <div style="margin-bottom: 4px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #64748b;">العدد المطلوب الفعلي:</span>
-                    <strong id="rawNeededCount" style="font-size: 1rem; color: #1e293b;">0.00</strong>
+                <div class="display-box" id="targetBox" style="background-color: var(--blue-light-bg); border-color: #bae6fd;">
+                    <span style="font-size: 0.75rem; opacity: 0.95; color: var(--blue-main-text); font-weight: 700;">النسبة المراد تحقيقها نظاماً</span>
+                    <strong id="targetDisplay" class="big-val" style="color: var(--blue-main-text);">0%</strong>
                 </div>
-                <span style="font-size: 0.75rem; font-weight: 700; color: #475569;" id="actionLabel">الاحتياج بالتوظيف (الاستبدال):</span>
-                <strong id="neededCount" class="big-number-display">0</strong>
-                <span style="font-size: 0.7rem; font-weight: 700; color: #94a3b8;" id="subLabel">موظف سعودي مطلوب للالتزام</span>
+            </div>
+
+            <div class="card stats-card">
+                <h3>👥 موظفي المنشأة الحالية</h3>
+                <label>عدد الأجانب الحالي:</label>
+                <input type="number" id="expats" value="0" min="0" oninput="runSaudization()">
+                
+                <label>عدد السعوديين الحالي:</label>
+                <input type="number" id="saudis" value="0" min="0" oninput="runSaudization()">
+
+                <div class="display-box" id="currentBox">
+                    <span id="currentLabel" style="font-size: 0.75rem; opacity: 0.95; font-weight: 700;">نسبة التوطين الحالية المحققة</span>
+                    <strong id="currentDisplay" class="big-val">0%</strong>
+                </div>
+            </div>
+
+            <div id="mainResultCard" class="card result-card-style" style="display:none;">
+                <h3>📑 حالة الامتثال والالتزام</h3>
+                <div id="statusEmblem" class="status-emblem-box"></div>
+                <div id="neededArea" class="needed-alert">
+                    <div style="margin-bottom: 4px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b;">العدد المطلوب الفعلي:</span>
+                        <strong id="rawNeededCount" style="font-size: 1rem; color: #1e293b;">0.00</strong>
+                    </div>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #475569;" id="actionLabel">الاحتياج بالتوظيف (الاستبدال):</span>
+                    <strong id="neededCount" class="big-number-display">0</strong>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: #94a3b8;" id="subLabel">موظف سعودي مطلوب للالتزام</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-grid">
+            <div id="directHireCard" class="bottom-card direct-hire-card" style="display:none;">
+                <h3>💡 خيار التوظيف المباشر (صافي زيادة تقريبي)</h3>
+                <div style="text-align: center; margin-top: auto; margin-bottom: auto; width: 100%;">
+                    <span style="font-size: 0.8rem; font-weight: 700; display: block; opacity: 0.95; color: var(--green-main-text);">عدد الموظفين السعوديين الجدد المطلوب تعيينهم فوراً (دون الاستغناء عن أي موظف أجنبي):</span>
+                    <strong id="directHireCount" class="direct-hire-val">0</strong>
+                    <span style="font-size: 0.75rem; font-weight: 700; opacity: 0.85; color: var(--green-main-text);">موظف سعودي إضافي صافي للتطابق</span>
+                </div>
+            </div>
+
+            <div id="detailsArea" class="bottom-card details-card" style="display:none;">
+                <h3>📌 الأجور والاشتراطات المهنية المعتمدة</h3>
+                <div id="salaryStack" style="width: 100%;"></div>
+                <div id="conditionInfo" class="condition-cell" style="margin-top: auto;"></div>
             </div>
         </div>
     </div>
 
-    <div class="bottom-grid">
-        <div id="directHireCard" class="bottom-card direct-hire-card" style="display:none;">
-            <h3>💡 خيار التوظيف المباشر (صافي زيادة تقريبي)</h3>
-            <div style="text-align: center; margin-top: auto; margin-bottom: auto; width: 100%;">
-                <span style="font-size: 0.8rem; font-weight: 700; display: block; opacity: 0.95; color: var(--green-main-text);">عدد الموظفين السعوديين الجدد المطلوب تعيينهم فوراً (دون الاستغناء عن أي موظف أجنبي):</span>
-                <strong id="directHireCount" class="direct-hire-val">0</strong>
-                <span style="font-size: 0.75rem; font-weight: 700; opacity: 0.85; color: var(--green-main-text);">موظف سعودي إضافي صافي للتطابق</span>
-            </div>
-        </div>
+    <div id="settlementTab" class="tab-content">
+        <div class="settlement-grid">
+            <div class="card settings-card" style="flex: 1.2;">
+                <h3>📝 بيانات عقد الموظف والمستحقات</h3>
+                
+                <label>الراتب الأساسي المعتمد (ريال):</label>
+                <input type="number" id="basicSalary" value="0" min="0">
 
-        <div id="detailsArea" class="bottom-card details-card" style="display:none;">
-            <h3>📌 الأجور والاشتراطات المهنية المعتمدة</h3>
-            <div id="salaryStack" style="width: 100%;"></div>
-            <div id="conditionInfo" class="condition-cell" style="margin-top: auto;"></div>
+                <label>بدل السكن الفعلي (ريال):</label>
+                <input type="number" id="housingAllowance" value="0" min="0">
+
+                <label>البدلات الأخرى الثابتة الخاضعة للتأمينات (ريال):</label>
+                <input type="number" id="otherAllowances" value="0" min="0">
+
+                <label>مدة الخدمة الإجمالية (بالسنوات):</label>
+                <input type="number" id="serviceYears" value="0" min="0" step="0.01" placeholder="مثال: 3.5">
+
+                <label>سبب إنهاء العلاقة التعاقدية (حسب قانون العمل):</label>
+                <select id="terminationReason">
+                    <option value="employer_end">إنهاء من طرف صاحب العمل (المادة 74)</option>
+                    <option value="resignation_less_2">استقالة - الخدمة أقل من سنتين</option>
+                    <option value="resignation_2_5">استقالة - الخدمة من سنتين إلى 5 سنوات</option>
+                    <option value="resignation_5_10">استقالة - الخدمة من 5 سنوات إلى أقل من 10</option>
+                    <option value="resignation_10_more">استقالة - الخدمة 10 سنوات فأكثر</option>
+                    <option value="force_majeure">ترك العمل بقوة قاهرة (المادة 74/أو مادة 87 للمرأة)</option>
+                    <option value="article_80">فصل بموجب المادة 80 (سقوط مكافأة نهاية الخدمة)</option>
+                </select>
+
+                <label>أيام الإجازات غير المستهلكة (الرصيد المتبقي):</label>
+                <input type="number" id="vacationDays" value="0" min="0">
+
+                <button class="calc-btn" onclick="calculateSettlement()">🧮 احسب مستحقات المخالصة</button>
+            </div>
+
+            <div id="settlementResultCard" class="card result-card-style" style="display:none; flex: 1.5;">
+                <h3>📑 كشف مستحقات نهاية الخدمة التفصيلي</h3>
+                
+                <div class="info-cell" style="border-right-color: #0284c7; background: #f0f9ff;">
+                    <span>💵 الأجر الفعلي الإجمالي (الخاضع للمكافأة):</span>
+                    <strong id="totalSalaryDisplay" style="display:block; font-size: 1.2rem; color: #0369a1; margin-top:2px;">0.00 ريال</strong>
+                </div>
+
+                <div class="info-cell" style="border-right-color: #16a34a;">
+                    <span>💰 مكافأة نهاية الخدمة المستحقة نظاماً:</span>
+                    <strong id="esbDisplay" style="display:block; font-size: 1.2rem; color: #15803d; margin-top:2px;">0.00 ريال</strong>
+                </div>
+
+                <div class="info-cell" style="border-right-color: #eab308;">
+                    <span>📅 تعويض رصيد الإجازات المستحق:</span>
+                    <strong id="vacationCompensationDisplay" style="display:block; font-size: 1.2rem; color: #a16207; margin-top:2px;">0.00 ريال</strong>
+                </div>
+
+                <div class="display-box" id="finalNetSettlementBox" style="background-color: var(--green-light-bg); border-color: #bbf7d0; margin-top: 15px; padding: 12px;">
+                    <span style="font-size: 0.85rem; color: var(--green-emblem-text); font-weight: 800; display:block; margin-bottom:4px;">صافي مبلغ المخالصة الإجمالي المستحق للموظف</span>
+                    <strong id="finalNetDisplay" class="big-val" style="color: var(--green-emblem-text); font-size: 2.2rem;">0.00 ريال</strong>
+                </div>
+
+                <div class="condition-cell" id="lawNote" style="margin-top: 12px; border-right-color: var(--gray-dark); background-color: #f8fafc;">
+                    سيتم عرض السند القانوني وطريقة الحسبة هنا بمجرد الضغط على الحساب.
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="contact-trigger" onclick="toggleContactPopup()">📞</div>
-
 <div class="contact-popup" id="contactPopup">
     <h4>📞 للتواصل والدعم الفني</h4>
-    
     <a href="https://wa.me/966532219777" target="_blank" class="contact-link">
         <div class="contact-row" style="border-right-color: #25d366;">
             <span style="color: var(--contact-icon-green); font-weight: 800;">📞 WhatsApp:</span>
             <span>0532219777</span>
         </div>
     </a>
-    
     <a href="https://www.linkedin.com/in/majed-alharbi-shrm-cp-2651071b6" target="_blank" class="contact-link">
         <div class="contact-row" style="border-right-color: #0077b5;">
             <span style="color: #0077b5; font-weight: 800;">🌐 LinkedIn:</span>
@@ -383,148 +441,3 @@
         </div>
     </a>
 </div>
-
-<script>
-    function toggleContactPopup() {
-        const popup = document.getElementById("contactPopup");
-        if (popup.style.display === "flex") {
-            popup.style.display = "none";
-        } else {
-            popup.style.display = "flex";
-        }
-    }
-
-    window.onclick = function(event) {
-        const popup = document.getElementById("contactPopup");
-        const trigger = document.querySelector(".contact-trigger");
-        if (event.target !== popup && event.target !== trigger && !popup.contains(event.target)) {
-            popup.style.display = "none";
-        }
-    }
-
-    const dataBank = {
-        accounting: { rates: {"2026":0.4, "2027":0.5, "2028":0.6, "2029":0.7}, salaries: ["بكالوريوس: 6000 ريال", "دبلوم: 4500 ريال"], note: "عضوية SOCPA إلزامية." },
-        engineering: { rates: {"default":0.3}, salaries: ["الحد الأدنى: 8000 ريال"], note: "عضوية SEC إلزامية." },
-        tech_eng: { rates: {"default":0.3}, salaries: ["الحد الأدنى: 5000 ريال"], note: "عضوية SEC إلزامية." },
-        it_pro: { rates: {"default":0.25}, salaries: ["الحد الأدنى: 7000 ريال"], note: "تشمل المبرمجين والتقنيين." },
-        it_support: { rates: {"default":0.25}, salaries: ["الحد الأدنى: 5000 ريال"], note: "الدعم الفني والمساندة والاتصالات." },
-        marketing: { rates: {"default":0.6}, salaries: ["الحد الأدنى: 5500 ريال"], note: "توطين مهن التسويق." },
-        sales: { rates: {"default":0.6}, salaries: ["وفقاً للنظام والتوجيهات المعتمدة."], note: "توطين مهن المبيعات." },
-        procurement: { rates: {"default":0.7}, salaries: ["وفقاً للنظام والتوجيهات المعتمدة."], note: "توطين المشتريات." },
-        legal: { rates: {"default":0.7}, salaries: ["الحد الأدنى: 5500 ريال"], note: "المهن القانونية والاستشارية." }
-    };
-
-    function run() {
-        const jobKey = document.getElementById("jobSelect").value;
-        const year = document.getElementById("yearSelect").value;
-        const expats = parseInt(document.getElementById("expats").value) || 0;
-        const saudisCurrent = parseInt(document.getElementById("saudis").value) || 0;
-
-        if (!jobKey) return;
-
-        const job = dataBank[jobKey];
-        const targetRate = job.rates[year] || job.rates["default"];
-        
-        const totalEmployees = expats + saudisCurrent;
-        const rawTargetAmount = totalEmployees * targetRate;
-        const rawDifference = rawTargetAmount - saudisCurrent;
-
-        let finalReplacement = 0;
-
-        if (rawDifference > 0) {
-            const integerPart = Math.floor(rawDifference);
-            const decimalPart = Number((rawDifference - integerPart).toFixed(4));
-
-            if (decimalPart >= 0.50) {
-                finalReplacement = Math.ceil(rawDifference); 
-            } else {
-                finalReplacement = integerPart; 
-            }
-        } else {
-            finalReplacement = 0; 
-        }
-
-        let isCompliant = (finalReplacement <= 0);
-
-        let finalDirectHire = 0;
-        if (!isCompliant && expats > 0) {
-            const ratePerExpat = targetRate / (1 - targetRate);
-            const totalSaudisNeededDirect = ratePerExpat * expats;
-            const rawDirectDifference = totalSaudisNeededDirect - saudisCurrent;
-
-            if (rawDirectDifference > 0) {
-                const intDirect = Math.floor(rawDirectDifference);
-                const decDirect = Number((rawDirectDifference - intDirect).toFixed(4));
-
-                if (decDirect >= 0.50) {
-                    finalDirectHire = Math.ceil(rawDirectDifference);
-                } else {
-                    finalDirectHire = intDirect;
-                }
-            }
-        }
-
-        const currentRate = totalEmployees > 0 ? (saudisCurrent / totalEmployees) : 0;
-        document.getElementById("targetDisplay").innerText = (targetRate * 100) + "%";
-        document.getElementById("currentDisplay").innerText = (currentRate * 100).toFixed(0) + "%";
-
-        const mainResultCard = document.getElementById("mainResultCard");
-        const emblem = document.getElementById("statusEmblem");
-        const directHireCard = document.getElementById("directHireCard");
-        const details = document.getElementById("detailsArea");
-        
-        const currentBox = document.getElementById("currentBox");
-        const currentLabel = document.getElementById("currentLabel");
-        const currentDisplay = document.getElementById("currentDisplay");
-
-        mainResultCard.style.display = "flex";
-        details.style.display = "flex";
-
-        document.getElementById("rawNeededCount").innerText = rawDifference.toFixed(2);
-
-        if (isCompliant) {
-            emblem.innerHTML = '<div class="emblem-icon">✓</div><div class="emblem-text">ملتزم</div>';
-            emblem.className = "status-emblem-box ok";
-            
-            mainResultCard.style.backgroundColor = "var(--green-light-bg)";
-            mainResultCard.style.borderColor = "#bbf7d0";
-            
-            currentBox.style.backgroundColor = "var(--blue-light-bg)";
-            currentBox.style.borderColor = "#bae6fd";
-            currentLabel.style.color = "var(--blue-main-text)";
-            currentDisplay.style.color = "var(--blue-main-text)";
-
-            document.getElementById("neededCount").innerText = "0";
-            document.getElementById("neededCount").style.color = "#16a34a";
-            document.getElementById("actionLabel").innerText = "الاحتياج الحالي بالتوظيف:";
-            document.getElementById("subLabel").innerText = "المنشأة ملتزمة تماماً ومحققة للنسبة النظامية";
-            
-            directHireCard.style.display = "none";
-        } else {
-            emblem.innerHTML = '<div class="emblem-icon">✕</div><div class="emblem-text">غير ملتزم</div>';
-            emblem.className = "status-emblem-box no";
-            
-            mainResultCard.style.backgroundColor = "var(--red-light-bg)";
-            mainResultCard.style.borderColor = "#fecdd3";
-
-            currentBox.style.backgroundColor = "var(--red-light-bg)";
-            currentBox.style.borderColor = "#fecdd3";
-            currentLabel.style.color = "var(--red-main-text)";
-            currentDisplay.style.color = "var(--red-main-text)";
-
-            document.getElementById("neededCount").innerText = finalReplacement;
-            document.getElementById("neededCount").style.color = "#dc2626";
-            document.getElementById("actionLabel").innerText = "الاحتياج بالتوظيف للالتزام (حسب الجبر):";
-            document.getElementById("subLabel").innerText = "موظف سعودي مطلوب تعيينه كبديل لأجنبي للالتزام بالعدد الحالي";
-            
-            directHireCard.style.display = "flex";
-            document.getElementById("directHireCount").innerText = finalDirectHire;
-        }
-
-        document.getElementById("salaryStack").innerHTML = job.salaries.map(s => `<div class="info-cell">${s}</div>`).join('');
-        document.getElementById("conditionInfo").innerText = job.note;
-    }
-</script>
-
-</body>
-</html>
