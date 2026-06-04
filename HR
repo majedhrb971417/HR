@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة أدوات الموارد البشرية ذكية</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a; /* أزرق داكن رسمي */
+            --secondary-color: #0284c7; /* أزرق فاتح */
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--secondary-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* كرت معطل للأدوات القادمة */
+        .card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .card.disabled::before {
+            background-color: #cbd5e1;
+        }
+        .card.disabled .card-icon {
+            color: #94a3b8;
+        }
+        .badge {
+            background-color: #f1f5f9;
+            color: #64748b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>منصة أدوات الموارد البشرية الرقمية</h1>
+        <p>أتمتة وحسابات الأنظمة واللوائح والقرارات الوزارية</p>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            
+            <!-- أداة حاسبة التوطين -->
+            <a href="رابط_حاسبة_التوطين_هنا" target="_blank" class="card">
+                <div class="card-icon">📊</div>
+                <div class="card-title">حاسبة التوطين الذكية</div>
+                <div class="card-desc">لحساب نسب التوطين ونطاقات المنشأة بشكل ذكي ودقيق حسب اللوائح المعتمدة.</div>
+                <span class="badge" style="background-color: #e0f2fe; color: #0369a1;">جاهز</span>
+            </a>
+
+            <!-- أداة المخالصة والتصفية -->
+            <a href="رابط_أداة_المخالصة_هنا" target="_blank" class="card">
+                <div class="card-icon">📄</div>
+                <div class="card-title">مخالصة وتصفية مستحقات</div>
+                <div class="card-desc">حساب مكافأة نهاية الخدمة، مستحقات الإجازات، والتسويات النهائية للموظفين مع طباعة PDF.</div>
+                <span class="badge" style="background-color: #e0f2fe; color: #0369a1;">جاهز</span>
+            </a>
+
+            <!-- أدوات مستقبلية (قيد التطوير) -->
+            <div class="card disabled">
+                <div class="card-icon">🌴</div>
+                <div class="card-title">نظام إدارة الإجازات</div>
+                <div class="card-desc">حساب رصيد الإجازات السنوية والمستحقة للموظفين ومتابعتها (قريباً).</div>
+                <span class="badge">قيد التطوير</span>
+            </div>
+
+            <div class="card disabled">
+                <div class="card-icon">⚠️</div>
+                <div class="card-title">إدارة المخالفات والإنذارات</div>
+                <div class="card-desc">متابعة التدرج في العقوبات والإنذارات حسب لائحة تنظيم العمل الداخلية (قريباً).</div>
+                <span class="badge">قيد التطوير</span>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
