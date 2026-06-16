@@ -3,770 +3,1462 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الموارد البشرية الذكية الموحدة | HR Portal</title>
+    <title>نظام الموارد البشرية | HR Portal</title>
     <style>
-        :root {
-            /* باليتة الألوان المعتمدة والمثبتة */
-            --bg-page: #f1f5f9;        
-            --gray-dark: #334155;      
-            --gray-light: #f8fafc;     
-            --gray-medium: #cbd5e1;    
-            
-            --green-light-bg: #e8fced; 
-            --red-light-bg: #fee2e2;   
-            
-            --green-emblem-soft: #86efac; 
-            --green-emblem-text: #166534; 
-            
-            --red-emblem-soft: #fca5a5;   
-            --red-emblem-text: #991b1b;   
-
-            --green-main-text: #15803d;
-            --blue-light-bg: #e0f2fe;  
-            --blue-main-text: #0369a1;
-            
-            /* ألوان أزرار التواصل المعتمدة */
-            --contact-green-light: #bbf7d0;
-            --contact-icon-green: #22c55e;
-            
-            --primary-tab: #0284c7;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body { 
-            background-color: var(--bg-page);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
             padding: 20px;
             direction: rtl;
+        }
+        body.en {
+            direction: ltr;
+        }
+        body.en .card-title {
+            border-right: none;
+            border-left: 4px solid #2563eb;
+            padding-right: 0;
+            padding-left: 15px;
+        }
+
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        body.en .lang-toggle {
+            left: auto;
+            right: 20px;
+        }
+
+        .login-container {
+            max-width: 500px;
+            margin: 100px auto;
+            background: white;
+            border-radius: 32px;
+            padding: 45px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        .login-container h1 {
             color: #1e293b;
-            min-height: 100vh;
+            margin-bottom: 10px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .login-error {
+            color: #dc2626;
+            margin-top: 15px;
+        }
+        .main-app {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+        .header {
+            background: white;
+            border-radius: 24px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .header h1 {
+            font-size: 1.3rem;
+            color: #1e293b;
+        }
+        .user-badge {
+            background: #e2e8f0;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .nav-menu {
+            background: white;
+            border-radius: 60px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .nav-btn {
+            padding: 10px 24px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .nav-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #1e293b;
+            border-right: 4px solid #2563eb;
+            padding-right: 15px;
+            margin-bottom: 20px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
             display: flex;
             flex-direction: column;
         }
-
-        .container { 
-            max-width: 1200px; 
-            margin: auto; 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-        }
-
-        header {
-            background: var(--gray-dark);
-            padding: 15px; border-radius: 16px; text-align: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02); width: 100%;
-            border: 1px solid #1e293b;
-        }
-
-        header h1 { font-size: 1.6rem; margin-bottom: 2px; color: #ffffff; font-weight: 800; }
-        header p { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
-
-        /* نظام التبويب المطور لـ 4 خانات */
-        .dashboard-tabs {
-            display: flex;
-            gap: 8px;
-            background: #ffffff;
-            padding: 8px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px 15px;
-            border: none;
-            background: var(--gray-light);
-            color: #475569;
-            font-size: 0.9rem;
+        label {
             font-weight: 700;
-            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #475569;
+        }
+        input,
+        select,
+        textarea {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 0.9rem;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        .btn-edit {
+            background: #2563eb;
+            color: white;
+            padding: 4px 12px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .service-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .service-card:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-3px);
+        }
+        .service-card h4 {
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        .service-card p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .request-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .badge-pending {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+        .badge-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-hr {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th,
+        td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f1f5f9;
+            font-weight: 700;
+        }
+        .view-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
             justify-content: center;
-            gap: 6px;
-            white-space: nowrap;
+            align-items: center;
         }
-
-        .tab-btn:hover { background: #f1f5f9; color: #1e293b; }
-        .tab-btn.active { background: var(--gray-dark); color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-
-        .tab-content { display: none; flex-direction: column; gap: 15px; animation: fadeIn 0.4s ease-out; }
-        .tab-content.active { display: flex; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* البطاقات والجداول المعيارية */
-        .card, .bottom-card {
-            border-radius: 16px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.01);
-            border: 1px solid #e2e8f0; background-color: #ffffff;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .edit-modal.active {
+            display: flex;
         }
-        .card:hover, .bottom-card:hover {
-            animation: cardPulseHover 1.8s infinite ease-in-out; border-color: #cbd5e1;
+        .edit-modal-content {
+            background: white;
+            border-radius: 32px;
+            padding: 35px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-
-        @keyframes cardPulseHover {
-            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-            50% { transform: scale(1.015); box-shadow: 0 12px 25px rgba(0,0,0,0.06); }
-            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .edit-modal-content .form-grid {
+            grid-template-columns: 1fr 1fr;
         }
-
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 15px; }
-
-        .settings-card { background-color: var(--gray-light); border-top: 5px solid #94a3b8; }
-        .stats-card { background-color: var(--gray-light); border-top: 5px solid #64748b; }
-        .result-card-style { border: 1px solid #cbd5e1; }
-
-        h3 { font-size: 1.05rem; margin-bottom: 10px; text-align: center; padding-bottom: 6px; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--gray-dark); }
-        label { display: block; margin-top: 8px; font-weight: 700; font-size: 0.8rem; color: #475569; }
-        
-        select, input {
-            width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #cbd5e1;
-            border-radius: 8px; font-size: 0.9rem; background: #ffffff; color: #0f172a; font-weight: 700; outline: none;
+        .edit-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
         }
-
-        .display-box { margin-top: auto; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; border: 1px solid #cbd5e1; }
-        .big-val { font-size: 1.8rem; font-weight: 900; display: block; margin-top: 2px; }
-
-        /* جداول استعراض البيانات (الموظفين والإجازات) */
-        .table-wrapper { width: 100%; overflow-x: auto; margin-top: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.85rem; background: #ffffff; }
-        th { background-color: var(--gray-dark); color: #ffffff; padding: 10px; font-weight: 700; }
-        td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #334155; }
-        tr:nth-child(even) { background-color: var(--gray-light); }
-
-        .status-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
-        .badge-active { background-color: var(--green-light-bg); color: var(--green-main-text); }
-        .badge-probation { background-color: var(--blue-light-bg); color: var(--blue-main-text); }
-
-        /* الأزرار والتنبيهات */
-        .calc-btn { background-color: var(--gray-dark); color: white; padding: 10px; border: none; border-radius: 8px; font-weight: 700; width: 100%; margin-top: 12px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
-        .calc-btn:hover { background-color: #1e293b; }
-        .info-cell { background: #ffffff; padding: 8px; border-radius: 8px; margin-bottom: 6px; font-weight: 700; font-size: 0.85rem; color: var(--gray-dark); border-right: 5px solid var(--gray-dark); border-left: 1px solid #cbd5e1; border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; }
-        .condition-cell { background: #ffffff; padding: 10px; border-radius: 8px; font-size: 0.8rem; color: var(--gray-dark); border: 1px solid #cbd5e1; line-height: 1.4; font-weight: 600; border-right: 5px solid var(--gray-dark); }
-        
-        .status-emblem-box { width: 95%; padding: 10px; border-radius: 12px; margin: 4px auto 8px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); animation: emblemPulse 2.4s infinite ease-in-out; }
-        .status-emblem-box.ok { background-color: var(--green-emblem-soft); color: var(--green-emblem-text) !important; }
-        .status-emblem-box.no { background-color: var(--red-emblem-soft); color: var(--red-emblem-text) !important; }
-        @keyframes emblemPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-
-        /* الدائرة العائمة للتواصل والدعم */
-        .contact-trigger { position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px; background-color: var(--contact-green-light); color: var(--green-emblem-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border: 2px solid #a7f3d0; z-index: 999; transition: all 0.3s ease; }
-        .contact-trigger:hover { transform: scale(1.1) rotate(15deg); background-color: #a7f3d0; }
-        .contact-popup { position: fixed; bottom: 85px; left: 25px; width: 290px; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 1000; display: none; flex-direction: column; gap: 12px; }
-        .contact-row { background-color: var(--bg-page); padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; display: flex; flex-direction: column; gap: 4px; border-right: 4px solid var(--blue-main-text); }
-        .contact-link { text-decoration: none; display: block; }
-
-        @media (max-width: 900px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } .dashboard-tabs { justify-content: flex-start; } }
+        .approve-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .approve-btn:hover {
+            background: #059669;
+        }
+        .reject-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .reject-btn:hover {
+            background: #dc2626;
+        }
+        @media (max-width: 800px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .edit-modal-content .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>بوابة الموارد البشرية الذكية الموحدة</h1>
-        <p>المنصة المتكاملة لإدارة التوطين، المخالصات، بيانات الموظفين، وأرصدة الإجازات لعام 2026</p>
-    </header>
+    <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧 English</button>
 
-    <!-- نظام التبويبات الرباعي الجديد -->
-    <div class="dashboard-tabs">
-        <button class="tab-btn active" onclick="switchTab('saudizationTab', this)">📊 حاسبة التوطين</button>
-        <button class="tab-btn" onclick="switchTab('settlementTab', this)">📑 حاسبة المخالصة</button>
-        <button class="tab-btn" onclick="switchTab('employeesTab', this)">👥 بيانات الموظفين</button>
-        <button class="tab-btn" onclick="switchTab('leavesTab', this)">📅 إدارة الإجازات</button>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <h1 id="loginTitle">🏢 نظام الموارد البشرية</h1>
+        <p id="loginSubtitle">تسجيل الدخول باستخدام الرقم الوظيفي</p>
+        <input type="text" id="loginId" placeholder="الرقم الوظيفي">
+        <input type="password" id="loginPass" placeholder="الرقم السري">
+        <button onclick="doLogin()" id="loginBtn">🚪 دخول</button>
+        <div id="loginError" class="login-error"></div>
     </div>
 
-    <!-- ================= الخانة 1: حاسبة التوطين ================= -->
-    <div id="saudizationTab" class="tab-content active">
-        <div class="grid-3">
-            <div class="card settings-card">
-                <h3>📋 معايير المهنة</h3>
-                <label>السنة المستهدفة:</label>
-                <select id="yearSelect" onchange="runSaudization()">
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                    <option value="2029">2029</option>
-                </select>
-                <label>التخصص المهني المطلوب:</label>
-                <select id="jobSelect" onchange="runSaudization()">
-                    <option value="">-- اختر المهنة --</option>
-                    <option value="accounting">المحاسبة</option>
-                    <option value="engineering">الهندسية</option>
-                    <option value="tech_eng">الفنية الهندسية</option>
-                    <option value="it_pro">تقنية المعلومات (مبرمج)</option>
-                    <option value="it_support">تقنية المعلومات (دعم)</option>
-                    <option value="marketing">التسويق</option>
-                    <option value="sales">المبيعات</option>
-                    <option value="procurement">المشتريات</option>
-                    <option value="legal">القانونية</option>
-                </select>
-                <div class="display-box" style="background-color: var(--blue-light-bg); border-color: #bae6fd;">
-                    <span style="font-size: 0.75rem; color: var(--blue-main-text); font-weight: 700;">النسبة المطلوبة نظاماً</span>
-                    <strong id="targetDisplay" class="big-val" style="color: var(--blue-main-text);">0%</strong>
-                </div>
+    <!-- Main App -->
+    <div id="mainApp" class="main-app">
+        <div class="header">
+            <h1 id="appTitle">🏢 نظام إدارة الموارد البشرية</h1>
+            <div>
+                <span class="user-badge">👤 <span id="userName"></span></span>
+                <span class="user-badge" id="userRole"></span>
+                <button class="logout-btn" onclick="doLogout()" id="logoutBtn">🚪 خروج</button>
             </div>
+        </div>
 
-            <div class="card stats-card">
-                <h3>👥 موظفي المنشأة الحاليين</h3>
-                <label>عدد الأجانب الحالي:</label>
-                <input type="number" id="expats" value="0" min="0" oninput="runSaudization()">
-                <label>عدد السعوديين الحالي:</label>
-                <input type="number" id="saudis" value="0" min="0" oninput="runSaudization()">
-                <div class="display-box" id="currentBox">
-                    <span id="currentLabel" style="font-size: 0.75rem; font-weight: 700;">نسبة التوطين المحققة</span>
-                    <strong id="currentDisplay" class="big-val">0%</strong>
-                </div>
+        <div class="nav-menu" id="navMenu"></div>
+
+        <!-- Dashboard -->
+        <div id="dashboardPage" class="page">
+            <div class="card">
+                <div class="card-title" id="dashboardTitle">📊 لوحة التحكم</div>
+                <div id="dashboardStats"></div>
             </div>
+            <div class="card">
+                <div class="card-title" id="recentTitle">📋 آخر طلباتي</div>
+                <div id="recentRequests"></div>
+            </div>
+        </div>
 
-            <div id="mainResultCard" class="card result-card-style" style="display:none;">
-                <h3>📑 حالة الامتثال والالتزام</h3>
-                <div id="statusEmblem" class="status-emblem-box"></div>
-                <div class="needed-alert">
-                    <div style="margin-bottom: 4px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b;">العدد المطلوب الفعلي:</span>
-                        <strong id="rawNeededCount" style="font-size: 1rem; color: #1e293b;">0.00</strong>
-                    </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #475569;" id="actionLabel">الاحتياج بالتوظيف (الاستبدال):</span>
-                    <strong id="neededCount" style="font-size: 2.1rem; font-weight: 900; display: block; margin: 1px 0;">0</strong>
-                    <span style="font-size: 0.7rem; font-weight: 700; color: #94a3b8;" id="subLabel">موظف سعودي مطلوب للالتزام</span>
+        <!-- Self Services -->
+        <div id="selfservicesPage" class="page">
+            <div class="card">
+                <div class="card-title" id="selfTitle">📝 الخدمات الذاتية</div>
+                <div class="services-grid" id="selfServicesGrid"></div>
+            </div>
+            <div id="requestFormContainer" style="display:none;">
+                <div class="card">
+                    <div class="card-title" id="formTitle"></div>
+                    <div id="requestForm"></div>
+                    <button class="btn btn-primary" onclick="submitRequest()" id="submitBtn">📤 إرسال</button>
+                    <button class="btn btn-danger" onclick="closeForm()" id="cancelBtn">إلغاء</button>
                 </div>
             </div>
         </div>
-        <div class="grid-2">
-            <div id="directHireCard" class="card direct-hire-card" style="display:none;">
-                <h3>💡 خيار التوظيف المباشر (صافي زيادة)</h3>
-                <div style="text-align: center; margin: auto; width: 100%;">
-                    <span style="font-size: 0.8rem; font-weight: 700; display: block; color: var(--green-main-text);">الموظفين السعوديين المطلوب تعيينهم فوراً (دون استغناء عن أجنبي):</span>
-                    <strong id="directHireCount" class="direct-hire-val" style="font-size: 2.4rem; font-weight: 900; display: block; margin: 4px 0;">0</strong>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--green-main-text);">موظف سعودي إضافي صافي للتطابق</span>
-                </div>
-            </div>
-            <div id="detailsArea" class="card details-card" style="display:none; background-color: var(--gray-medium);">
-                <h3>📌 الأجور والاشتراطات المهنية المعتمدة</h3>
-                <div id="salaryStack" style="width: 100%;"></div>
-                <div id="conditionInfo" class="condition-cell" style="margin-top: auto;"></div>
+
+        <!-- My Requests -->
+        <div id="myrequestsPage" class="page">
+            <div class="card">
+                <div class="card-title" id="requestsTitle">📋 طلباتي</div>
+                <div id="myRequestsList"></div>
             </div>
         </div>
-    </div>
 
-    <!-- ================= الخانة 2: حاسبة المخالصة ================= -->
-    <div id="settlementTab" class="tab-content">
-        <div class="grid-2">
-            <div class="card settings-card">
-                <h3>📝 بيانات عقد الموظف والمستحقات</h3>
-                <label>الراتب الأساسي (ريال):</label>
-                <input type="number" id="basicSalary" value="0" min="0">
-                <label>بدل السكن الفعلي (ريال):</label>
-                <input type="number" id="housingAllowance" value="0" min="0">
-                <label>البدلات الثابتة الأخرى (ريال):</label>
-                <input type="number" id="otherAllowances" value="0" min="0">
-                <label>مدة الخدمة الإجمالية (بالسنوات):</label>
-                <input type="number" id="serviceYears" value="0" min="0" step="0.01" placeholder="مثال: 3.5">
-                <label>سبب إنهاء العلاقة التعاقدية:</label>
-                <select id="terminationReason">
-                    <option value="employer_end">إنهاء من طرف صاحب العمل (المادة 74)</option>
-                    <option value="resignation_less_2">استقالة - الخدمة أقل من سنتين</option>
-                    <option value="resignation_2_5">استقالة - الخدمة من سنتين إلى 5 سنوات</option>
-                    <option value="resignation_5_10">استقالة - الخدمة من 5 سنوات إلى أقل من 10</option>
-                    <option value="resignation_10_more">استقالة - الخدمة 10 سنوات فأكثر</option>
-                    <option value="force_majeure">ترك العمل بقوة قاهرة (المادة 74/أو مادة 87 للمرأة)</option>
-                    <option value="article_80">فصل بموجب المادة 80 (سقوط مكافأة نهاية الخدمة)</option>
-                </select>
-                <label>أيام الإجازات المتبقية (الرصيد):</label>
-                <input type="number" id="vacationDays" value="0" min="0">
-                <button class="calc-btn" onclick="calculateSettlement()">🧮 احسب مستحقات المخالصة</button>
-            </div>
-
-            <div id="settlementResultCard" class="card result-card-style" style="display:none; flex-direction: column;">
-                <h3>📑 كشف مستحقات نهاية الخدمة التفصيلي</h3>
-                <div class="info-cell" style="border-right-color: #0284c7; background: #f0f9ff;">
-                    <span>💵 الأجر الفعلي الإجمالي (الخاضع للمكافأة):</span>
-                    <strong id="totalSalaryDisplay" style="display:block; font-size: 1.1rem; color: #0369a1;">0.00 ريال</strong>
-                </div>
-                <div class="info-cell" style="border-right-color: #16a34a;">
-                    <span>💰 مكافأة نهاية الخدمة المستحقة:</span>
-                    <strong id="esbDisplay" style="display:block; font-size: 1.1rem; color: #15803d;">0.00 ريال</strong>
-                </div>
-                <div class="info-cell" style="border-right-color: #eab308;">
-                    <span>📅 تعويض رصيد الإجازات:</span>
-                    <strong id="vacationCompensationDisplay" style="display:block; font-size: 1.1rem; color: #a16207;">0.00 ريال</strong>
-                </div>
-                <div class="display-box" style="background-color: var(--green-light-bg); border-color: #bbf7d0; margin-top: 10px; padding: 10px;">
-                    <span style="font-size: 0.85rem; color: var(--green-emblem-text); font-weight: 800; display:block;">صافي مبلغ المخالصة الإجمالي المستحق</span>
-                    <strong id="finalNetDisplay" style="color: var(--green-emblem-text); font-size: 2rem; font-weight: 900;">0.00 ريال</strong>
-                </div>
-                <div class="condition-cell" id="lawNote" style="margin-top: 10px; background-color: #f8fafc;">
-                    السند القانوني وطريقة الحسبة يظهر هنا فور الحساب.
-                </div>
+        <!-- My Team -->
+        <div id="myteamPage" class="page">
+            <div class="card">
+                <div class="card-title" id="teamTitle">👥 فريقي</div>
+                <div id="teamMembers"></div>
             </div>
         </div>
-    </div>
 
-    <!-- ================= الخانة 3: بيانات الموظفين والأرشيف ================= -->
-    <div id="employeesTab" class="tab-content">
-        <div class="grid-2">
-            <div class="card settings-card">
-                <h3>📝 إضافة / تحديث موظف</h3>
-                <label>اسم الموظف:</label>
-                <input type="text" id="empName" placeholder="مثال: أحمد محمد">
-                <label>الجنسية:</label>
-                <select id="empNationality">
-                    <option value="سعودي">سعودي</option>
-                    <option value="أجنبي">أجنبي</option>
-                </select>
-                <label>تاريخ بدء العمل:</label>
-                <input type="date" id="empStartDate">
-                <label>المسمى الوظيفي / القسم:</label>
-                <input type="text" id="empPosition" placeholder="مثال: محاسب عمالي">
-                <button class="calc-btn" onclick="addEmployee()">➕ حفظ في أرشيف الموظفين</button>
+        <!-- Employee Profile -->
+        <div id="employeeprofilePage" class="page">
+            <div class="card">
+                <div class="card-title" id="profileTitle">👤 ملف الموظف</div>
+                <div id="employeeProfileInfo"></div>
             </div>
-            
-            <div class="card result-card-style" style="flex: 1.5;">
-                <h3>👥 أرشيف سجلات الموظفين وفترات التجربة</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>الاسم</th>
-                                <th>الجنسية</th>
-                                <th>تاريخ البدء</th>
-                                <th>انتهاء فترة التجربة (90 يوم)</th>
-                                <th>الحالة التعاقدية</th>
-                            </tr>
-                        </thead>
-                        <tbody id="employeeTableBody">
-                            <!-- تعبئة البيانات برمجياً -->
-                        </tbody>
-                    </table>
+            <div class="card">
+                <div class="card-title" id="empRequestsTitle">📋 طلبات الموظف</div>
+                <div id="employeeRequestsList"></div>
+            </div>
+            <button class="btn btn-primary" onclick="showPage('myteam')" id="backBtn">🔙 العودة</button>
+        </div>
+
+        <!-- Benefits -->
+        <div id="benefitsPage" class="page">
+            <div class="card">
+                <div class="card-title" id="benefitsTitle">🎁 المزايا والبدلات</div>
+                <div id="benefitsInfo"></div>
+            </div>
+        </div>
+
+        <!-- Tools -->
+        <div id="toolsPage" class="page">
+            <div class="card">
+                <div class="card-title" id="toolsTitle">🛠️ الأدوات</div>
+                <div class="services-grid" id="toolsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Employees Management -->
+        <div id="employeesPage" class="page">
+            <div class="card">
+                <div class="card-title" id="addEmpTitle">➕ إضافة موظف جديد</div>
+                <div class="form-grid">
+                    <div><label id="nameLabel">الاسم</label><input type="text" id="newName" placeholder="الاسم كاملاً"></div>
+                    <div><label id="titleLabel">المسمى الوظيفي</label><input type="text" id="newTitle" placeholder="المسمى"></div>
+                    <div><label id="deptLabel">القسم</label><input type="text" id="newDept" placeholder="القسم"></div>
+                    <div><label id="salaryLabel">الراتب</label><input type="number" id="newSalary" value="5000"></div>
+                    <div><label id="dateLabel">تاريخ المباشرة</label><input type="date" id="newStartDate"></div>
+                    <div><label id="managerLabel">المدير المباشر</label><select id="newManagerId"><option value="">-- اختر المدير --</option></select></div>
+                </div>
+                <button class="btn btn-primary" onclick="addEmployee()" id="addEmpBtn">➕ إضافة موظف</button>
+            </div>
+            <div class="card">
+                <div class="card-title" id="empListTitle">📋 قائمة الموظفين</div>
+                <div id="employeesList"></div>
+            </div>
+        </div>
+
+        <!-- Performance Review -->
+        <div id="performancereviewPage" class="page">
+            <div class="card">
+                <div class="card-title" id="prTitle">📊 تقييم الأداء</div>
+                <div id="prStep1">
+                    <p id="prStep1Desc">اختر الموظفين الذين أكملوا 6 أشهر لإرسال تقييم لهم</p>
+                    <div id="prEmployeeList"></div>
+                    <button class="btn btn-primary" onclick="sendPerformanceReview()" id="prSendBtn">📤 إرسال تقييم للموظفين</button>
+                </div>
+                <div id="prStep2" style="display:none;">
+                    <p id="prStep2Desc">قيم نفسك على المقاييس التالية</p>
+                    <div id="prSelfEvalForm"></div>
+                    <button class="btn btn-success" onclick="submitSelfEvaluation()" id="prSubmitSelfBtn">📤 إرسال التقييم الذاتي</button>
+                </div>
+                <div id="prStep3" style="display:none;">
+                    <p id="prStep3Desc">مراجعة تقييم الموظفين</p>
+                    <div id="prManagerReviewList"></div>
+                </div>
+                <div id="prStep4" style="display:none;">
+                    <p id="prStep4Desc">التقييمات النهائية المعتمدة</p>
+                    <div id="prFinalList"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ================= الخانة 4: إدارة الإجازات ================= -->
-    <div id="leavesTab" class="tab-content">
-        <div class="grid-2">
-            <div class="card settings-card">
-                <h3>📝 تسجيل حركة إجازة</h3>
-                <label>اختر الموظف:</label>
-                <select id="leaveEmpSelect">
-                    <option value="">-- اختر الموظف --</option>
-                </select>
-                <label>نوع الإجازة:</label>
-                <select id="leaveType">
-                    <option value="annual">سنوية اعتيادية</option>
-                    <option value="sick">مرضية</option>
-                    <option value="emergency">اضطرارية</option>
-                </select>
-                <label>عدد الأيام المستهلكة في هذه الحركة:</label>
-                <input type="number" id="leaveDays" value="0" min="1">
-                <button class="calc-btn" onclick="deductLeave()">📉 تسجيل وخصم من الرصيد</button>
+    <!-- Edit Modal -->
+    <div id="editModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <h2 id="editModalTitle" style="text-align:center;margin-bottom:20px;">✏️ تعديل بيانات الموظف</h2>
+            <div class="form-grid">
+                <div class="form-group"><label id="editNameLabel">الاسم</label><input type="text" id="editName"></div>
+                <div class="form-group"><label id="editIdLabel">الرقم الوظيفي</label><input type="text" id="editId" readonly style="background:#f1f5f9;"></div>
+                <div class="form-group"><label id="editTitleLabel">المسمى الوظيفي</label><input type="text" id="editTitle"></div>
+                <div class="form-group"><label id="editDeptLabel">القسم</label><input type="text" id="editDept"></div>
+                <div class="form-group"><label id="editSalaryLabel">الراتب</label><input type="number" id="editSalary"></div>
+                <div class="form-group"><label id="editDateLabel">تاريخ المباشرة</label><input type="date" id="editStartDate"></div>
+                <div class="form-group"><label id="editManagerLabel">المدير المباشر</label><select id="editManagerId"></select></div>
+                <div class="form-group"><label id="editRoleLabel">الصلاحية</label><select id="editRole">
+                    <option value="موظف">موظف</option>
+                    <option value="مدير">مدير</option>
+                    <option value="hr">موارد بشرية</option>
+                </select></div>
             </div>
-
-            <div class="card result-card-style" style="flex: 1.5;">
-                <h3>📊 كشف أرصدة الإجازات السنوية للموظفين (مستحق/متبقي)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم الموظف</th>
-                                <th>الرصيد السنوي المستحق</th>
-                                <th>المستهلك حتى الآن</th>
-                                <th>الرصيد المتبقي الفعلي</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaveTableBody">
-                            <!-- تعبئة البيانات برمجياً -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="edit-actions">
+                <button class="btn btn-success" onclick="saveEmployeeEdit()" id="editSaveBtn">💾 حفظ التعديلات</button>
+                <button class="btn btn-danger" onclick="closeEditModal()" id="editCancelBtn">❌ إلغاء</button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- عناصر الدعم والتواصل العائمة -->
-<div class="contact-trigger" onclick="toggleContactPopup()">📞</div>
-<div class="contact-popup" id="contactPopup">
-    <h4>📞 للتواصل والدعم الفني</h4>
-    <a href="https://wa.me/966532219777" target="_blank" class="contact-link">
-        <div class="contact-row" style="border-right-color: #25d366;">
-            <span style="color: var(--contact-icon-green); font-weight: 800;">📞 WhatsApp:</span>
-            <span>0532219777</span>
-        </div>
-    </a>
-    <a href="https://www.linkedin.com/in/majed-alharbi-shrm-cp-2651071b6" target="_blank" class="contact-link">
-        <div class="contact-row" style="border-right-color: #0077b5;">
-            <span style="color: #0077b5; font-weight: 800;">🌐 LinkedIn:</span>
-            <span>majed-alharbi-shrm-cp-2651071b6</span>
-        </div>
-    </a>
-</div>
-<script>
-    // 1. بنك البيانات المعياري للمهن والتوطين المستهدف لعام 2026 والسنوات القادمة
-    const dataBank = {
-        "accounting": {
-            rates: { "2026": 0.30, "default": 0.30 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 6,000 ريال (حسب قرارات الوزارة الحالية)"],
-            note: "يُشترط الحصول على الاعتماد المهني من الهيئة السعودية للمراجعين والمحاسبين (SOCPA) للاحتساب في التوطين."
-        },
-        "engineering": {
-            rates: { "2026": 0.25, "default": 0.25 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 7,000 ريال"],
-            note: "يُشترط التسجيل المهني لدى الهيئة السعودية للمهندسين (SCE)، ولا يُحتسب خريج الهندسة دون عضوية سارية."
-        },
-        "tech_eng": {
-            rates: { "2026": 0.25, "default": 0.25 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 5,000 ريال"],
-            note: "يشمل المهن الفنية الهندسية الداعمة بشرط التسجيل في الهيئة السعودية للمهندسين."
-        },
-        "it_pro": {
-            rates: { "2026": 0.25, "default": 0.25 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 7,000 ريال للمبرمجين ومطوري النظم"],
-            note: "يشمل وظائف تكنولوجيا المعلومات المتقدمة وتطوير البرمجيات."
-        },
-        "it_support": {
-            rates: { "2026": 0.25, "default": 0.25 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 5,000 ريال للدعم الفني والشبكات"],
-            note: "يشمل وظائف التشغيل والصيانة والشبكات الداعمة."
-        },
-        "marketing": {
-            rates: { "2026": 0.30, "default": 0.30 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 5,500 ريال"],
-            note: "يستهدف المهن التسويقية والدعاية والإعلان في المنشآت التي يعمل بها 5 عاملين فأكثر في التسويق."
-        },
-        "sales": {
-            rates: { "2026": 0.15, "default": 0.15 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 5,000 ريال"],
-            note: "يغطي مهن مبيعات التجزئة والجملة والمندوبين وفق ضوابط الوزارة."
-        },
-        "procurement": {
-            rates: { "2026": 0.50, "default": 0.50 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 6,000 ريال"],
-            note: "يشمل مهن اختصاصي المشتريات وموظفي إدارة سلاسل الإمداد."
-        },
-        "legal": {
-            rates: { "2026": 0.50, "default": 0.50 },
-            salaries: ["الحد الأدنى ل احتساب التوطين: 5,500 ريال لحملة البكالوريوس"],
-            note: "يستهدف المستشارين القانونيين ومستشاري العقود في الشركات."
-        }
-    };
+    <script>
+        // ========== بيانات الموظفين ==========
+        let employees = [
+            { id: "10001", name: "المدير العام", pass: "10001", role: "مدير", title: "مدير عام", salary: 20000, dept: "الإدارة",
+                leaveBalance: 30, managerId: null, startDate: "2020-01-01" },
+            { id: "10002", name: "ماجد الحربي", pass: "10002", role: "hr", title: "مدير الموارد البشرية", salary: 15000,
+                dept: "الموارد البشرية", leaveBalance: 30, managerId: "10001", startDate: "2020-02-01" },
+            { id: "10003", name: "وليد الحربي", pass: "10003", role: "موظف", title: "محاسب", salary: 8000, dept: "المالية",
+                leaveBalance: 30, managerId: "10001", startDate: "2021-01-21" },
+            { id: "10004", name: "بجاد الحربي", pass: "10004", role: "موظف", title: "مبرمج", salary: 9000, dept: "تقنية المعلومات",
+                leaveBalance: 30, managerId: "10001", startDate: "2021-01-22" },
+            { id: "10005", name: "محمد الحربي", pass: "10005", role: "موظف", title: "مسوق", salary: 7000, dept: "التسويق",
+                leaveBalance: 30, managerId: "10001", startDate: "2021-01-20" },
+            { id: "10006", name: "خالد العرجاني", pass: "10006", role: "موظف", title: "مندوب مبيعات", salary: 6500,
+                dept: "المبيعات", leaveBalance: 30, managerId: "10001", startDate: "2021-01-23" }
+        ];
 
-    // 2. إدارة قاعدة البيانات المحلية للأرشيف (مصفوفات تخزين افتراضية)
-    let employeeArchive = [];
+        let leaveRequests = JSON.parse(localStorage.getItem('hr_leaveRequests')) || [];
+        let performanceReviews = JSON.parse(localStorage.getItem('hr_performanceReviews')) || [];
+        let currentUser = null;
+        let selectedEmployeeId = null;
+        let editingEmployeeId = null;
+        let currentLang = 'ar';
 
-    // نظام التنقل الفوري بين التبويبات الـ 4
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        btn.classList.add('active');
-    }
-
-    // ================= جافاسكريبت: حاسبة التوطين الذكية (دمج النسختين) =================
-    function runSaudization() {
-        const jobKey = document.getElementById("jobSelect").value;
-        const year = document.getElementById("yearSelect").value;
-        const expats = parseInt(document.getElementById("expats").value) || 0;
-        const saudisCurrent = parseInt(document.getElementById("saudis").value) || 0;
-
-        if (!jobKey) {
-            document.getElementById("mainResultCard").style.display = "none";
-            document.getElementById("directHireCard").style.display = "none";
-            document.getElementById("detailsArea").style.display = "none";
-            return;
-        }
-
-        const job = dataBank[jobKey];
-        const targetRate = job.rates[year] || job.rates["default"];
-        const totalEmployees = expats + saudisCurrent;
-        
-        // النسخة الأولى: حساب الاحتياج بالاستبدال (العدد المطلوب الكلاسيكي)
-        const rawTargetAmount = totalEmployees * targetRate;
-        const rawDifference = rawTargetAmount - saudisCurrent;
-        let finalReplacement = 0;
-
-        if (rawDifference > 0) {
-            const integerPart = Math.floor(rawDifference);
-            const decimalPart = Number((rawDifference - integerPart).toFixed(4));
-            // تطبيق قاعدة الجبر المعتمدة (0.50 وأعلى يُجبر لأعلى)
-            finalReplacement = (decimalPart >= 0.50) ? Math.ceil(rawDifference) : integerPart;
-        }
-
-        let isCompliant = (finalReplacement <= 0);
-
-        // النسخة الثانية: حساب التوظيف المباشر (دون استغناء عن عمالة وافدة)
-        let finalDirectHire = 0;
-        if (!isCompliant && expats > 0) {
-            const ratePerExpat = targetRate / (1 - targetRate);
-            const totalSaudisNeededDirect = ratePerExpat * expats;
-            const rawDirectDifference = totalSaudisNeededDirect - saudisCurrent;
-
-            if (rawDirectDifference > 0) {
-                const intDirect = Math.floor(rawDirectDifference);
-                const decDirect = Number((rawDirectDifference - intDirect).toFixed(4));
-                finalDirectHire = (decDirect >= 0.50) ? Math.ceil(rawDirectDifference) : intDirect;
-            }
-        }
-
-        // تحديث واجهات العرض والنسب
-        const currentRate = totalEmployees > 0 ? (saudisCurrent / totalEmployees) : 0;
-        document.getElementById("targetDisplay").innerText = (targetRate * 100) + "%";
-        document.getElementById("currentDisplay").innerText = (currentRate * 100).toFixed(0) + "%";
-
-        // إظهار البطاقات والنتائج المدمجة
-        document.getElementById("mainResultCard").style.display = "flex";
-        document.getElementById("detailsArea").style.display = "flex";
-        document.getElementById("rawNeededCount").innerText = rawDifference.toFixed(2);
-
-        const emblem = document.getElementById("statusEmblem");
-        const mainResultCard = document.getElementById("mainResultCard");
-        const currentBox = document.getElementById("currentBox");
-        const currentLabel = document.getElementById("currentLabel");
-        const currentDisplay = document.getElementById("currentDisplay");
-        const directHireCard = document.getElementById("directHireCard");
-
-        if (isCompliant) {
-            emblem.innerHTML = '<div style="font-size:1.8rem; font-weight:bold;">✓</div><div style="font-size:0.85rem; font-weight:bold;">منشأة ملتزمة</div>';
-            emblem.className = "status-emblem-box ok";
-            mainResultCard.style.backgroundColor = "var(--green-light-bg)";
-            mainResultCard.style.borderColor = "#bbf7d0";
-            currentBox.style.backgroundColor = "var(--blue-light-bg)";
-            currentBox.style.borderColor = "#bae6fd";
-            currentLabel.style.color = "var(--blue-main-text)";
-            currentDisplay.style.color = "var(--blue-main-text)";
-
-            document.getElementById("neededCount").innerText = "0";
-            document.getElementById("neededCount").style.color = "var(--green-main-text)";
-            document.getElementById("actionLabel").innerText = "الاحتياج الحالي بالتوظيف:";
-            document.getElementById("subLabel").innerText = "المنشأة ملتزمة تماماً ومحققة للنسبة النظامية المستهدفة.";
-            directHireCard.style.display = "none";
-        } else {
-            emblem.innerHTML = '<div style="font-size:1.8rem; font-weight:bold;">✕</div><div style="font-size:0.85rem; font-weight:bold;">غير ملتزم</div>';
-            emblem.className = "status-emblem-box no";
-            mainResultCard.style.backgroundColor = "var(--red-light-bg)";
-            mainResultCard.style.borderColor = "#fecdd3";
-            currentBox.style.backgroundColor = "var(--red-light-bg)";
-            currentBox.style.borderColor = "#fecdd3";
-            currentLabel.style.color = "var(--red-main-text)";
-            currentDisplay.style.color = "var(--red-main-text)";
-
-            document.getElementById("neededCount").innerText = finalReplacement;
-            document.getElementById("neededCount").style.color = "#dc2626";
-            document.getElementById("actionLabel").innerText = "الاحتياج بالتوظيف (الاستبدال):";
-            document.getElementById("subLabel").innerText = "موظف سعودي مطلوب تعيينه كبديل لوافد للالتزام بالعدد الحالي.";
-            
-            // تفعيل بطاقة النسخة الثانية للتوظيف المباشر تلقائياً هنا
-            directHireCard.style.display = "flex";
-            document.getElementById("directHireCount").innerText = finalDirectHire;
-        }
-
-        document.getElementById("salaryStack").innerHTML = job.salaries.map(s => `<div class="info-cell">${s}</div>`).join('');
-        document.getElementById("conditionInfo").innerText = job.note;
-    }
-
-    // ================= جافاسكريبت: حاسبة المخالصة ونهاية الخدمة =================
-    function calculateSettlement() {
-        const basic = parseFloat(document.getElementById("basicSalary").value) || 0;
-        const housing = parseFloat(document.getElementById("housingAllowance").value) || 0;
-        const other = parseFloat(document.getElementById("otherAllowances").value) || 0;
-        const years = parseFloat(document.getElementById("serviceYears").value) || 0;
-        const reason = document.getElementById("terminationReason").value;
-        const vacDays = parseFloat(document.getElementById("vacationDays").value) || 0;
-
-        const totalSalary = basic + housing + other;
-        document.getElementById("totalSalaryDisplay").innerText = totalSalary.toFixed(2) + " ريال";
-
-        let rawEsb = 0;
-        if (years <= 5) {
-            rawEsb = years * (totalSalary / 2);
-        } else {
-            rawEsb = (5 * (totalSalary / 2)) + ((years - 5) * totalSalary);
-        }
-
-        let esbResult = 0;
-        let noteText = "";
-
-        if (reason === "employer_end") {
-            esbResult = rawEsb;
-            noteText = "✓ يستحق المكافأة كاملة بموجب المادة (84) لإنهاء العقد من طرف صاحب العمل أو بالتراضي.";
-        } else if (reason === "resignation_less_2") {
-            esbResult = 0;
-            noteText = "⚠️ لا يستحق مكافأة نهاية خدمة لأن مدة الخدمة في الاستقالة أقل من سنتين متتاليتين (المادة 85).";
-        } else if (reason === "resignation_2_5") {
-            esbResult = rawEsb * (1 / 3);
-            noteText = "✓ يستحق ثلث المكافأة بموجب المادة (85) بسبب الاستقالة والخدمة تتراوح بين سنتين إلى 5 سنوات.";
-        } else if (reason === "resignation_5_10") {
-            esbResult = rawEsb * (2 / 3);
-            noteText = "✓ يستحق ثلثي المكافأة بموجب المادة (85) بسبب الاستقالة والخدمة تتراوح بين 5 سنوات إلى أقل من 10 سنوات.";
-        } else if (reason === "resignation_10_more") {
-            esbResult = rawEsb;
-            noteText = "✓ يستحق المكافأة كاملة بموجب المادة (85) لأن مدة الخدمة بالاستقالة بلغت 10 سنوات فأكثر.";
-        } else if (reason === "force_majeure") {
-            esbResult = rawEsb;
-            noteText = "✓ يستحق المكافأة كاملة بموجب المادة (87) لترك العمل نتيجة قوة قاهرة (أو استقالة المرأة خلال 6 أشهر من الزواج/3 أشهر من الوضع).";
-        } else if (reason === "article_80") {
-            esbResult = 0;
-            noteText = "❌ تسقط المكافأة بالكامل لفسخ العقد بموجب حالات المادة (80) من نظام العمل السعودي.";
-        }
-
-        document.getElementById("esbDisplay").innerText = esbResult.toFixed(2) + " ريال";
-
-        const dayRate = totalSalary / 30;
-        const vacationCompensation = vacDays * dayRate;
-        document.getElementById("vacationCompensationDisplay").innerText = vacationCompensation.toFixed(2) + " ريال";
-
-        const finalNet = esbResult + vacationCompensation;
-        document.getElementById("finalNetDisplay").innerText = finalNet.toFixed(2) + " ريال";
-
-        document.getElementById("settlementResultCard").style.display = "flex";
-        document.getElementById("lawNote").innerText = noteText;
-    }
-
-    // ================= جافاسكريبت: إدارة الموظفين والإجازات التفاعلية =================
-    function addEmployee() {
-        const name = document.getElementById("empName").value.trim();
-        const nationality = document.getElementById("empNationality").value;
-        const startDateText = document.getElementById("empStartDate").value;
-        const position = document.getElementById("empPosition").value.trim();
-
-        if (!name || !startDateText) {
-            alert("فضلاً، املأ اسم الموظف وتاريخ بدء العمل بشكل صحيح.");
-            return;
-        }
-
-        // حساب تاريخ انتهاء فترة التجربة تلقائياً (تاريخ البدء + 90 يوم)
-        const startDate = new Date(startDateText);
-        const probationEndDate = new Date(startDate);
-        probationEndDate.setDate(startDate.getDate() + 90);
-        
-        const formattedProbationDate = probationEndDate.toISOString().split('T')[0];
-
-        // تحديد الحالة (تحت التجربة أم موظف رسمي حالياً)
-        const today = new Date();
-        const status = (today < probationEndDate) ? "تحت التجربة" : "رسمي / نشط";
-        const badgeClass = (today < probationEndDate) ? "badge-probation" : "badge-active";
-
-        const employee = {
-            id: Date.now(),
-            name: name,
-            nationality: nationality,
-            startDate: startDateText,
-            probationEnd: formattedProbationDate,
-            position: position,
-            status: status,
-            badgeClass: badgeClass,
-            allowedLeave: 30, // رصيد الإجازة السنوية الافتراضي النظامي
-            usedLeave: 0
+        // ========== الخدمات ==========
+        const servicesData = {
+            ar: [
+                { id: "leave", name: "📅 طلب إجازة", desc: "تقديم طلب إجازة سنوية أو مرضية", fields: ["نوع الإجازة", "من تاريخ",
+                        "إلى تاريخ", "السبب"
+                    ] },
+                { id: "ticket", name: "🎫 طلب تذكرة سفر", desc: "طلب تذكرة سفر", fields: ["نوع التذكرة", "تاريخ السفر",
+                        "الوجهة", "ملاحظات"
+                    ] },
+                { id: "salarycert", name: "💰 شهادة راتب", desc: "طلب شهادة راتب معتمدة", fields: ["جهة الطلب", "الغرض"] },
+                { id: "bankaccount", name: "🏦 تغيير الحساب البنكي", desc: "تحديث رقم الحساب البنكي", fields: ["رقم الحساب الجديد",
+                        "اسم البنك"
+                    ] },
+                { id: "exitreentry", name: "✈️ تأشيرة خروج وعودة", desc: "طلب تأشيرة خروج وعودة", fields: ["تاريخ المغادرة",
+                        "تاريخ العودة", "الوجهة"
+                    ] },
+                { id: "education", name: "📚 طلب دراسة", desc: "طلب إجازة دراسة أو دورة", fields: ["اسم الدورة", "تاريخ البدء",
+                        "تاريخ النهاية"
+                    ] },
+                { id: "businesscard", name: "💳 بطاقة أعمال", desc: "طلب طباعة بطاقة أعمال", fields: ["المسمى الوظيفي",
+                        "رقم الجوال"
+                    ] },
+                { id: "medicalcancel", name: "🩺 إلغاء تأمين طبي", desc: "طلب إلغاء التأمين الطبي", fields: ["سبب الإلغاء",
+                        "تاريخ الإلغاء"
+                    ] }
+            ],
+            en: [
+                { id: "leave", name: "📅 Leave Request", desc: "Submit annual or sick leave", fields: ["Leave Type",
+                        "From Date", "To Date", "Reason"
+                    ] },
+                { id: "ticket", name: "🎫 Travel Ticket", desc: "Request travel ticket", fields: ["Ticket Type",
+                        "Travel Date", "Destination", "Notes"
+                    ] },
+                { id: "salarycert", name: "💰 Salary Certificate", desc: "Request salary certificate",
+                fields: ["Requesting Authority", "Purpose"] },
+                { id: "bankaccount", name: "🏦 Change Bank Account", desc: "Update bank account", fields: [
+                        "New Account Number", "Bank Name"
+                    ] },
+                { id: "exitreentry", name: "✈️ Exit-Reentry Visa", desc: "Request exit-reentry visa", fields: [
+                        "Departure Date", "Return Date", "Destination"
+                    ] },
+                { id: "education", name: "📚 Study Request", desc: "Request study leave", fields: ["Course Name",
+                        "Start Date", "End Date"
+                    ] },
+                { id: "businesscard", name: "💳 Business Card", desc: "Request business card", fields: ["Job Title",
+                        "Mobile Number"
+                    ] },
+                { id: "medicalcancel", name: "🩺 Cancel Medical Insurance", desc: "Cancel medical insurance",
+                fields: ["Cancellation Reason", "Cancellation Date"] }
+            ]
         };
 
-        employeeArchive.push(employee);
-        renderData();
+        const tools = {
+            ar: [{ name: "📊 تقارير الرواتب", desc: "عرض تقارير الرواتب" }, { name: "📈 تحليلات الأداء",
+                desc: "تحليلات أداء الموظفين" }],
+            en: [{ name: "📊 Payroll Reports", desc: "View salary reports" }, { name: "📈 Performance Analytics",
+                desc: "Performance analytics" }]
+        };
 
-        // تصفير الخانات بعد الحفظ بنجاح
-        document.getElementById("empName").value = "";
-        document.getElementById("empStartDate").value = "";
-        document.getElementById("empPosition").value = "";
-    }
+        const evaluationCriteria = {
+            ar: [
+                { id: 'achievements', name: 'إنجازات العمل' },
+                { id: 'skills', name: 'المهارات الفنية' },
+                { id: 'teamwork', name: 'التعاون والعمل الجماعي' },
+                { id: 'discipline', name: 'الالتزام والانضباط' },
+                { id: 'development', name: 'التطوير المهني' }
+            ],
+            en: [
+                { id: 'achievements', name: 'Work Achievements' },
+                { id: 'skills', name: 'Technical Skills' },
+                { id: 'teamwork', name: 'Teamwork & Collaboration' },
+                { id: 'discipline', name: 'Discipline & Commitment' },
+                { id: 'development', name: 'Professional Development' }
+            ]
+        };
 
-    function deductLeave() {
-        const empId = document.getElementById("leaveEmpSelect").value;
-        const days = parseInt(document.getElementById("leaveDays").value) || 0;
-
-        if (!empId) {
-            alert("الرجاء اختيار موظف من القائمة أولاً.");
-            return;
+        // ========== دوال الترجمة ==========
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.body.classList.toggle('en', currentLang === 'en');
+            document.querySelector('.lang-toggle').innerHTML = currentLang === 'ar' ? '🇬🇧 English' : '🇸🇦 عربي';
+            updateTexts();
+            if (currentUser) {
+                renderSelfServices();
+                renderTools();
+                renderAll();
+                renderPerformanceReview();
+            }
         }
-        if (days <= 0) {
-            alert("الرجاء إدخال عدد أيام إجازة صحيح.");
-            return;
+
+        function updateTexts() {
+            document.getElementById('loginTitle').innerHTML = currentLang === 'ar' ? '🏢 نظام الموارد البشرية' : '🏢 HR Portal';
+            document.getElementById('loginSubtitle').innerHTML = currentLang === 'ar' ? 'تسجيل الدخول باستخدام الرقم الوظيفي' :
+                'Login with Employee ID';
+            document.getElementById('loginBtn').innerHTML = currentLang === 'ar' ? '🚪 دخول' : '🚪 Login';
+            document.getElementById('appTitle').innerHTML = currentLang === 'ar' ? '🏢 نظام إدارة الموارد البشرية' :
+                '🏢 HR Management';
+            document.getElementById('logoutBtn').innerHTML = currentLang === 'ar' ? '🚪 خروج' : '🚪 Logout';
+            document.getElementById('dashboardTitle').innerHTML = currentLang === 'ar' ? '📊 لوحة التحكم' : '📊 Dashboard';
+            document.getElementById('recentTitle').innerHTML = currentLang === 'ar' ? '📋 آخر طلباتي' : '📋 Recent Requests';
+            document.getElementById('selfTitle').innerHTML = currentLang === 'ar' ? '📝 الخدمات الذاتية' : '📝 Self Services';
+            document.getElementById('requestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلباتي' : '📋 My Requests';
+            document.getElementById('teamTitle').innerHTML = currentLang === 'ar' ? '👥 فريقي' : '👥 My Team';
+            document.getElementById('profileTitle').innerHTML = currentLang === 'ar' ? '👤 ملف الموظف' : '👤 Profile';
+            document.getElementById('empRequestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلبات الموظف' :
+                '📋 Employee Requests';
+            document.getElementById('benefitsTitle').innerHTML = currentLang === 'ar' ? '🎁 المزايا' : '🎁 Benefits';
+            document.getElementById('toolsTitle').innerHTML = currentLang === 'ar' ? '🛠️ الأدوات' : '🛠️ Tools';
+            document.getElementById('addEmpTitle').innerHTML = currentLang === 'ar' ? '➕ إضافة موظف' : '➕ Add Employee';
+            document.getElementById('empListTitle').innerHTML = currentLang === 'ar' ? '📋 قائمة الموظفين' : '📋 Employees';
+            document.getElementById('backBtn').innerHTML = currentLang === 'ar' ? '🔙 العودة' : '🔙 Back';
+            document.getElementById('submitBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال' : '📤 Submit';
+            document.getElementById('cancelBtn').innerHTML = currentLang === 'ar' ? 'إلغاء' : 'Cancel';
+            document.getElementById('addEmpBtn').innerHTML = currentLang === 'ar' ? '➕ إضافة' : '➕ Add';
+            document.getElementById('nameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
+            document.getElementById('titleLabel').innerHTML = currentLang === 'ar' ? 'المسمى' : 'Title';
+            document.getElementById('deptLabel').innerHTML = currentLang === 'ar' ? 'القسم' : 'Dept';
+            document.getElementById('salaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
+            document.getElementById('dateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
+            document.getElementById('managerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Manager';
+            // Performance Review
+            document.getElementById('prTitle').innerHTML = currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance Review';
+            document.getElementById('prStep1Desc').innerHTML = currentLang === 'ar' ?
+                'اختر الموظفين الذين أكملوا 6 أشهر لإرسال تقييم لهم' :
+                'Select employees who completed 6 months to send evaluation';
+            document.getElementById('prStep2Desc').innerHTML = currentLang === 'ar' ? 'قيم نفسك على المقاييس التالية' :
+                'Rate yourself on the following criteria';
+            document.getElementById('prStep3Desc').innerHTML = currentLang === 'ar' ? 'مراجعة تقييم الموظفين' :
+                'Review employee evaluations';
+            document.getElementById('prStep4Desc').innerHTML = currentLang === 'ar' ? 'التقييمات النهائية المعتمدة' :
+                'Final approved evaluations';
+            document.getElementById('prSendBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال تقييم للموظفين' :
+                '📤 Send Evaluation to Employees';
+            document.getElementById('prSubmitSelfBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال التقييم الذاتي' :
+                '📤 Submit Self Evaluation';
+            // Edit Modal
+            document.getElementById('editModalTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل بيانات الموظف' :
+                '✏️ Edit Employee Data';
+            document.getElementById('editNameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
+            document.getElementById('editIdLabel').innerHTML = currentLang === 'ar' ? 'الرقم الوظيفي' : 'Employee ID';
+            document.getElementById('editTitleLabel').innerHTML = currentLang === 'ar' ? 'المسمى الوظيفي' : 'Job Title';
+            document.getElementById('editDeptLabel').innerHTML = currentLang === 'ar' ? 'القسم' : 'Department';
+            document.getElementById('editSalaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
+            document.getElementById('editDateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
+            document.getElementById('editManagerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' :
+                'Direct Manager';
+            document.getElementById('editRoleLabel').innerHTML = currentLang === 'ar' ? 'الصلاحية' : 'Role';
+            document.getElementById('editSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' :
+                '💾 Save Changes';
+            document.getElementById('editCancelBtn').innerHTML = currentLang === 'ar' ? '❌ إلغاء' : '❌ Cancel';
         }
 
-        const employee = employeeArchive.find(e => e.id == empId);
-        if (employee) {
-            if ((employee.usedLeave + days) > employee.allowedLeave) {
-                alert(`رصيد الموظف لا يسمح! الرصيد المتبقي الحالي له هو: ${employee.allowedLeave - employee.usedLeave} يوم فقط.`);
+        function getNextId() {
+            let max = 10006;
+            employees.forEach(e => {
+                if (parseInt(e.id) > max) max = parseInt(e.id);
+            });
+            return (max + 1).toString();
+        }
+
+        function isEligibleForReview(startDate) {
+            let start = new Date(startDate);
+            let now = new Date();
+            let diffMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+            return diffMonths >= 6;
+        }
+
+        // ========== تسجيل الدخول ==========
+        function doLogin() {
+            let id = document.getElementById('loginId').value.trim();
+            let pass = document.getElementById('loginPass').value.trim();
+            let user = employees.find(e => e.id === id && e.pass === pass);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('hr_currentUser', JSON.stringify(currentUser));
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('userName').innerText = currentUser.name;
+                let roleText = currentUser.role === 'مدير' ? (currentLang === 'ar' ? '👑 مدير عام' : '👑 CEO') : (currentUser
+                    .role === 'hr' ? (currentLang === 'ar' ? '📋 HR' : '📋 HR') : (currentLang === 'ar' ? '👤 موظف' :
+                    '👤 Employee'));
+                document.getElementById('userRole').innerHTML = roleText;
+                buildNav();
+                renderAll();
+                renderPerformanceReview();
+                showPage('dashboard');
+            } else {
+                document.getElementById('loginError').innerHTML = currentLang === 'ar' ?
+                    '❌ الرقم الوظيفي أو الرقم السري غير صحيح' :
+                    '❌ Invalid ID or Password';
+            }
+        }
+
+        function doLogout() {
+            currentUser = null;
+            localStorage.removeItem('hr_currentUser');
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function buildNav() {
+            let nav = document.getElementById('navMenu');
+            let items = [
+                { id: 'dashboard', name: currentLang === 'ar' ? '🏠 الرئيسية' : '🏠 Dashboard' },
+                { id: 'selfservices', name: currentLang === 'ar' ? '✨ الخدمات الذاتية' : '✨ Self Services' },
+                { id: 'myrequests', name: currentLang === 'ar' ? '📋 طلباتي' : '📋 My Requests' }
+            ];
+            if (currentUser.role === 'مدير' || currentUser.role === 'hr') {
+                items.push({ id: 'myteam', name: currentLang === 'ar' ? '👥 فريقي' : '👥 My Team' });
+                items.push({ id: 'benefits', name: currentLang === 'ar' ? '🎁 المزايا' : '🎁 Benefits' });
+                items.push({ id: 'tools', name: currentLang === 'ar' ? '🛠️ الأدوات' : '🛠️ Tools' });
+            }
+            if (currentUser.role === 'hr') {
+                items.push({ id: 'employees', name: currentLang === 'ar' ? '👥 إدارة الموظفين' : '👥 Employees' });
+                items.push({ id: 'performancereview', name: currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance' });
+            }
+            nav.innerHTML = items.map(i => `<button class="nav-btn" onclick="showPage('${i.id}')">${i.name}</button>`).join('');
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId + 'Page').classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+            renderAll();
+            if (pageId === 'performancereview') renderPerformanceReview();
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderSelfServices();
+            renderMyRequests();
+            renderTeam();
+            renderBenefits();
+            renderTools();
+            renderEmployeesList();
+            updateManagerSelect();
+            if (selectedEmployeeId) renderEmployeeProfile();
+        }
+
+        // ========== Dashboard ==========
+        function renderDashboard() {
+            let myRequests = leaveRequests.filter(r => r.employeeId === currentUser.id).length;
+            let pendingReviews = performanceReviews.filter(r => r.status === 'pending_manager' || r.status === 'pending_hr')
+                .length;
+            document.getElementById('dashboardStats').innerHTML =
+                `<div class="services-grid"><div class="service-card"><h4>👥 ${currentLang === 'ar' ? 'إجمالي الموظفين' : 'Total Employees'}</h4><p style="font-size:2rem;">${employees.length}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'طلباتي' : 'My Requests'}</h4><p style="font-size:2rem;">${myRequests}</p></div><div class="service-card"><h4>📊 ${currentLang === 'ar' ? 'تقييمات معلقة' : 'Pending Reviews'}</h4><p style="font-size:2rem;">${pendingReviews}</p></div></div>`;
+            let recent = leaveRequests.filter(r => r.employeeId === currentUser.id).slice(-5).reverse();
+            let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
+                    'Pending Manager') :
+                (s === 'pending_hr' ? (currentLang === 'ar' ? 'قيد مراجعة HR' : 'Pending HR') : (s === 'approved' ? (
+                    currentLang === 'ar' ? 'معتمد' : 'Approved') : (currentLang === 'ar' ? 'مرفوض' : 'Rejected')));
+            let badgeClass = (s) => s === 'pending_manager' ? 'badge-pending' : (s === 'pending_hr' ? 'badge-hr' : (s ===
+                'approved' ? 'badge-approved' : 'badge-rejected'));
+            document.getElementById('recentRequests').innerHTML = recent.length ? recent.map(r =>
+                    `<div class="request-card"><strong>${r.type}</strong> - ${r.start} إلى ${r.end}<br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
+                ).join('') :
+                `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
+        }
+
+        // ========== Self Services ==========
+        let currentRequestType = null;
+
+        function renderSelfServices() {
+            let services = currentLang === 'ar' ? servicesData.ar : servicesData.en;
+            document.getElementById('selfServicesGrid').innerHTML = services.map(s =>
+                `<div class="service-card" onclick="openRequestForm('${s.id}', '${s.name}', ${JSON.stringify(s.fields).replace(/"/g, '&quot;')})"><h4>${s.name}</h4><p>${s.desc}</p></div>`
+                ).join('');
+        }
+
+        function openRequestForm(id, name, fields) {
+            if (currentUser.role !== 'موظف') {
+                alert(currentLang === 'ar' ? '❌ فقط الموظفين يمكنهم رفع طلبات' : '❌ Only employees can submit');
                 return;
             }
-            employee.usedLeave += days;
-            renderData();
-            document.getElementById("leaveDays").value = "0";
-        }
-    }
-
-    // إعادة بناء وتحديث الجداول والقوائم المنسدلة في الواجهة
-    function renderData() {
-        const empTableBody = document.getElementById("employeeTableBody");
-        const leaveTableBody = document.getElementById("leaveTableBody");
-        const leaveEmpSelect = document.getElementById("leaveEmpSelect");
-
-        empTableBody.innerHTML = "";
-        leaveTableBody.innerHTML = "";
-        
-        // الاحتفاظ بالخيار الافتراضي للقائمة المنسدلة
-        leaveEmpSelect.innerHTML = '<option value="">-- اختر الموظف --</option>';
-
-        if (employeeArchive.length === 0) {
-            empTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8;">لا يوجد موظفين مسجلين حالياً بالأرشيف</td></tr>';
-            leaveTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">لا يوجد بيانات إجازات لاستعراضها</td></tr>';
-            return;
+            currentRequestType = { id, name, fields };
+            document.getElementById('formTitle').innerText = name;
+            let html = '<div class="form-grid">';
+            fields.forEach(f => {
+                html +=
+                    `<div class="form-group"><label>${f}</label><input type="text" id="field_${f.replace(/ /g, '_')}"></div>`;
+            });
+            html += '</div>';
+            document.getElementById('requestForm').innerHTML = html;
+            document.getElementById('requestFormContainer').style.display = 'block';
         }
 
-        employeeArchive.forEach(emp => {
-            // 1. تحديث جدول الأرشيف وفترة التجربة
-            const empRow = `<tr>
-                <td>${emp.name}</td>
-                <td>${emp.nationality}</td>
-                <td>${emp.startDate}</td>
-                <td>${emp.probationEnd}</td>
-                <td><span class="status-badge ${emp.badgeClass}">${emp.status}</span></td>
-            </tr>`;
-            empTableBody.innerHTML += empRow;
-
-            // 2. تحديث جدول أرصدة الإجازات
-            const remainingLeave = emp.allowedLeave - emp.usedLeave;
-            const leaveRow = `<tr>
-                <td><strong>${emp.name}</strong></td>
-                <td>${emp.allowedLeave} يوم</td>
-                <td style="color:#dc2626;">${emp.usedLeave} يوم</td>
-                <td style="color:var(--green-main-text); font-weight:800;">${remainingLeave} يوم</td>
-            </tr>`;
-            leaveTableBody.innerHTML += leaveRow;
-
-            // 3. تحديث قائمة اختيار الموظف في إدارة الإجازات
-            const option = document.createElement("option");
-            option.value = emp.id;
-            option.text = emp.name;
-            leaveEmpSelect.appendChild(option);
-        });
-    }
-
-    // إدارة عناصر الدعم الفني العائمة
-    function toggleContactPopup() {
-        const popup = document.getElementById("contactPopup");
-        popup.style.display = (popup.style.display === "flex") ? "none" : "flex";
-    }
-
-    window.onclick = function(event) {
-        const popup = document.getElementById("contactPopup");
-        const trigger = document.querySelector(".contact-trigger");
-        if (event.target !== popup && event.target !== trigger && !popup.contains(event.target)) {
-            popup.style.display = "none";
+        function closeForm() {
+            document.getElementById('requestFormContainer').style.display = 'none';
+            currentRequestType = null;
         }
-    }
 
-    // تشغيل التهيئة الأولية للجداول عند فتح الصفحة
-    renderData();
-</script>
+        function submitRequest() {
+            if (!currentRequestType) return;
+            if (currentRequestType.id !== 'leave') {
+                alert(currentLang === 'ar' ? '🚧 هذا النوع قيد التطوير' : '🚧 Coming soon');
+                closeForm();
+                return;
+            }
+            let manager = employees.find(e => e.id === currentUser.managerId);
+            if (!manager) {
+                alert(currentLang === 'ar' ? '❌ لا يوجد مدير مباشر' : '❌ No manager assigned');
+                return;
+            }
+            let type = document.getElementById('field_نوع_الإجازة')?.value || document.getElementById('field_Leave_Type')
+                ?.value || 'إجازة';
+            let start = document.getElementById('field_من_تاريخ')?.value || document.getElementById('field_From_Date')
+                ?.value || '';
+            let end = document.getElementById('field_إلى_تاريخ')?.value || document.getElementById('field_To_Date')
+                ?.value || '';
+            let reason = document.getElementById('field_السبب')?.value || document.getElementById('field_Reason')
+                ?.value || '';
+            if (!start || !end) {
+                alert(currentLang === 'ar' ? '❌ الرجاء إدخال التاريخ' : '❌ Please enter dates');
+                return;
+            }
+            let days = Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;
+            let newRequest = {
+                id: Date.now(),
+                employeeId: currentUser.id,
+                employeeName: currentUser.name,
+                managerId: currentUser.managerId,
+                managerName: manager.name,
+                type: type,
+                start: start,
+                end: end,
+                days: days,
+                reason: reason,
+                status: 'pending_manager',
+                date: new Date().toISOString()
+            };
+            leaveRequests.unshift(newRequest);
+            localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
+            closeForm();
+            renderAll();
+            alert(`${currentLang === 'ar' ? '✅ تم رفع الطلب إلى مديرك' : '✅ Request submitted to your manager'} (${manager.name})`);
+        }
+
+        function renderMyRequests() {
+            let my = leaveRequests.filter(r => r.employeeId === currentUser.id);
+            let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
+                    'Pending Manager') :
+                (s === 'pending_hr' ? (currentLang === 'ar' ? 'قيد مراجعة HR' : 'Pending HR') : (s === 'approved' ? (
+                    currentLang === 'ar' ? 'معتمد' : 'Approved') : (currentLang === 'ar' ? 'مرفوض' : 'Rejected')));
+            let badgeClass = (s) => s === 'pending_manager' ? 'badge-pending' : (s === 'pending_hr' ? 'badge-hr' : (s ===
+                'approved' ? 'badge-approved' : 'badge-rejected'));
+            document.getElementById('myRequestsList').innerHTML = my.length ? my.map(r =>
+                    `<div class="request-card"><strong>${r.type}</strong> - ${r.start} - ${r.end}<br><small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
+                ).join('') :
+                `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
+        }
+
+        // ========== LEAVE APPROVALS (المصححة) ==========
+        function approveAsManager(id) {
+            let req = leaveRequests.find(r => r.id === id);
+            if (req && req.status === 'pending_manager') {
+                req.status = 'pending_hr';
+                localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
+                renderTeam();
+                renderDashboard();
+                alert(currentLang === 'ar' ? '✅ تمت الموافقة المبدئية، الطلب الآن في انتظار HR' :
+                    '✅ Initial approved, waiting for HR');
+            }
+        }
+
+        // ========== HR APPROVAL (FIXED) ==========
+        function approveAsHR(id) {
+            let req = leaveRequests.find(r => r.id === id);
+            if (req && req.status === 'pending_hr') {
+                req.status = 'approved';
+                let emp = employees.find(e => e.id === req.employeeId);
+                if (emp) {
+                    emp.leaveBalance = Math.max(0, emp.leaveBalance - (req.days || 1));
+                }
+                localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
+                localStorage.setItem('hr_employees', JSON.stringify(employees));
+                renderTeam();
+                renderDashboard();
+                renderMyRequests();
+                alert(currentLang === 'ar' ? `✅ تم اعتماد الإجازة نهائياً للموظف ${req.employeeName}` :
+                    `✅ Leave approved for ${req.employeeName}`);
+            } else {
+                alert(currentLang === 'ar' ? '❌ هذا الطلب غير متاح للموافقة' : '❌ This request is not available for approval');
+            }
+        }
+
+        function rejectRequest(id) {
+            let req = leaveRequests.find(r => r.id === id);
+            if (req && (req.status === 'pending_manager' || req.status === 'pending_hr')) {
+                req.status = 'rejected';
+                localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
+                renderTeam();
+                renderDashboard();
+                renderMyRequests();
+                alert(currentLang === 'ar' ? '❌ تم رفض الطلب' : '❌ Request rejected');
+            } else {
+                alert(currentLang === 'ar' ? '❌ هذا الطلب غير متاح للرفض' : '❌ This request is not available for rejection');
+            }
+        }
+
+        // ========== Team ==========
+        function renderTeam() {
+            if (currentUser.role !== 'مدير' && currentUser.role !== 'hr') {
+                document.getElementById('teamMembers').innerHTML = `<p>${currentLang === 'ar' ? 'غير مصرح' : 'Unauthorized'}</p>`;
+                return;
+            }
+            let team = employees.filter(e => e.managerId === currentUser.id || (currentUser.role === 'hr' && e.id !== currentUser
+                .id));
+
+            // Pending requests based on role
+            let pendingRequests = [];
+            if (currentUser.role === 'مدير') {
+                pendingRequests = leaveRequests.filter(r => r.status === 'pending_manager' && r.managerId === currentUser.id);
+            } else if (currentUser.role === 'hr') {
+                pendingRequests = leaveRequests.filter(r => r.status === 'pending_hr');
+            }
+
+            let html = `<div class="card"><h4>⏳ ${currentLang === 'ar' ? 'طلبات تنتظر موافقتك' : 'Pending Requests'}</h4>`;
+            if (pendingRequests.length > 0) {
+                html += pendingRequests.map(r => {
+                    let emp = employees.find(e => e.id === r.employeeId);
+                    return `
+                        <div class="request-card" style="border:2px solid ${currentUser.role === 'hr' ? '#2563eb' : '#f59e0b'};">
+                            <strong>👤 ${r.employeeName}</strong> - ${r.type}<br>
+                            📅 ${r.start} إلى ${r.end} (${r.days} يوم)<br>
+                            <small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br>
+                            <span class="badge ${currentUser.role === 'hr' ? 'badge-hr' : 'badge-pending'}">
+                                ${currentUser.role === 'hr' ? (currentLang === 'ar' ? 'في انتظار موافقة HR' : 'Pending HR Approval') : (currentLang === 'ar' ? 'في انتظار موافقة المدير' : 'Pending Manager Approval')}
+                            </span>
+                            <div style="margin-top:10px;">
+                                ${currentUser.role === 'hr' ? `
+                                    <button class="approve-btn" onclick="approveAsHR(${r.id})">✅ ${currentLang === 'ar' ? 'اعتماد نهائي' : 'Final Approve'}</button>
+                                    <button class="reject-btn" onclick="rejectRequest(${r.id})" style="margin-right:10px;">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
+                                ` : `
+                                    <button class="approve-btn" onclick="approveAsManager(${r.id})">✅ ${currentLang === 'ar' ? 'موافقة مبدئية' : 'Initial Approve'}</button>
+                                    <button class="reject-btn" onclick="rejectRequest(${r.id})" style="margin-right:10px;">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                html += `<p>${currentLang === 'ar' ? 'لا توجد طلبات معلقة' : 'No pending requests'}</p>`;
+            }
+            html += `</div><div class="card"><h4>👥 ${currentLang === 'ar' ? 'الموظفين' : 'Employees'}</h4><table><thead><tr><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</th><th></th></tr></thead><tbody>`;
+            team.forEach(e => {
+                html +=
+                    `<tr><td style="font-weight:bold;">${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${e.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button></td></tr>`;
+            });
+            html += `</tbody></div>`;
+            document.getElementById('teamMembers').innerHTML = html;
+        }
+
+        // ========== Employee Profile ==========
+        function viewEmployeeProfile(empId) {
+            selectedEmployeeId = empId;
+            renderEmployeeProfile();
+            showPage('employeeprofile');
+        }
+
+        function renderEmployeeProfile() {
+            let emp = employees.find(e => e.id === selectedEmployeeId);
+            if (!emp) return;
+            let empRequests = leaveRequests.filter(r => r.employeeId === emp.id);
+            let manager = employees.find(e => e.id === emp.managerId);
+            let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
+                    'Pending Manager') :
+                (s === 'pending_hr' ? (currentLang === 'ar' ? 'قيد مراجعة HR' : 'Pending HR') : (s === 'approved' ? (
+                    currentLang === 'ar' ? 'معتمد' : 'Approved') : (currentLang === 'ar' ? 'مرفوض' : 'Rejected')));
+            let badgeClass = (s) => s === 'pending_manager' ? 'badge-pending' : (s === 'pending_hr' ? 'badge-hr' : (s ===
+                'approved' ? 'badge-approved' : 'badge-rejected'));
+            document.getElementById('employeeProfileInfo').innerHTML =
+                `<div class="services-grid"><div class="service-card"><h4>🆔 ${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</h4><p>${emp.id}</p></div><div class="service-card"><h4>👤 ${currentLang === 'ar' ? 'الاسم' : 'Name'}</h4><p>${emp.name}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'المسمى' : 'Title'}</h4><p>${emp.title}</p></div><div class="service-card"><h4>🏢 ${currentLang === 'ar' ? 'القسم' : 'Dept'}</h4><p>${emp.dept}</p></div><div class="service-card"><h4>💰 ${currentLang === 'ar' ? 'الراتب' : 'Salary'}</h4><p>${emp.salary} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</p></div><div class="service-card"><h4>👨‍💼 ${currentLang === 'ar' ? 'المدير المباشر' : 'Manager'}</h4><p>${manager ? manager.name : '-'}</p></div><div class="service-card"><h4>📅 ${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</h4><p>${emp.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</p></div></div>`;
+            document.getElementById('employeeRequestsList').innerHTML = empRequests.length ? empRequests.map(r =>
+                    `<div class="request-card"><strong>${r.type}</strong> - ${r.start} - ${r.end}<br><small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
+                ).join('') :
+                `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
+        }
+
+        // ========== إدارة الموظفين + EDIT ==========
+        function updateManagerSelect() {
+            let select = document.getElementById('newManagerId');
+            if (select) {
+                let managers = employees.filter(e => e.role === 'مدير' || e.role === 'hr');
+                select.innerHTML = '<option value="">-- ' + (currentLang === 'ar' ? 'اختر المدير' : 'Select Manager') +
+                    ' --</option>' + managers.map(m =>
+                        `<option value="${m.id}">${m.name} (${m.title})</option>`).join('');
+            }
+            let editSelect = document.getElementById('editManagerId');
+            if (editSelect) {
+                let managers = employees.filter(e => e.role === 'مدير' || e.role === 'hr');
+                editSelect.innerHTML = '<option value="">-- ' + (currentLang === 'ar' ? 'اختر المدير' : 'Select Manager') +
+                    ' --</option>' + managers.map(m =>
+                        `<option value="${m.id}">${m.name} (${m.title})</option>`).join('');
+            }
+        }
+
+        function addEmployee() {
+            let name = document.getElementById('newName').value.trim(),
+                title = document.getElementById('newTitle').value.trim(),
+                dept = document.getElementById('newDept').value.trim(),
+                salary = parseInt(document.getElementById('newSalary').value),
+                startDate = document.getElementById('newStartDate').value,
+                managerId = document.getElementById('newManagerId').value;
+            if (!name || !title || !dept || !startDate) {
+                alert(currentLang === 'ar' ? '❌ املأ جميع الحقول' : '❌ Fill all fields');
+                return;
+            }
+            let newId = getNextId();
+            employees.push({
+                id: newId,
+                name: name,
+                pass: newId,
+                role: 'موظف',
+                title: title,
+                salary: salary,
+                dept: dept,
+                leaveBalance: 30,
+                managerId: managerId || null,
+                startDate: startDate
+            });
+            renderEmployeesList();
+            updateManagerSelect();
+            document.getElementById('newName').value = '';
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newDept').value = '';
+            document.getElementById('newSalary').value = '5000';
+            document.getElementById('newStartDate').value = '';
+            document.getElementById('newManagerId').value = '';
+            alert(`${currentLang === 'ar' ? `✅ تم إضافة الموظف ${name} برقم وظيفي ${newId}` : `✅ Employee ${name} added with ID ${newId}`}`);
+        }
+
+        function openEditModal(empId) {
+            let emp = employees.find(e => e.id === empId);
+            if (!emp) return;
+            editingEmployeeId = empId;
+            document.getElementById('editName').value = emp.name;
+            document.getElementById('editId').value = emp.id;
+            document.getElementById('editTitle').value = emp.title || '';
+            document.getElementById('editDept').value = emp.dept || '';
+            document.getElementById('editSalary').value = emp.salary || 0;
+            document.getElementById('editStartDate').value = emp.startDate || '';
+            document.getElementById('editRole').value = emp.role || 'موظف';
+            updateManagerSelect();
+            let editSelect = document.getElementById('editManagerId');
+            if (emp.managerId) {
+                editSelect.value = emp.managerId;
+            } else {
+                editSelect.value = '';
+            }
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editingEmployeeId = null;
+        }
+
+        function saveEmployeeEdit() {
+            if (!editingEmployeeId) return;
+            let emp = employees.find(e => e.id === editingEmployeeId);
+            if (!emp) return;
+            let newName = document.getElementById('editName').value.trim();
+            let newTitle = document.getElementById('editTitle').value.trim();
+            let newDept = document.getElementById('editDept').value.trim();
+            let newSalary = parseInt(document.getElementById('editSalary').value);
+            let newStartDate = document.getElementById('editStartDate').value;
+            let newRole = document.getElementById('editRole').value;
+            let newManagerId = document.getElementById('editManagerId').value;
+
+            if (!newName || !newTitle || !newDept || !newStartDate) {
+                alert(currentLang === 'ar' ? '❌ الرجاء ملء جميع الحقول' : '❌ Please fill all fields');
+                return;
+            }
+            if (emp.id === currentUser.id && emp.role !== newRole) {
+                if (!confirm(currentLang === 'ar' ? '⚠️ أنت تعدل صلاحيتك الخاصة. هل أنت متأكد؟' :
+                        '⚠️ You are changing your own role. Are you sure?')) {
+                    return;
+                }
+            }
+
+            emp.name = newName;
+            emp.title = newTitle;
+            emp.dept = newDept;
+            emp.salary = newSalary;
+            emp.startDate = newStartDate;
+            emp.role = newRole;
+            emp.managerId = newManagerId || null;
+
+            if (emp.id === currentUser.id) {
+                currentUser = emp;
+                localStorage.setItem('hr_currentUser', JSON.stringify(currentUser));
+                document.getElementById('userName').innerText = currentUser.name;
+                let roleText = currentUser.role === 'مدير' ? (currentLang === 'ar' ? '👑 مدير عام' : '👑 CEO') : (currentUser
+                    .role === 'hr' ? (currentLang === 'ar' ? '📋 HR' : '📋 HR') : (currentLang === 'ar' ? '👤 موظف' :
+                    '👤 Employee'));
+                document.getElementById('userRole').innerHTML = roleText;
+                buildNav();
+            }
+
+            if (!employees.find(e => e.id === emp.id && e.pass === emp.id)) {
+                emp.pass = emp.id;
+            }
+
+            localStorage.setItem('hr_employees', JSON.stringify(employees));
+            closeEditModal();
+            renderEmployeesList();
+            renderAll();
+            alert(currentLang === 'ar' ? `✅ تم تحديث بيانات الموظف ${emp.name} بنجاح` :
+                `✅ Employee ${emp.name} data updated successfully`);
+        }
+
+        function renderEmployeesList() {
+            let html =
+                `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'المدير' : 'Manager'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave'}</th><th></th></tr></thead><tbody>`;
+            employees.forEach(e => {
+                let manager = employees.find(m => m.id === e.managerId);
+                html +=
+                    `<tr><td style="font-weight:bold;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${manager ? manager.name : '-'}</td><td>${e.leaveBalance}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')" style="margin-left:5px;">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button><button class="btn-edit" onclick="openEditModal('${e.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button></td></tr>`;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('employeesList').innerHTML = html;
+        }
+
+        // ========== المزايا والأدوات ==========
+        function renderBenefits() {
+            document.getElementById('benefitsInfo').innerHTML =
+                `<div class="services-grid"><div class="service-card"><h4>🩺 ${currentLang === 'ar' ? 'التأمين الطبي' : 'Medical Insurance'}</h4><p>${currentLang === 'ar' ? 'تأمين بوبا شامل' : 'Comprehensive Bupa insurance'}</p></div><div class="service-card"><h4>✈️ ${currentLang === 'ar' ? 'تذكرة سفر' : 'Travel Ticket'}</h4><p>${currentLang === 'ar' ? 'سنوية للموظف وعائلته' : 'Annual for employee and family'}</p></div><div class="service-card"><h4>🎓 ${currentLang === 'ar' ? 'بدل التعليم' : 'Education Allowance'}</h4><p>${currentLang === 'ar' ? 'دعم تعليمي 5000 ريال' : '5000 SAR educational support'}</p></div><div class="service-card"><h4>🏠 ${currentLang === 'ar' ? 'بدل السكن' : 'Housing Allowance'}</h4><p>${currentLang === 'ar' ? 'حسب المسمى الوظيفي' : 'Based on job title'}</p></div></div>`;
+        }
+
+        function renderTools() {
+            let toolsData = currentLang === 'ar' ? tools.ar : tools.en;
+            document.getElementById('toolsGrid').innerHTML = toolsData.map(t =>
+                `<div class="service-card" onclick="alert('${currentLang === 'ar' ? 'سيتم تطوير هذه الأداة قريباً' : 'Coming soon'}')"><h4>${t.name}</h4><p>${t.desc}</p></div>`
+                ).join('');
+        }
+
+        // ============================================================
+        // ========== PERFORMANCE REVIEW SYSTEM ==========
+        // ============================================================
+
+        function renderPerformanceReview() {
+            if (currentUser.role !== 'hr') return;
+            document.getElementById('prStep1').style.display = 'block';
+            document.getElementById('prStep2').style.display = 'none';
+            document.getElementById('prStep3').style.display = 'none';
+            document.getElementById('prStep4').style.display = 'none';
+
+            let eligible = employees.filter(e =>
+                e.role === 'موظف' &&
+                isEligibleForReview(e.startDate) &&
+                !performanceReviews.some(r => r.employeeId === e.id && r.status !== 'rejected')
+            );
+
+            let listHtml =
+                `<table><thead><tr><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date'}</th><th>${currentLang === 'ar' ? 'اختيار' : 'Select'}</th></tr></thead><tbody>`;
+            if (eligible.length === 0) {
+                listHtml +=
+                    `<tr><td colspan="4" style="text-align:center;">${currentLang === 'ar' ? 'لا يوجد موظفين مؤهلين للتقييم حالياً' : 'No eligible employees for review'}</td></tr>`;
+            } else {
+                eligible.forEach(e => {
+                    listHtml +=
+                        `<tr><td>${e.name}</td><td>${e.title}</td><td>${e.startDate}</td><td><input type="checkbox" class="prCheckbox" value="${e.id}"></td></tr>`;
+                });
+            }
+            listHtml += `</tbody></table>`;
+            document.getElementById('prEmployeeList').innerHTML = listHtml;
+
+            let myPendingReview = performanceReviews.find(r => r.employeeId === currentUser.id && r.status ===
+            'pending_employee');
+            if (myPendingReview) {
+                showSelfEvaluationForm(myPendingReview);
+                document.getElementById('prStep1').style.display = 'none';
+                document.getElementById('prStep2').style.display = 'block';
+            }
+
+            let managerReviews = performanceReviews.filter(r => r.status === 'pending_manager' && r.managerId === currentUser
+            .id);
+            if (managerReviews.length > 0 && currentUser.role === 'مدير') {
+                showManagerReviewList(managerReviews);
+                document.getElementById('prStep1').style.display = 'none';
+                document.getElementById('prStep2').style.display = 'none';
+                document.getElementById('prStep3').style.display = 'block';
+            }
+
+            let finalReviews = performanceReviews.filter(r => r.status === 'approved' || r.status === 'rejected');
+            if (finalReviews.length > 0 && currentUser.role === 'hr') {
+                showFinalList(finalReviews);
+                document.getElementById('prStep4').style.display = 'block';
+            }
+        }
+
+        function showSelfEvaluationForm(review) {
+            let criteria = currentLang === 'ar' ? evaluationCriteria.ar : evaluationCriteria.en;
+            let html = `<div class="form-grid">`;
+            criteria.forEach(c => {
+                html +=
+                    `<div class="form-group"><label>${c.name} (1-5)</label><input type="number" id="eval_${c.id}" min="1" max="5" value="3" style="width:80px;"></div>`;
+            });
+            html +=
+                `<div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات إضافية' : 'Additional Notes'}</label><textarea id="eval_notes" rows="3"></textarea></div>`;
+            html += `</div>`;
+            document.getElementById('prSelfEvalForm').innerHTML = html;
+            window.currentReviewId = review.id;
+        }
+
+        function submitSelfEvaluation() {
+            let reviewId = window.currentReviewId;
+            let review = performanceReviews.find(r => r.id === reviewId);
+            if (!review) return;
+            let criteria = currentLang === 'ar' ? evaluationCriteria.ar : evaluationCriteria.en;
+            let scores = {};
+            criteria.forEach(c => {
+                let val = parseInt(document.getElementById(`eval_${c.id}`).value);
+                scores[c.id] = val || 3;
+            });
+            let notes = document.getElementById('eval_notes').value || '';
+            review.selfEvaluation = { scores, notes };
+            review.status = 'pending_manager';
+            review.employeeSubmitted = new Date().toISOString();
+            localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
+            alert(currentLang === 'ar' ? '✅ تم إرسال التقييم الذاتي إلى المدير' :
+                '✅ Self evaluation submitted to manager');
+            renderPerformanceReview();
+            renderAll();
+        }
+
+        function showManagerReviewList(reviews) {
+            let html = '';
+            reviews.forEach(r => {
+                let emp = employees.find(e => e.id === r.employeeId);
+                let criteria = currentLang === 'ar' ? evaluationCriteria.ar : evaluationCriteria.en;
+                let scoresHtml = '';
+                if (r.selfEvaluation) {
+                    scoresHtml = Object.entries(r.selfEvaluation.scores).map(([key, val]) => {
+                        let name = criteria.find(c => c.id === key)?.name || key;
+                        return `<span style="display:inline-block;margin:0 10px;">${name}: <strong>${val}/5</strong></span>`;
+                    }).join('');
+                }
+                html += `
+                    <div class="request-card" style="border:2px solid #2563eb;">
+                        <h4>👤 ${emp ? emp.name : r.employeeId}</h4>
+                        <p><strong>${currentLang === 'ar' ? 'التقييم الذاتي' : 'Self Evaluation'}:</strong></p>
+                        <div style="margin:10px 0;">${scoresHtml}</div>
+                        <p><small>${currentLang === 'ar' ? 'ملاحظات' : 'Notes'}: ${r.selfEvaluation?.notes || '-'}</small></p>
+                        <div style="margin-top:15px;">
+                            <button class="btn-success" style="padding:8px 16px;border:none;border-radius:12px;" onclick="approveManagerReview(${r.id})">✅ ${currentLang === 'ar' ? 'موافقة على التقييم' : 'Approve Evaluation'}</button>
+                            <button class="btn-warning" style="padding:8px 16px;border:none;border-radius:12px;margin-right:10px;" onclick="showManagerEditForm(${r.id})">✏️ ${currentLang === 'ar' ? 'تعديل التقييم' : 'Edit & Re-evaluate'}</button>
+                        </div>
+                        <div id="managerEdit_${r.id}" style="display:none;margin-top:15px;padding:15px;background:#f8fafc;border-radius:12px;"></div>
+                    </div>
+                `;
+            });
+            document.getElementById('prManagerReviewList').innerHTML = html;
+        }
+
+        function approveManagerReview(id) {
+            let review = performanceReviews.find(r => r.id === id);
+            if (review) {
+                review.status = 'approved';
+                review.managerApproved = new Date().toISOString();
+                localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
+                alert(currentLang === 'ar' ? '✅ تم اعتماد التقييم بنجاح' : '✅ Evaluation approved successfully');
+                renderPerformanceReview();
+                renderAll();
+            }
+        }
+
+        function showManagerEditForm(id) {
+            let review = performanceReviews.find(r => r.id === id);
+            if (!review) return;
+            let criteria = currentLang === 'ar' ? evaluationCriteria.ar : evaluationCriteria.en;
+            let div = document.getElementById(`managerEdit_${id}`);
+            div.style.display = 'block';
+            let html =
+                `<h5>${currentLang === 'ar' ? 'تعديل التقييم (المدير)' : 'Edit Evaluation (Manager)'}</h5><div class="form-grid">`;
+            criteria.forEach(c => {
+                let currentVal = review.selfEvaluation?.scores[c.id] || 3;
+                html +=
+                    `<div class="form-group"><label>${c.name} (1-5)</label><input type="number" id="mgr_${c.id}_${id}" min="1" max="5" value="${currentVal}" style="width:80px;"></div>`;
+            });
+            html +=
+                `<div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات المدير' : 'Manager Notes'}</label><textarea id="mgr_notes_${id}" rows="3">${review.selfEvaluation?.notes || ''}</textarea></div>`;
+            html +=
+                `</div><button class="btn-primary" style="padding:8px 16px;border:none;border-radius:12px;margin-top:10px;" onclick="submitManagerEdit(${id})">${currentLang === 'ar' ? '📤 إرسال التقييم المعدل' : '📤 Submit Edited Evaluation'}</button>`;
+            div.innerHTML = html;
+        }
+
+        function submitManagerEdit(id) {
+            let review = performanceReviews.find(r => r.id === id);
+            if (!review) return;
+            let criteria = currentLang === 'ar' ? evaluationCriteria.ar : evaluationCriteria.en;
+            let scores = {};
+            criteria.forEach(c => {
+                let val = parseInt(document.getElementById(`mgr_${c.id}_${id}`).value);
+                scores[c.id] = val || 3;
+            });
+            let notes = document.getElementById(`mgr_notes_${id}`).value || '';
+            review.selfEvaluation = { scores, notes };
+            review.managerEdited = true;
+            review.status = 'approved';
+            review.managerApproved = new Date().toISOString();
+            localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
+            alert(currentLang === 'ar' ? '✅ تم إرسال التقييم المعدل بنجاح' : '✅ Edited evaluation submitted');
+            renderPerformanceReview();
+            renderAll();
+        }
+
+        function showFinalList(reviews) {
+            let html =
+                `<table><thead><tr><th>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</th><th>${currentLang === 'ar' ? 'التقييم' : 'Score'}</th><th>${currentLang === 'ar' ? 'الحالة' : 'Status'}</th><th>${currentLang === 'ar' ? 'ملاحظات' : 'Notes'}</th><th>${currentLang === 'ar' ? 'تم التقييم بواسطة' : 'Evaluated By'}</th></tr></thead><tbody>`;
+            reviews.forEach(r => {
+                let emp = employees.find(e => e.id === r.employeeId);
+                let total = r.selfEvaluation?.scores ? Object.values(r.selfEvaluation.scores).reduce((a, b) => a + b,
+                    0) :
+                    0;
+                let avg = r.selfEvaluation?.scores ? (total / Object.values(r.selfEvaluation.scores).length).toFixed(
+                    1) :
+                    '-';
+                let status = r.status === 'approved' ? (currentLang === 'ar' ? '✅ معتمد' : '✅ Approved') : (currentLang ===
+                    'ar' ? '❌ مرفوض' : '❌ Rejected');
+                let by = r.managerEdited ? (currentLang === 'ar' ? 'المدير (معدل)' : 'Manager (Edited)') : (currentLang ===
+                    'ar' ? 'الموظف + المدير' : 'Employee + Manager');
+                html +=
+                    `<tr><td>${emp ? emp.name : r.employeeId}</td><td>${avg}/5</td><td>${status}</td><td>${r.selfEvaluation?.notes || '-'}</td><td>${by}</td></tr>`;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('prFinalList').innerHTML = html;
+        }
+
+        function sendPerformanceReview() {
+            let checkboxes = document.querySelectorAll('.prCheckbox:checked');
+            if (checkboxes.length === 0) {
+                alert(currentLang === 'ar' ? '❌ الرجاء اختيار موظفين على الأقل' :
+                    '❌ Please select at least one employee');
+                return;
+            }
+            let count = 0;
+            checkboxes.forEach(cb => {
+                let empId = cb.value;
+                let existing = performanceReviews.find(r => r.employeeId === empId && r.status !== 'rejected');
+                if (!existing) {
+                    let newReview = {
+                        id: Date.now() + count,
+                        employeeId: empId,
+                        managerId: employees.find(e => e.id === empId)?.managerId || null,
+                        status: 'pending_employee',
+                        selfEvaluation: null,
+                        employeeSubmitted: null,
+                        managerApproved: null,
+                        managerEdited: false,
+                        createdAt: new Date().toISOString()
+                    };
+                    performanceReviews.push(newReview);
+                    count++;
+                }
+            });
+            if (count === 0) {
+                alert(currentLang === 'ar' ? '⚠️ جميع الموظفين المختارين لديهم تقييمات معلقة حالياً' :
+                    '⚠️ All selected employees already have pending evaluations');
+                return;
+            }
+            localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
+            alert(`${currentLang === 'ar' ? `✅ تم إرسال التقييم إلى ${count} موظف` : `✅ Evaluation sent to ${count} employees`}`);
+            renderPerformanceReview();
+            renderAll();
+        }
+
+        // ========== Init ==========
+        let saved = localStorage.getItem('hr_currentUser');
+        if (saved) {
+            let parsed = JSON.parse(saved);
+            let exists = employees.find(e => e.id === parsed.id);
+            if (exists) {
+                currentUser = exists;
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('userName').innerText = currentUser.name;
+                let roleText = currentUser.role === 'مدير' ? (currentLang === 'ar' ? '👑 مدير عام' : '👑 CEO') : (currentUser
+                    .role === 'hr' ? (currentLang === 'ar' ? '📋 HR' : '📋 HR') : (currentLang === 'ar' ? '👤 موظف' :
+                    '👤 Employee'));
+                document.getElementById('userRole').innerHTML = roleText;
+                buildNav();
+                renderAll();
+                renderPerformanceReview();
+                showPage('dashboard');
+            }
+        }
+    </script>
 
 </body>
 </html>
