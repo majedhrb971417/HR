@@ -393,6 +393,40 @@
             background: #e0f7fa;
             color: #00695c;
         }
+        /* رسالة التنبيه */
+        .notification-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 16px;
+            font-weight: bold;
+            z-index: 3000;
+            display: none;
+            animation: slideDown 0.5s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            text-align: center;
+        }
+        .notification-popup.error {
+            background: #ef4444;
+        }
+        .notification-popup.warning {
+            background: #f59e0b;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
         @media (max-width: 800px) {
             .services-grid {
                 grid-template-columns: 1fr;
@@ -404,10 +438,16 @@
             .edit-modal-content .form-grid {
                 grid-template-columns: 1fr;
             }
+            .notification-popup {
+                font-size: 0.8rem;
+                padding: 12px 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <div id="notification" class="notification-popup"></div>
 
     <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧 English</button>
 
@@ -518,6 +558,8 @@
                     <div><label id="salaryLabel">الراتب</label><input type="number" id="newSalary" value="5000"></div>
                     <div><label id="dateLabel">تاريخ المباشرة</label><input type="date" id="newStartDate"></div>
                     <div><label id="managerLabel">المدير المباشر</label><select id="newManagerId"><option value="">-- اختر المدير --</option></select></div>
+                    <div><label id="emailLabel">📧 البريد الإلكتروني</label><input type="email" id="newEmail" placeholder="example@domain.com"></div>
+                    <div><label id="phoneLabel">📱 رقم الجوال</label><input type="text" id="newPhone" placeholder="05xxxxxxxx"></div>
                 </div>
                 <button class="btn btn-primary" onclick="addEmployee()" id="addEmpBtn">➕ إضافة موظف</button>
             </div>
@@ -545,6 +587,30 @@
                     <button class="btn btn-danger" onclick="deleteLeaveRequest()" id="leaveDeleteBtn">🗑️ حذف الإجازة</button>
                     <button class="btn btn-primary" onclick="closeLeaveDetail()" id="leaveCloseBtn">🔙 إغلاق</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- ========== NEW: Change Password & Edit Profile ========== -->
+        <div id="changepasswordPage" class="page">
+            <div class="card">
+                <div class="card-title" id="cpTitle">🔑 تغيير الرقم السري</div>
+                <div class="form-grid">
+                    <div class="form-group"><label id="cpCurrentLabel">الرقم السري الحالي</label><input type="password" id="cpCurrentPassword" placeholder="أدخل الرقم السري الحالي"></div>
+                    <div class="form-group"><label id="cpNewLabel">الرقم السري الجديد</label><input type="password" id="cpNewPassword" placeholder="أدخل الرقم السري الجديد"></div>
+                    <div class="form-group"><label id="cpConfirmLabel">تأكيد الرقم السري الجديد</label><input type="password" id="cpConfirmPassword" placeholder="أعد إدخال الرقم السري الجديد"></div>
+                </div>
+                <button class="btn btn-primary" onclick="changePassword()" id="cpChangeBtn">🔑 تغيير الرقم السري</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title" id="editProfileTitle">✏️ تعديل المعلومات الشخصية</div>
+                <div class="form-grid">
+                    <div class="form-group"><label id="epNameLabel">الاسم</label><input type="text" id="epName"></div>
+                    <div class="form-group"><label id="epEmailLabel">📧 البريد الإلكتروني</label><input type="email" id="epEmail" placeholder="example@domain.com"></div>
+                    <div class="form-group"><label id="epPhoneLabel">📱 رقم الجوال</label><input type="text" id="epPhone" placeholder="05xxxxxxxx"></div>
+                    <div class="form-group"><label id="epPassLabel">الرقم السري الحالي (للتأكيد)</label><input type="password" id="epCurrentPassword" placeholder="أدخل الرقم السري للتأكيد"></div>
+                </div>
+                <button class="btn btn-success" onclick="updateProfile()" id="epSaveBtn">💾 حفظ التغييرات</button>
             </div>
         </div>
 
@@ -591,6 +657,8 @@
                     <option value="مدير">مدير</option>
                     <option value="hr">موارد بشرية</option>
                 </select></div>
+                <div class="form-group"><label id="editEmailLabel">📧 البريد الإلكتروني</label><input type="email" id="editEmail"></div>
+                <div class="form-group"><label id="editPhoneLabel">📱 رقم الجوال</label><input type="text" id="editPhone"></div>
             </div>
             <div class="edit-actions">
                 <button class="btn btn-success" onclick="saveEmployeeEdit()" id="editSaveBtn">💾 حفظ التعديلات</button>
@@ -603,17 +671,22 @@
         // ========== بيانات الموظفين ==========
         let employees = [
             { id: "10001", name: "المدير العام", pass: "10001", role: "مدير", title: "مدير عام", salary: 20000, dept: "الإدارة",
-                leaveBalance: 30, managerId: null, startDate: "2020-01-01" },
+                leaveBalance: 30, managerId: null, startDate: "2020-01-01", email: "ceo@company.com", phone: "0500000000" },
             { id: "10002", name: "ماجد الحربي", pass: "10002", role: "hr", title: "مدير الموارد البشرية", salary: 15000,
-                dept: "الموارد البشرية", leaveBalance: 30, managerId: "10001", startDate: "2020-02-01" },
+                dept: "الموارد البشرية", leaveBalance: 30, managerId: "10001", startDate: "2020-02-01",
+                email: "majed@company.com", phone: "0501111111" },
             { id: "10003", name: "وليد الحربي", pass: "10003", role: "موظف", title: "محاسب", salary: 8000, dept: "المالية",
-                leaveBalance: 30, managerId: "10001", startDate: "2021-01-21" },
+                leaveBalance: 30, managerId: "10001", startDate: "2021-01-21", email: "waleed@company.com",
+                phone: "0502222222" },
             { id: "10004", name: "بجاد الحربي", pass: "10004", role: "موظف", title: "مبرمج", salary: 9000, dept: "تقنية المعلومات",
-                leaveBalance: 30, managerId: "10001", startDate: "2021-01-22" },
+                leaveBalance: 30, managerId: "10001", startDate: "2021-01-22", email: "bajad@company.com",
+                phone: "0503333333" },
             { id: "10005", name: "محمد الحربي", pass: "10005", role: "موظف", title: "مسوق", salary: 7000, dept: "التسويق",
-                leaveBalance: 30, managerId: "10001", startDate: "2021-01-20" },
+                leaveBalance: 30, managerId: "10001", startDate: "2021-01-20", email: "mohammed@company.com",
+                phone: "0504444444" },
             { id: "10006", name: "خالد العرجاني", pass: "10006", role: "موظف", title: "مندوب مبيعات", salary: 6500,
-                dept: "المبيعات", leaveBalance: 30, managerId: "10001", startDate: "2021-01-23" }
+                dept: "المبيعات", leaveBalance: 30, managerId: "10001", startDate: "2021-01-23",
+                email: "khalid@company.com", phone: "0505555555" }
         ];
 
         let leaveRequests = JSON.parse(localStorage.getItem('hr_leaveRequests')) || [];
@@ -647,11 +720,11 @@
             en: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود']
         };
 
-        // ========== الخدمات (مرتبة بدون تكرار) ==========
+        // ========== الخدمات ==========
         const servicesData = {
             ar: [
                 { id: "leave", name: "📅 طلب إجازة", desc: "تقديم طلب إجازة سنوية، مرضية، زواج، مولود، أو بدون راتب",
-                fields: ["نوع الإجازة", "من تاريخ", "إلى تاريخ", "السبب"] },
+                    fields: ["نوع الإجازة", "من تاريخ", "إلى تاريخ", "السبب"] },
                 { id: "ticket", name: "🎫 طلب تذكرة سفر", desc: "طلب تذكرة سفر", fields: ["نوع التذكرة", "تاريخ السفر",
                         "الوجهة", "ملاحظات"
                     ] },
@@ -679,7 +752,7 @@
                         "Travel Date", "Destination", "Notes"
                     ] },
                 { id: "salarycert", name: "💰 Salary Certificate", desc: "Request salary certificate",
-                fields: ["Requesting Authority", "Purpose"] },
+                    fields: ["Requesting Authority", "Purpose"] },
                 { id: "bankaccount", name: "🏦 Change Bank Account", desc: "Update bank account", fields: [
                         "New Account Number", "Bank Name"
                     ] },
@@ -693,7 +766,7 @@
                         "Mobile Number"
                     ] },
                 { id: "medicalcancel", name: "🩺 Cancel Medical Insurance", desc: "Cancel medical insurance",
-                fields: ["Cancellation Reason", "Cancellation Date"] }
+                    fields: ["Cancellation Reason", "Cancellation Date"] }
             ]
         };
 
@@ -765,6 +838,27 @@
             document.getElementById('salaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
             document.getElementById('dateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
             document.getElementById('managerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Manager';
+            document.getElementById('emailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
+            document.getElementById('phoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+
+            // Change Password
+            document.getElementById('cpTitle').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' : '🔑 Change Password';
+            document.getElementById('cpCurrentLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الحالي' :
+                'Current Password';
+            document.getElementById('cpNewLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الجديد' : 'New Password';
+            document.getElementById('cpConfirmLabel').innerHTML = currentLang === 'ar' ? 'تأكيد الرقم السري الجديد' :
+                'Confirm New Password';
+            document.getElementById('cpChangeBtn').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' :
+                '🔑 Change Password';
+            document.getElementById('editProfileTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل المعلومات الشخصية' :
+                '✏️ Edit Personal Information';
+            document.getElementById('epNameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
+            document.getElementById('epEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
+            document.getElementById('epPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+            document.getElementById('epPassLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الحالي (للتأكيد)' :
+                'Current Password (for confirmation)';
+            document.getElementById('epSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التغييرات' : '💾 Save Changes';
+
             // Leave Management
             document.getElementById('leaveMgmtTitle').innerHTML = currentLang === 'ar' ? '📅 إدارة الإجازات (جميع الموظفين)' :
                 '📅 Leave Management (All Employees)';
@@ -804,9 +898,24 @@
             document.getElementById('editManagerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' :
                 'Direct Manager';
             document.getElementById('editRoleLabel').innerHTML = currentLang === 'ar' ? 'الصلاحية' : 'Role';
+            document.getElementById('editEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
+            document.getElementById('editPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
             document.getElementById('editSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' :
                 '💾 Save Changes';
             document.getElementById('editCancelBtn').innerHTML = currentLang === 'ar' ? '❌ إلغاء' : '❌ Cancel';
+        }
+
+        // ========== دالة الإشعارات ==========
+        function showNotification(message, type = 'success') {
+            let notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = 'notification-popup';
+            if (type === 'error') notif.classList.add('error');
+            if (type === 'warning') notif.classList.add('warning');
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 5000);
         }
 
         function getNextId() {
@@ -843,6 +952,7 @@
                 renderAll();
                 renderPerformanceReview();
                 showPage('dashboard');
+                showNotification(currentLang === 'ar' ? `✅ مرحباً ${currentUser.name}` : `✅ Welcome ${currentUser.name}`);
             } else {
                 document.getElementById('loginError').innerHTML = currentLang === 'ar' ?
                     '❌ الرقم الوظيفي أو الرقم السري غير صحيح' :
@@ -855,6 +965,7 @@
             localStorage.removeItem('hr_currentUser');
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('mainApp').style.display = 'none';
+            showNotification(currentLang === 'ar' ? '👋 تم تسجيل الخروج' : '👋 Logged out', 'warning');
         }
 
         function buildNav() {
@@ -862,7 +973,8 @@
             let items = [
                 { id: 'dashboard', name: currentLang === 'ar' ? '🏠 الرئيسية' : '🏠 Dashboard' },
                 { id: 'selfservices', name: currentLang === 'ar' ? '✨ الخدمات الذاتية' : '✨ Self Services' },
-                { id: 'myrequests', name: currentLang === 'ar' ? '📋 طلباتي' : '📋 My Requests' }
+                { id: 'myrequests', name: currentLang === 'ar' ? '📋 طلباتي' : '📋 My Requests' },
+                { id: 'changepassword', name: currentLang === 'ar' ? '🔑 تغيير الرقم السري' : '🔑 Change Password' }
             ];
             if (currentUser.role === 'مدير' || currentUser.role === 'hr') {
                 items.push({ id: 'myteam', name: currentLang === 'ar' ? '👥 فريقي' : '👥 My Team' });
@@ -885,6 +997,7 @@
             renderAll();
             if (pageId === 'performancereview') renderPerformanceReview();
             if (pageId === 'leavemanagement') renderLeaveManagement();
+            if (pageId === 'changepassword') loadProfileData();
         }
 
         function renderAll() {
@@ -932,7 +1045,6 @@
         }
 
         function openRequestForm(id, name, fields) {
-            // السماح للموظفين و HR برفع طلبات
             if (currentUser.role !== 'موظف' && currentUser.role !== 'hr') {
                 alert(currentLang === 'ar' ? '❌ فقط الموظفين يمكنهم رفع طلبات' : '❌ Only employees can submit');
                 return;
@@ -1074,7 +1186,9 @@
             closeForm();
             renderAll();
             if (currentUser.role === 'hr') renderLeaveManagement();
-            alert(`${currentLang === 'ar' ? '✅ تم رفع الطلب إلى مديرك' : '✅ Request submitted to your manager'} (${manager.name})`);
+            showNotification(
+                `${currentLang === 'ar' ? '✅ تم رفع الطلب إلى مديرك' : '✅ Request submitted to your manager'} (${manager.name})`
+                );
         }
 
         // ========== My Requests ==========
@@ -1108,7 +1222,7 @@
                 renderTeam();
                 renderDashboard();
                 if (currentUser.role === 'hr') renderLeaveManagement();
-                alert(currentLang === 'ar' ? '✅ تمت الموافقة المبدئية، الطلب الآن في انتظار HR' :
+                showNotification(currentLang === 'ar' ? '✅ تمت الموافقة المبدئية، الطلب الآن في انتظار HR' :
                     '✅ Initial approved, waiting for HR');
             }
         }
@@ -1127,8 +1241,9 @@
                 renderDashboard();
                 renderMyRequests();
                 if (currentUser.role === 'hr') renderLeaveManagement();
-                alert(currentLang === 'ar' ? `✅ تم اعتماد الإجازة نهائياً للموظف ${req.employeeName}` :
-                    `✅ Leave approved for ${req.employeeName}`);
+                showNotification(
+                    `${currentLang === 'ar' ? `✅ تم اعتماد الإجازة نهائياً للموظف ${req.employeeName}` :
+                        `✅ Leave approved for ${req.employeeName}`}`);
             } else {
                 alert(currentLang === 'ar' ? '❌ هذا الطلب غير متاح للموافقة' : '❌ This request is not available for approval');
             }
@@ -1143,7 +1258,7 @@
                 renderDashboard();
                 renderMyRequests();
                 if (currentUser.role === 'hr') renderLeaveManagement();
-                alert(currentLang === 'ar' ? '❌ تم رفض الطلب' : '❌ Request rejected');
+                showNotification(currentLang === 'ar' ? '❌ تم رفض الطلب' : '❌ Request rejected', 'error');
             } else {
                 alert(currentLang === 'ar' ? '❌ هذا الطلب غير متاح للرفض' : '❌ This request is not available for rejection');
             }
@@ -1226,7 +1341,7 @@
             let badgeClass = (s) => s === 'pending_manager' ? 'badge-pending' : (s === 'pending_hr' ? 'badge-hr' : (s ===
                 'approved' ? 'badge-approved' : 'badge-rejected'));
             document.getElementById('employeeProfileInfo').innerHTML =
-                `<div class="services-grid"><div class="service-card"><h4>🆔 ${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</h4><p>${emp.id}</p></div><div class="service-card"><h4>👤 ${currentLang === 'ar' ? 'الاسم' : 'Name'}</h4><p>${emp.name}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'المسمى' : 'Title'}</h4><p>${emp.title}</p></div><div class="service-card"><h4>🏢 ${currentLang === 'ar' ? 'القسم' : 'Dept'}</h4><p>${emp.dept}</p></div><div class="service-card"><h4>💰 ${currentLang === 'ar' ? 'الراتب' : 'Salary'}</h4><p>${emp.salary} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</p></div><div class="service-card"><h4>👨‍💼 ${currentLang === 'ar' ? 'المدير المباشر' : 'Manager'}</h4><p>${manager ? manager.name : '-'}</p></div><div class="service-card"><h4>📅 ${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</h4><p>${emp.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</p></div></div>`;
+                `<div class="services-grid"><div class="service-card"><h4>🆔 ${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</h4><p>${emp.id}</p></div><div class="service-card"><h4>👤 ${currentLang === 'ar' ? 'الاسم' : 'Name'}</h4><p>${emp.name}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'المسمى' : 'Title'}</h4><p>${emp.title}</p></div><div class="service-card"><h4>🏢 ${currentLang === 'ar' ? 'القسم' : 'Dept'}</h4><p>${emp.dept}</p></div><div class="service-card"><h4>💰 ${currentLang === 'ar' ? 'الراتب' : 'Salary'}</h4><p>${emp.salary} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</p></div><div class="service-card"><h4>👨‍💼 ${currentLang === 'ar' ? 'المدير المباشر' : 'Manager'}</h4><p>${manager ? manager.name : '-'}</p></div><div class="service-card"><h4>📅 ${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</h4><p>${emp.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</p></div><div class="service-card"><h4>📧 ${currentLang === 'ar' ? 'البريد الإلكتروني' : 'Email'}</h4><p>${emp.email || '-'}</p></div><div class="service-card"><h4>📱 ${currentLang === 'ar' ? 'رقم الجوال' : 'Phone'}</h4><p>${emp.phone || '-'}</p></div></div>`;
             document.getElementById('employeeRequestsList').innerHTML = empRequests.length ? empRequests.map(r =>
                     `<div class="request-card"><strong>${r.type}</strong> - ${r.start} - ${r.end}<br><small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
                 ).join('') :
@@ -1361,7 +1476,7 @@
             editingLeaveId = null;
         }
 
-        // ========== Save Leave Edit (FIXED) ==========
+        // ========== Save Leave Edit ==========
         function saveLeaveEdit() {
             if (!editingLeaveId) return;
             let req = leaveRequests.find(r => r.id === editingLeaveId);
@@ -1386,7 +1501,6 @@
                 return;
             }
 
-            // تحديث الطلب
             req.type = newType;
             req.start = newStart;
             req.end = newEnd;
@@ -1396,7 +1510,6 @@
 
             localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
 
-            // تحديث الرصيد إذا كانت الحالة معتمدة
             if (newStatus === 'approved' && req.type !== 'بدون_راتب' && req.type !== 'زواج' && req.type !== 'مولود') {
                 let emp = employees.find(e => e.id === req.employeeId);
                 if (emp) {
@@ -1411,7 +1524,7 @@
             closeLeaveDetail();
             renderLeaveManagement();
             renderAll();
-            alert(currentLang === 'ar' ? '✅ تم تحديث الإجازة بنجاح' : '✅ Leave updated successfully');
+            showNotification(currentLang === 'ar' ? '✅ تم تحديث الإجازة بنجاح' : '✅ Leave updated successfully');
         }
 
         // ========== Delete Leave ==========
@@ -1430,7 +1543,106 @@
             localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
             renderLeaveManagement();
             renderAll();
-            alert(currentLang === 'ar' ? '🗑️ تم حذف الإجازة بنجاح' : '🗑️ Leave deleted successfully');
+            showNotification(currentLang === 'ar' ? '🗑️ تم حذف الإجازة بنجاح' : '🗑️ Leave deleted successfully', 'warning');
+        }
+
+        // ========== CHANGE PASSWORD ==========
+        function loadProfileData() {
+            if (!currentUser) return;
+            document.getElementById('epName').value = currentUser.name || '';
+            document.getElementById('epEmail').value = currentUser.email || '';
+            document.getElementById('epPhone').value = currentUser.phone || '';
+            document.getElementById('epCurrentPassword').value = '';
+            document.getElementById('cpCurrentPassword').value = '';
+            document.getElementById('cpNewPassword').value = '';
+            document.getElementById('cpConfirmPassword').value = '';
+        }
+
+        function changePassword() {
+            let currentPass = document.getElementById('cpCurrentPassword').value.trim();
+            let newPass = document.getElementById('cpNewPassword').value.trim();
+            let confirmPass = document.getElementById('cpConfirmPassword').value.trim();
+
+            if (!currentPass || !newPass || !confirmPass) {
+                alert(currentLang === 'ar' ? '❌ الرجاء ملء جميع الحقول' : '❌ Please fill all fields');
+                return;
+            }
+
+            if (currentPass !== currentUser.pass) {
+                alert(currentLang === 'ar' ? '❌ الرقم السري الحالي غير صحيح' : '❌ Current password is incorrect');
+                return;
+            }
+
+            if (newPass.length < 4) {
+                alert(currentLang === 'ar' ? '❌ الرقم السري الجديد يجب أن يكون 4 أرقام على الأقل' :
+                    '❌ New password must be at least 4 characters');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                alert(currentLang === 'ar' ? '❌ الرقم السري الجديد وتأكيده غير متطابقين' :
+                    '❌ New password and confirmation do not match');
+                return;
+            }
+
+            // تغيير الرقم السري
+            let emp = employees.find(e => e.id === currentUser.id);
+            if (emp) {
+                emp.pass = newPass;
+                currentUser.pass = newPass;
+                localStorage.setItem('hr_currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('hr_employees', JSON.stringify(employees));
+                document.getElementById('cpCurrentPassword').value = '';
+                document.getElementById('cpNewPassword').value = '';
+                document.getElementById('cpConfirmPassword').value = '';
+                showNotification(
+                    `${currentLang === 'ar' ? '✅ تم تغيير الرقم السري بنجاح. تم إرسال إشعار إلى جوالك وبريدك الإلكتروني' :
+                        '✅ Password changed successfully. A notification was sent to your phone and email'}`
+                    );
+            }
+        }
+
+        // ========== UPDATE PROFILE ==========
+        function updateProfile() {
+            let name = document.getElementById('epName').value.trim();
+            let email = document.getElementById('epEmail').value.trim();
+            let phone = document.getElementById('epPhone').value.trim();
+            let currentPass = document.getElementById('epCurrentPassword').value.trim();
+
+            if (!name || !email || !phone) {
+                alert(currentLang === 'ar' ? '❌ الرجاء ملء جميع الحقول' : '❌ Please fill all fields');
+                return;
+            }
+
+            if (!currentPass) {
+                alert(currentLang === 'ar' ? '❌ الرجاء إدخال الرقم السري للتأكيد' :
+                    '❌ Please enter your current password for confirmation');
+                return;
+            }
+
+            if (currentPass !== currentUser.pass) {
+                alert(currentLang === 'ar' ? '❌ الرقم السري غير صحيح' : '❌ Incorrect password');
+                return;
+            }
+
+            let emp = employees.find(e => e.id === currentUser.id);
+            if (emp) {
+                emp.name = name;
+                emp.email = email;
+                emp.phone = phone;
+                currentUser.name = name;
+                currentUser.email = email;
+                currentUser.phone = phone;
+                localStorage.setItem('hr_currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('hr_employees', JSON.stringify(employees));
+                document.getElementById('userName').innerText = currentUser.name;
+                document.getElementById('epCurrentPassword').value = '';
+                showNotification(
+                    `${currentLang === 'ar' ? '✅ تم تحديث المعلومات الشخصية بنجاح. تم إرسال إشعار إلى جوالك وبريدك الإلكتروني' :
+                        '✅ Profile updated successfully. A notification was sent to your phone and email'}`
+                    );
+                renderAll();
+            }
         }
 
         // ========== Employees Management ==========
@@ -1457,8 +1669,10 @@
                 dept = document.getElementById('newDept').value.trim(),
                 salary = parseInt(document.getElementById('newSalary').value),
                 startDate = document.getElementById('newStartDate').value,
-                managerId = document.getElementById('newManagerId').value;
-            if (!name || !title || !dept || !startDate) {
+                managerId = document.getElementById('newManagerId').value,
+                email = document.getElementById('newEmail').value.trim(),
+                phone = document.getElementById('newPhone').value.trim();
+            if (!name || !title || !dept || !startDate || !email || !phone) {
                 alert(currentLang === 'ar' ? '❌ املأ جميع الحقول' : '❌ Fill all fields');
                 return;
             }
@@ -1473,7 +1687,9 @@
                 dept: dept,
                 leaveBalance: 30,
                 managerId: managerId || null,
-                startDate: startDate
+                startDate: startDate,
+                email: email,
+                phone: phone
             });
             renderEmployeesList();
             updateManagerSelect();
@@ -1483,7 +1699,11 @@
             document.getElementById('newSalary').value = '5000';
             document.getElementById('newStartDate').value = '';
             document.getElementById('newManagerId').value = '';
-            alert(`${currentLang === 'ar' ? `✅ تم إضافة الموظف ${name} برقم وظيفي ${newId}` : `✅ Employee ${name} added with ID ${newId}`}`);
+            document.getElementById('newEmail').value = '';
+            document.getElementById('newPhone').value = '';
+            showNotification(
+                `${currentLang === 'ar' ? `✅ تم إضافة الموظف ${name} برقم وظيفي ${newId}` : `✅ Employee ${name} added with ID ${newId}`}`
+                );
         }
 
         function openEditModal(empId) {
@@ -1497,6 +1717,8 @@
             document.getElementById('editSalary').value = emp.salary || 0;
             document.getElementById('editStartDate').value = emp.startDate || '';
             document.getElementById('editRole').value = emp.role || 'موظف';
+            document.getElementById('editEmail').value = emp.email || '';
+            document.getElementById('editPhone').value = emp.phone || '';
             updateManagerSelect();
             let editSelect = document.getElementById('editManagerId');
             if (emp.managerId) {
@@ -1523,8 +1745,10 @@
             let newStartDate = document.getElementById('editStartDate').value;
             let newRole = document.getElementById('editRole').value;
             let newManagerId = document.getElementById('editManagerId').value;
+            let newEmail = document.getElementById('editEmail').value.trim();
+            let newPhone = document.getElementById('editPhone').value.trim();
 
-            if (!newName || !newTitle || !newDept || !newStartDate) {
+            if (!newName || !newTitle || !newDept || !newStartDate || !newEmail || !newPhone) {
                 alert(currentLang === 'ar' ? '❌ الرجاء ملء جميع الحقول' : '❌ Please fill all fields');
                 return;
             }
@@ -1542,6 +1766,8 @@
             emp.startDate = newStartDate;
             emp.role = newRole;
             emp.managerId = newManagerId || null;
+            emp.email = newEmail;
+            emp.phone = newPhone;
 
             if (emp.id === currentUser.id) {
                 currentUser = emp;
@@ -1562,17 +1788,18 @@
             closeEditModal();
             renderEmployeesList();
             renderAll();
-            alert(currentLang === 'ar' ? `✅ تم تحديث بيانات الموظف ${emp.name} بنجاح` :
-                `✅ Employee ${emp.name} data updated successfully`);
+            showNotification(
+                `${currentLang === 'ar' ? `✅ تم تحديث بيانات الموظف ${emp.name} بنجاح` :
+                    `✅ Employee ${emp.name} data updated successfully`}`);
         }
 
         function renderEmployeesList() {
             let html =
-                `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'المدير' : 'Manager'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave'}</th><th></th></tr></thead><tbody>`;
+                `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'المدير' : 'Manager'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave'}</th><th>📧</th><th>📱</th><th></th></tr></thead><tbody>`;
             employees.forEach(e => {
                 let manager = employees.find(m => m.id === e.managerId);
                 html +=
-                    `<tr><td style="font-weight:bold;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${manager ? manager.name : '-'}</td><td>${e.leaveBalance}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')" style="margin-left:5px;">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button><button class="btn-edit" onclick="openEditModal('${e.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button></td></tr>`;
+                    `<tr><td style="font-weight:bold;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${manager ? manager.name : '-'}</td><td>${e.leaveBalance}</td><td>${e.email || '-'}</td><td>${e.phone || '-'}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')" style="margin-left:5px;">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button><button class="btn-edit" onclick="openEditModal('${e.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button></td></tr>`;
             });
             html += `</tbody></table>`;
             document.getElementById('employeesList').innerHTML = html;
@@ -1675,7 +1902,7 @@
             review.status = 'pending_manager';
             review.employeeSubmitted = new Date().toISOString();
             localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
-            alert(currentLang === 'ar' ? '✅ تم إرسال التقييم الذاتي إلى المدير' :
+            showNotification(currentLang === 'ar' ? '✅ تم إرسال التقييم الذاتي إلى المدير' :
                 '✅ Self evaluation submitted to manager');
             renderPerformanceReview();
             renderAll();
@@ -1716,7 +1943,7 @@
                 review.status = 'approved';
                 review.managerApproved = new Date().toISOString();
                 localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
-                alert(currentLang === 'ar' ? '✅ تم اعتماد التقييم بنجاح' : '✅ Evaluation approved successfully');
+                showNotification(currentLang === 'ar' ? '✅ تم اعتماد التقييم بنجاح' : '✅ Evaluation approved successfully');
                 renderPerformanceReview();
                 renderAll();
             }
@@ -1757,7 +1984,7 @@
             review.status = 'approved';
             review.managerApproved = new Date().toISOString();
             localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
-            alert(currentLang === 'ar' ? '✅ تم إرسال التقييم المعدل بنجاح' : '✅ Edited evaluation submitted');
+            showNotification(currentLang === 'ar' ? '✅ تم إرسال التقييم المعدل بنجاح' : '✅ Edited evaluation submitted');
             renderPerformanceReview();
             renderAll();
         }
@@ -1817,7 +2044,9 @@
                 return;
             }
             localStorage.setItem('hr_performanceReviews', JSON.stringify(performanceReviews));
-            alert(`${currentLang === 'ar' ? `✅ تم إرسال التقييم إلى ${count} موظف` : `✅ Evaluation sent to ${count} employees`}`);
+            showNotification(
+                `${currentLang === 'ar' ? `✅ تم إرسال التقييم إلى ${count} موظف` : `✅ Evaluation sent to ${count} employees`}`
+                );
             renderPerformanceReview();
             renderAll();
         }
@@ -1839,6 +2068,7 @@
                 buildNav();
                 renderAll();
                 renderPerformanceReview();
+                loadProfileData();
                 showPage('dashboard');
             }
         }
