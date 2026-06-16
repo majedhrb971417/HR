@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الموارد البشرية | HR Portal</title>
+    <title>نظام الموارد البشرية | إدارة الإجازات المتقدمة</title>
     <style>
         * {
             margin: 0;
@@ -359,7 +359,39 @@
             font-weight: 700;
         }
         .reject-btn:hover {
-            background: #dc2626;
+            background: #dc2625;
+        }
+        .attachment-link {
+            color: #2563eb;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .leave-type-badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .leave-type-سنوية {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .leave-type-مرضية {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .leave-type-بدون_راتب {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .leave-type-زواج {
+            background: #fce4ec;
+            color: #880e4f;
+        }
+        .leave-type-مولود {
+            background: #e0f7fa;
+            color: #00695c;
         }
         @media (max-width: 800px) {
             .services-grid {
@@ -495,6 +527,27 @@
             </div>
         </div>
 
+        <!-- ========== NEW: LEAVE MANAGEMENT (HR) ========== -->
+        <div id="leavemanagementPage" class="page">
+            <div class="card">
+                <div class="card-title" id="leaveMgmtTitle">📅 إدارة الإجازات (جميع الموظفين)</div>
+                <div id="leaveManagementContainer"></div>
+            </div>
+        </div>
+
+        <!-- ========== NEW: LEAVE DETAIL MODAL ========== -->
+        <div id="leaveDetailModal" class="edit-modal">
+            <div class="edit-modal-content">
+                <h2 id="leaveDetailTitle" style="text-align:center;margin-bottom:20px;">📋 تفاصيل الإجازة</h2>
+                <div id="leaveDetailContent"></div>
+                <div class="edit-actions" id="leaveDetailActions">
+                    <button class="btn btn-success" onclick="saveLeaveEdit()" id="leaveSaveBtn">💾 حفظ التعديلات</button>
+                    <button class="btn btn-danger" onclick="deleteLeaveRequest()" id="leaveDeleteBtn">🗑️ حذف الإجازة</button>
+                    <button class="btn btn-primary" onclick="closeLeaveDetail()" id="leaveCloseBtn">🔙 إغلاق</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Performance Review -->
         <div id="performancereviewPage" class="page">
             <div class="card">
@@ -521,7 +574,7 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
+    <!-- Edit Employee Modal -->
     <div id="editModal" class="edit-modal">
         <div class="edit-modal-content">
             <h2 id="editModalTitle" style="text-align:center;margin-bottom:20px;">✏️ تعديل بيانات الموظف</h2>
@@ -569,13 +622,36 @@
         let selectedEmployeeId = null;
         let editingEmployeeId = null;
         let currentLang = 'ar';
+        let editingLeaveId = null;
+
+        // ========== Leave Types ==========
+        const leaveTypes = {
+            ar: {
+                سنوية: { maxDays: 30, needsAttachment: false },
+                مرضية: { maxDays: 30, needsAttachment: true },
+                بدون_راتب: { maxDays: 30, needsAttachment: false },
+                زواج: { maxDays: 5, needsAttachment: false },
+                مولود: { maxDays: 3, needsAttachment: false }
+            },
+            en: {
+                سنوية: { maxDays: 30, needsAttachment: false },
+                مرضية: { maxDays: 30, needsAttachment: true },
+                بدون_راتب: { maxDays: 30, needsAttachment: false },
+                زواج: { maxDays: 5, needsAttachment: false },
+                مولود: { maxDays: 3, needsAttachment: false }
+            }
+        };
+
+        const leaveTypeNames = {
+            ar: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود'],
+            en: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود']
+        };
 
         // ========== الخدمات ==========
         const servicesData = {
             ar: [
-                { id: "leave", name: "📅 طلب إجازة", desc: "تقديم طلب إجازة سنوية أو مرضية", fields: ["نوع الإجازة", "من تاريخ",
-                        "إلى تاريخ", "السبب"
-                    ] },
+                { id: "leave", name: "📅 طلب إجازة", desc: "تقديم طلب إجازة سنوية، مرضية، زواج، مولود، أو بدون راتب",
+                fields: ["نوع الإجازة", "من تاريخ", "إلى تاريخ", "السبب"] },
                 { id: "ticket", name: "🎫 طلب تذكرة سفر", desc: "طلب تذكرة سفر", fields: ["نوع التذكرة", "تاريخ السفر",
                         "الوجهة", "ملاحظات"
                     ] },
@@ -597,8 +673,8 @@
                     ] }
             ],
             en: [
-                { id: "leave", name: "📅 Leave Request", desc: "Submit annual or sick leave", fields: ["Leave Type",
-                        "From Date", "To Date", "Reason"
+                { id: "leave", name: "📅 Leave Request", desc: "Submit leave request", fields: ["Leave Type", "From Date",
+                        "To Date", "Reason"
                     ] },
                 { id: "ticket", name: "🎫 Travel Ticket", desc: "Request travel ticket", fields: ["Ticket Type",
                         "Travel Date", "Destination", "Notes"
@@ -690,6 +766,17 @@
             document.getElementById('salaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
             document.getElementById('dateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
             document.getElementById('managerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Manager';
+            // Leave Management
+            document.getElementById('leaveMgmtTitle').innerHTML = currentLang === 'ar' ? '📅 إدارة الإجازات (جميع الموظفين)' :
+                '📅 Leave Management (All Employees)';
+            document.getElementById('leaveDetailTitle').innerHTML = currentLang === 'ar' ? '📋 تفاصيل الإجازة' :
+                '📋 Leave Details';
+            document.getElementById('leaveSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' :
+                '💾 Save Changes';
+            document.getElementById('leaveDeleteBtn').innerHTML = currentLang === 'ar' ? '🗑️ حذف الإجازة' :
+                '🗑️ Delete Leave';
+            document.getElementById('leaveCloseBtn').innerHTML = currentLang === 'ar' ? '🔙 إغلاق' : '🔙 Close';
+
             // Performance Review
             document.getElementById('prTitle').innerHTML = currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance Review';
             document.getElementById('prStep1Desc').innerHTML = currentLang === 'ar' ?
@@ -705,6 +792,7 @@
                 '📤 Send Evaluation to Employees';
             document.getElementById('prSubmitSelfBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال التقييم الذاتي' :
                 '📤 Submit Self Evaluation';
+
             // Edit Modal
             document.getElementById('editModalTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل بيانات الموظف' :
                 '✏️ Edit Employee Data';
@@ -784,6 +872,7 @@
             }
             if (currentUser.role === 'hr') {
                 items.push({ id: 'employees', name: currentLang === 'ar' ? '👥 إدارة الموظفين' : '👥 Employees' });
+                items.push({ id: 'leavemanagement', name: currentLang === 'ar' ? '📅 إدارة الإجازات' : '📅 Leave Mgmt' });
                 items.push({ id: 'performancereview', name: currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance' });
             }
             nav.innerHTML = items.map(i => `<button class="nav-btn" onclick="showPage('${i.id}')">${i.name}</button>`).join('');
@@ -796,6 +885,7 @@
             if (event && event.target) event.target.classList.add('active');
             renderAll();
             if (pageId === 'performancereview') renderPerformanceReview();
+            if (pageId === 'leavemanagement') renderLeaveManagement();
         }
 
         function renderAll() {
@@ -832,6 +922,8 @@
 
         // ========== Self Services ==========
         let currentRequestType = null;
+        let selectedAttachment = null;
+        let selectedAttachmentName = null;
 
         function renderSelfServices() {
             let services = currentLang === 'ar' ? servicesData.ar : servicesData.en;
@@ -849,17 +941,72 @@
             document.getElementById('formTitle').innerText = name;
             let html = '<div class="form-grid">';
             fields.forEach(f => {
-                html +=
-                    `<div class="form-group"><label>${f}</label><input type="text" id="field_${f.replace(/ /g, '_')}"></div>`;
+                if (f === 'نوع الإجازة' || f === 'Leave Type') {
+                    let types = currentLang === 'ar' ? leaveTypeNames.ar : leaveTypeNames.en;
+                    html +=
+                        `<div class="form-group"><label>${f}</label><select id="field_${f.replace(/ /g, '_')}" onchange="toggleAttachmentField()">`;
+                    types.forEach(t => {
+                        let displayName = t;
+                        if (currentLang === 'ar') {
+                            if (t === 'بدون_راتب') displayName = 'بدون راتب';
+                            else if (t === 'زواج') displayName = 'زواج';
+                            else if (t === 'مولود') displayName = 'مولود';
+                            else displayName = t;
+                        }
+                        html += `<option value="${t}">${displayName}</option>`;
+                    });
+                    html += `</select></div>`;
+                } else if (f === 'السبب' || f === 'Reason') {
+                    html +=
+                        `<div class="form-group"><label>${f}</label><textarea id="field_${f.replace(/ /g, '_')}" rows="2"></textarea></div>`;
+                } else {
+                    html +=
+                        `<div class="form-group"><label>${f}</label><input type="${f.includes('تاريخ') || f.includes('Date') ? 'date' : 'text'}" id="field_${f.replace(/ /g, '_')}"></div>`;
+                }
             });
+            html +=
+                `<div class="form-group" id="attachmentField" style="display:none;"><label>${currentLang === 'ar' ? '📎 رفع مرفق (تقرير طبي)' : '📎 Attachment (Medical Report)'}</label><input type="file" id="leaveAttachment" accept=".pdf,.jpg,.png,.jpeg"></div>`;
             html += '</div>';
             document.getElementById('requestForm').innerHTML = html;
             document.getElementById('requestFormContainer').style.display = 'block';
+            selectedAttachment = null;
+            selectedAttachmentName = null;
+
+            // Add file listener
+            setTimeout(() => {
+                let fileInput = document.getElementById('leaveAttachment');
+                if (fileInput) {
+                    fileInput.addEventListener('change', function(e) {
+                        if (this.files && this.files[0]) {
+                            let reader = new FileReader();
+                            reader.onload = function(ev) {
+                                selectedAttachment = ev.target.result;
+                                selectedAttachmentName = fileInput.files[0].name;
+                            };
+                            reader.readAsDataURL(this.files[0]);
+                        }
+                    });
+                }
+            }, 100);
+        }
+
+        function toggleAttachmentField() {
+            let typeSelect = document.getElementById('field_نوع_الإجازة') || document.getElementById('field_Leave_Type');
+            if (typeSelect) {
+                let type = typeSelect.value;
+                let needsAttach = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.needsAttachment || false;
+                let attachField = document.getElementById('attachmentField');
+                if (attachField) {
+                    attachField.style.display = needsAttach ? 'block' : 'none';
+                }
+            }
         }
 
         function closeForm() {
             document.getElementById('requestFormContainer').style.display = 'none';
             currentRequestType = null;
+            selectedAttachment = null;
+            selectedAttachmentName = null;
         }
 
         function submitRequest() {
@@ -869,24 +1016,44 @@
                 closeForm();
                 return;
             }
-            let manager = employees.find(e => e.id === currentUser.managerId);
-            if (!manager) {
-                alert(currentLang === 'ar' ? '❌ لا يوجد مدير مباشر' : '❌ No manager assigned');
-                return;
-            }
+
             let type = document.getElementById('field_نوع_الإجازة')?.value || document.getElementById('field_Leave_Type')
-                ?.value || 'إجازة';
+                ?.value || 'سنوية';
             let start = document.getElementById('field_من_تاريخ')?.value || document.getElementById('field_From_Date')
                 ?.value || '';
             let end = document.getElementById('field_إلى_تاريخ')?.value || document.getElementById('field_To_Date')
                 ?.value || '';
             let reason = document.getElementById('field_السبب')?.value || document.getElementById('field_Reason')
                 ?.value || '';
+
             if (!start || !end) {
                 alert(currentLang === 'ar' ? '❌ الرجاء إدخال التاريخ' : '❌ Please enter dates');
                 return;
             }
+
             let days = Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;
+
+            // Check max days for leave type
+            let maxDays = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.maxDays || 30;
+            let needsAttachment = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.needsAttachment || false;
+
+            if (days > maxDays) {
+                alert(`${currentLang === 'ar' ? `❌ عدد الأيام (${days}) يتجاوز الحد الأقصى لهذا النوع (${maxDays} يوم)` : `❌ Days (${days}) exceeds max for this type (${maxDays} days)`}`);
+                return;
+            }
+
+            if (needsAttachment && !selectedAttachment) {
+                alert(currentLang === 'ar' ? '❌ يجب رفع مرفق (تقرير طبي) للإجازة المرضية' :
+                    '❌ Attachment required for sick leave');
+                return;
+            }
+
+            let manager = employees.find(e => e.id === currentUser.managerId);
+            if (!manager) {
+                alert(currentLang === 'ar' ? '❌ لا يوجد مدير مباشر' : '❌ No manager assigned');
+                return;
+            }
+
             let newRequest = {
                 id: Date.now(),
                 employeeId: currentUser.id,
@@ -898,16 +1065,21 @@
                 end: end,
                 days: days,
                 reason: reason,
+                attachment: selectedAttachment || null,
+                attachmentName: selectedAttachmentName || null,
                 status: 'pending_manager',
                 date: new Date().toISOString()
             };
+
             leaveRequests.unshift(newRequest);
             localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
             closeForm();
             renderAll();
+            if (currentUser.role === 'hr') renderLeaveManagement();
             alert(`${currentLang === 'ar' ? '✅ تم رفع الطلب إلى مديرك' : '✅ Request submitted to your manager'} (${manager.name})`);
         }
 
+        // ========== My Requests ==========
         function renderMyRequests() {
             let my = leaveRequests.filter(r => r.employeeId === currentUser.id);
             let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
@@ -916,13 +1088,20 @@
                     currentLang === 'ar' ? 'معتمد' : 'Approved') : (currentLang === 'ar' ? 'مرفوض' : 'Rejected')));
             let badgeClass = (s) => s === 'pending_manager' ? 'badge-pending' : (s === 'pending_hr' ? 'badge-hr' : (s ===
                 'approved' ? 'badge-approved' : 'badge-rejected'));
+            let typeDisplay = (t) => {
+                if (currentLang === 'ar') {
+                    if (t === 'بدون_راتب') return 'بدون راتب';
+                    return t;
+                }
+                return t;
+            };
             document.getElementById('myRequestsList').innerHTML = my.length ? my.map(r =>
-                    `<div class="request-card"><strong>${r.type}</strong> - ${r.start} - ${r.end}<br><small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
+                    `<div class="request-card"><strong>${typeDisplay(r.type)}</strong> - ${r.start} - ${r.end}<br><small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
                 ).join('') :
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== LEAVE APPROVALS (المصححة) ==========
+        // ========== LEAVE APPROVALS ==========
         function approveAsManager(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (req && req.status === 'pending_manager') {
@@ -930,18 +1109,18 @@
                 localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
                 renderTeam();
                 renderDashboard();
+                if (currentUser.role === 'hr') renderLeaveManagement();
                 alert(currentLang === 'ar' ? '✅ تمت الموافقة المبدئية، الطلب الآن في انتظار HR' :
                     '✅ Initial approved, waiting for HR');
             }
         }
 
-        // ========== HR APPROVAL (FIXED) ==========
         function approveAsHR(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (req && req.status === 'pending_hr') {
                 req.status = 'approved';
                 let emp = employees.find(e => e.id === req.employeeId);
-                if (emp) {
+                if (emp && req.type !== 'بدون_راتب' && req.type !== 'زواج' && req.type !== 'مولود') {
                     emp.leaveBalance = Math.max(0, emp.leaveBalance - (req.days || 1));
                 }
                 localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
@@ -949,6 +1128,7 @@
                 renderTeam();
                 renderDashboard();
                 renderMyRequests();
+                if (currentUser.role === 'hr') renderLeaveManagement();
                 alert(currentLang === 'ar' ? `✅ تم اعتماد الإجازة نهائياً للموظف ${req.employeeName}` :
                     `✅ Leave approved for ${req.employeeName}`);
             } else {
@@ -964,6 +1144,7 @@
                 renderTeam();
                 renderDashboard();
                 renderMyRequests();
+                if (currentUser.role === 'hr') renderLeaveManagement();
                 alert(currentLang === 'ar' ? '❌ تم رفض الطلب' : '❌ Request rejected');
             } else {
                 alert(currentLang === 'ar' ? '❌ هذا الطلب غير متاح للرفض' : '❌ This request is not available for rejection');
@@ -979,7 +1160,6 @@
             let team = employees.filter(e => e.managerId === currentUser.id || (currentUser.role === 'hr' && e.id !== currentUser
                 .id));
 
-            // Pending requests based on role
             let pendingRequests = [];
             if (currentUser.role === 'مدير') {
                 pendingRequests = leaveRequests.filter(r => r.status === 'pending_manager' && r.managerId === currentUser.id);
@@ -990,15 +1170,21 @@
             let html = `<div class="card"><h4>⏳ ${currentLang === 'ar' ? 'طلبات تنتظر موافقتك' : 'Pending Requests'}</h4>`;
             if (pendingRequests.length > 0) {
                 html += pendingRequests.map(r => {
-                    let emp = employees.find(e => e.id === r.employeeId);
+                    let typeDisplay = r.type;
+                    if (currentLang === 'ar') {
+                        if (r.type === 'بدون_راتب') typeDisplay = 'بدون راتب';
+                    }
+                    let attachHtml = '';
+                    if (r.attachment) {
+                        attachHtml =
+                            `<br><span class="attachment-link" onclick="viewAttachment('${r.id}')">📎 عرض المرفق (${r.attachmentName || 'مرفق'})</span>`;
+                    }
                     return `
                         <div class="request-card" style="border:2px solid ${currentUser.role === 'hr' ? '#2563eb' : '#f59e0b'};">
-                            <strong>👤 ${r.employeeName}</strong> - ${r.type}<br>
+                            <strong>👤 ${r.employeeName}</strong> - <span class="leave-type-badge leave-type-${r.type}">${typeDisplay}</span><br>
                             📅 ${r.start} إلى ${r.end} (${r.days} يوم)<br>
-                            <small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br>
-                            <span class="badge ${currentUser.role === 'hr' ? 'badge-hr' : 'badge-pending'}">
-                                ${currentUser.role === 'hr' ? (currentLang === 'ar' ? 'في انتظار موافقة HR' : 'Pending HR Approval') : (currentLang === 'ar' ? 'في انتظار موافقة المدير' : 'Pending Manager Approval')}
-                            </span>
+                            <small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small>
+                            ${attachHtml}
                             <div style="margin-top:10px;">
                                 ${currentUser.role === 'hr' ? `
                                     <button class="approve-btn" onclick="approveAsHR(${r.id})">✅ ${currentLang === 'ar' ? 'اعتماد نهائي' : 'Final Approve'}</button>
@@ -1049,7 +1235,207 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== إدارة الموظفين + EDIT ==========
+        // ========== LEAVE MANAGEMENT (HR) ==========
+        function renderLeaveManagement() {
+            if (currentUser.role !== 'hr') return;
+            let allRequests = leaveRequests;
+            let html = `<div class="table-wrapper"><table><thead><tr>
+                <th>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</th>
+                <th>${currentLang === 'ar' ? 'نوع الإجازة' : 'Type'}</th>
+                <th>${currentLang === 'ar' ? 'من' : 'From'}</th>
+                <th>${currentLang === 'ar' ? 'إلى' : 'To'}</th>
+                <th>${currentLang === 'ar' ? 'الأيام' : 'Days'}</th>
+                <th>${currentLang === 'ar' ? 'الحالة' : 'Status'}</th>
+                <th>${currentLang === 'ar' ? 'مرفق' : 'Attachment'}</th>
+                <th>${currentLang === 'ar' ? 'إجراء' : 'Actions'}</th>
+            </tr></thead><tbody>`;
+
+            if (allRequests.length === 0) {
+                html +=
+                    `<tr><td colspan="8" style="text-align:center;">${currentLang === 'ar' ? 'لا توجد طلبات إجازات' : 'No leave requests'}</td></tr>`;
+            } else {
+                allRequests.forEach(r => {
+                    let typeDisplay = r.type;
+                    if (currentLang === 'ar') {
+                        if (r.type === 'بدون_راتب') typeDisplay = 'بدون راتب';
+                    }
+                    let statusDisplay = r.status === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
+                            'Pending Manager') :
+                        (r.status === 'pending_hr' ? (currentLang === 'ar' ? 'قيد مراجعة HR' : 'Pending HR') :
+                            (r.status === 'approved' ? (currentLang === 'ar' ? 'معتمد' : 'Approved') : (currentLang ===
+                                'ar' ? 'مرفوض' : 'Rejected')));
+                    let badgeClass = r.status === 'pending_manager' ? 'badge-pending' : (r.status === 'pending_hr' ?
+                        'badge-hr' : (r.status === 'approved' ? 'badge-approved' : 'badge-rejected'));
+                    let attachHtml = r.attachment ?
+                        `<span class="attachment-link" onclick="viewAttachment('${r.id}')">📎 ${r.attachmentName || 'مرفق'}</span>` :
+                        '-';
+                    html += `<tr>
+                        <td><strong>${r.employeeName}</strong></td>
+                        <td><span class="leave-type-badge leave-type-${r.type}">${typeDisplay}</span></td>
+                        <td>${r.start}</td>
+                        <td>${r.end}</td>
+                        <td>${r.days}</td>
+                        <td><span class="badge ${badgeClass}">${statusDisplay}</span></td>
+                        <td>${attachHtml}</td>
+                        <td>
+                            <button class="btn-edit" onclick="openLeaveDetail('${r.id}')">${currentLang === 'ar' ? '✏️ تعديل' : '✏️ Edit'}</button>
+                            <button class="btn-edit" style="background:#ef4444;" onclick="deleteLeaveRequestDirect('${r.id}')">🗑️</button>
+                        </td>
+                    </tr>`;
+                });
+            }
+            html += `</tbody></table></div>`;
+            document.getElementById('leaveManagementContainer').innerHTML = html;
+        }
+
+        // ========== View Attachment ==========
+        function viewAttachment(id) {
+            let req = leaveRequests.find(r => r.id === id);
+            if (req && req.attachment) {
+                let win = window.open('', '_blank');
+                if (win) {
+                    win.document.write(
+                        `<html><head><title>${req.attachmentName || 'مرفق'}</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;height:100vh;background:#f1f5f9;">`
+                        );
+                    if (req.attachment.startsWith('data:image')) {
+                        win.document.write(
+                            `<img src="${req.attachment}" style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">`
+                            );
+                    } else {
+                        win.document.write(
+                            `<embed src="${req.attachment}" type="application/pdf" style="width:90%;height:90%;border-radius:12px;">`
+                            );
+                    }
+                    win.document.write(`</body></html>`);
+                    win.document.close();
+                } else {
+                    alert(currentLang === 'ar' ? '❌ لا يمكن فتح المرفق' : '❌ Cannot open attachment');
+                }
+            } else {
+                alert(currentLang === 'ar' ? '❌ لا يوجد مرفق لهذا الطلب' : '❌ No attachment for this request');
+            }
+        }
+
+        // ========== Open Leave Detail (Edit) ==========
+        function openLeaveDetail(id) {
+            let req = leaveRequests.find(r => r.id === id);
+            if (!req) return;
+            editingLeaveId = id;
+            document.getElementById('leaveDetailModal').classList.add('active');
+
+            let typeDisplay = req.type;
+            if (currentLang === 'ar') {
+                if (req.type === 'بدون_راتب') typeDisplay = 'بدون راتب';
+            }
+
+            let html = `<div class="form-grid">
+                <div class="form-group"><label>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</label><input type="text" value="${req.employeeName}" readonly style="background:#f1f5f9;"></div>
+                <div class="form-group"><label>${currentLang === 'ar' ? 'نوع الإجازة' : 'Leave Type'}</label>
+                    <select id="editLeaveType">
+                        <option value="سنوية" ${req.type === 'سنوية' ? 'selected' : ''}>${currentLang === 'ar' ? 'سنوية' : 'Annual'}</option>
+                        <option value="مرضية" ${req.type === 'مرضية' ? 'selected' : ''}>${currentLang === 'ar' ? 'مرضية' : 'Sick'}</option>
+                        <option value="بدون_راتب" ${req.type === 'بدون_راتب' ? 'selected' : ''}>${currentLang === 'ar' ? 'بدون راتب' : 'Unpaid'}</option>
+                        <option value="زواج" ${req.type === 'زواج' ? 'selected' : ''}>${currentLang === 'ar' ? 'زواج' : 'Marriage'}</option>
+                        <option value="مولود" ${req.type === 'مولود' ? 'selected' : ''}>${currentLang === 'ar' ? 'مولود' : 'Newborn'}</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>${currentLang === 'ar' ? 'من تاريخ' : 'From Date'}</label><input type="date" id="editLeaveStart" value="${req.start}"></div>
+                <div class="form-group"><label>${currentLang === 'ar' ? 'إلى تاريخ' : 'To Date'}</label><input type="date" id="editLeaveEnd" value="${req.end}"></div>
+                <div class="form-group"><label>${currentLang === 'ar' ? 'السبب' : 'Reason'}</label><textarea id="editLeaveReason" rows="2">${req.reason || ''}</textarea></div>
+                <div class="form-group"><label>${currentLang === 'ar' ? 'الحالة' : 'Status'}</label>
+                    <select id="editLeaveStatus">
+                        <option value="pending_manager" ${req.status === 'pending_manager' ? 'selected' : ''}>${currentLang === 'ar' ? 'قيد مراجعة المدير' : 'Pending Manager'}</option>
+                        <option value="pending_hr" ${req.status === 'pending_hr' ? 'selected' : ''}>${currentLang === 'ar' ? 'قيد مراجعة HR' : 'Pending HR'}</option>
+                        <option value="approved" ${req.status === 'approved' ? 'selected' : ''}>${currentLang === 'ar' ? 'معتمد' : 'Approved'}</option>
+                        <option value="rejected" ${req.status === 'rejected' ? 'selected' : ''}>${currentLang === 'ar' ? 'مرفوض' : 'Rejected'}</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>${currentLang === 'ar' ? 'المرفق' : 'Attachment'}</label>
+                    ${req.attachment ? `<div><span class="attachment-link" onclick="viewAttachment('${req.id}')">📎 ${req.attachmentName || 'مرفق'}</span></div>` : '<span>-</span>'}
+                </div>
+            </div>`;
+            document.getElementById('leaveDetailContent').innerHTML = html;
+            document.getElementById('leaveDetailActions').style.display = 'flex';
+        }
+
+        function closeLeaveDetail() {
+            document.getElementById('leaveDetailModal').classList.remove('active');
+            editingLeaveId = null;
+        }
+
+        // ========== Save Leave Edit ==========
+        function saveLeaveEdit() {
+            if (!editingLeaveId) return;
+            let req = leaveRequests.find(r => r.id === editingLeaveId);
+            if (!req) return;
+
+            let newType = document.getElementById('editLeaveType').value;
+            let newStart = document.getElementById('editLeaveStart').value;
+            let newEnd = document.getElementById('editLeaveEnd').value;
+            let newReason = document.getElementById('editLeaveReason').value;
+            let newStatus = document.getElementById('editLeaveStatus').value;
+
+            if (!newStart || !newEnd) {
+                alert(currentLang === 'ar' ? '❌ الرجاء إدخال التواريخ' : '❌ Please enter dates');
+                return;
+            }
+
+            let days = Math.ceil((new Date(newEnd) - new Date(newStart)) / 86400000) + 1;
+            let maxDays = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][newType]?.maxDays || 30;
+
+            if (days > maxDays) {
+                alert(`${currentLang === 'ar' ? `❌ عدد الأيام (${days}) يتجاوز الحد الأقصى (${maxDays} يوم)` : `❌ Days (${days}) exceeds max (${maxDays} days)`}`);
+                return;
+            }
+
+            req.type = newType;
+            req.start = newStart;
+            req.end = newEnd;
+            req.days = days;
+            req.reason = newReason;
+            req.status = newStatus;
+
+            localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
+
+            // Update employee balance if approved
+            if (newStatus === 'approved' && req.type !== 'بدون_راتب' && req.type !== 'زواج' && req.type !== 'مولود') {
+                let emp = employees.find(e => e.id === req.employeeId);
+                if (emp) {
+                    // Recalculate balance based on all approved leaves
+                    let totalUsed = leaveRequests.filter(r => r.employeeId === req.employeeId && r.status === 'approved' && r
+                        .type !== 'بدون_راتب' && r.type !== 'زواج' && r.type !== 'مولود')
+                        .reduce((sum, r) => sum + r.days, 0);
+                    emp.leaveBalance = Math.max(0, 30 - totalUsed);
+                    localStorage.setItem('hr_employees', JSON.stringify(employees));
+                }
+            }
+
+            closeLeaveDetail();
+            renderLeaveManagement();
+            renderAll();
+            alert(currentLang === 'ar' ? '✅ تم تحديث الإجازة بنجاح' : '✅ Leave updated successfully');
+        }
+
+        // ========== Delete Leave ==========
+        function deleteLeaveRequest() {
+            if (!editingLeaveId) return;
+            if (!confirm(currentLang === 'ar' ? '⚠️ هل أنت متأكد من حذف هذه الإجازة؟' :
+                    '⚠️ Are you sure you want to delete this leave?')) return;
+            deleteLeaveRequestDirect(editingLeaveId);
+            closeLeaveDetail();
+        }
+
+        function deleteLeaveRequestDirect(id) {
+            if (!confirm(currentLang === 'ar' ? '⚠️ هل أنت متأكد من حذف هذه الإجازة؟' :
+                    '⚠️ Are you sure you want to delete this leave?')) return;
+            leaveRequests = leaveRequests.filter(r => r.id !== id);
+            localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
+            renderLeaveManagement();
+            renderAll();
+            alert(currentLang === 'ar' ? '🗑️ تم حذف الإجازة بنجاح' : '🗑️ Leave deleted successfully');
+        }
+
+        // ========== Employees Management ==========
         function updateManagerSelect() {
             let select = document.getElementById('newManagerId');
             if (select) {
