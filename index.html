@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الموارد البشرية | إدارة الإجازات المتقدمة</title>
+    <title>نظام الموارد البشرية | HR Portal</title>
     <style>
         * {
             margin: 0;
@@ -527,7 +527,7 @@
             </div>
         </div>
 
-        <!-- ========== NEW: LEAVE MANAGEMENT (HR) ========== -->
+        <!-- Leave Management (HR) -->
         <div id="leavemanagementPage" class="page">
             <div class="card">
                 <div class="card-title" id="leaveMgmtTitle">📅 إدارة الإجازات (جميع الموظفين)</div>
@@ -535,7 +535,7 @@
             </div>
         </div>
 
-        <!-- ========== NEW: LEAVE DETAIL MODAL ========== -->
+        <!-- Leave Detail Modal -->
         <div id="leaveDetailModal" class="edit-modal">
             <div class="edit-modal-content">
                 <h2 id="leaveDetailTitle" style="text-align:center;margin-bottom:20px;">📋 تفاصيل الإجازة</h2>
@@ -647,7 +647,7 @@
             en: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود']
         };
 
-        // ========== الخدمات ==========
+        // ========== الخدمات (مرتبة بدون تكرار) ==========
         const servicesData = {
             ar: [
                 { id: "leave", name: "📅 طلب إجازة", desc: "تقديم طلب إجازة سنوية، مرضية، زواج، مولود، أو بدون راتب",
@@ -673,9 +673,8 @@
                     ] }
             ],
             en: [
-                { id: "leave", name: "📅 Leave Request", desc: "Submit leave request", fields: ["Leave Type", "From Date",
-                        "To Date", "Reason"
-                    ] },
+                { id: "leave", name: "📅 Leave Request", desc: "Submit annual, sick, marriage, newborn, or unpaid leave",
+                    fields: ["Leave Type", "From Date", "To Date", "Reason"] },
                 { id: "ticket", name: "🎫 Travel Ticket", desc: "Request travel ticket", fields: ["Ticket Type",
                         "Travel Date", "Destination", "Notes"
                     ] },
@@ -933,7 +932,8 @@
         }
 
         function openRequestForm(id, name, fields) {
-            if (currentUser.role !== 'موظف') {
+            // السماح للموظفين و HR برفع طلبات
+            if (currentUser.role !== 'موظف' && currentUser.role !== 'hr') {
                 alert(currentLang === 'ar' ? '❌ فقط الموظفين يمكنهم رفع طلبات' : '❌ Only employees can submit');
                 return;
             }
@@ -972,7 +972,6 @@
             selectedAttachment = null;
             selectedAttachmentName = null;
 
-            // Add file listener
             setTimeout(() => {
                 let fileInput = document.getElementById('leaveAttachment');
                 if (fileInput) {
@@ -1033,7 +1032,6 @@
 
             let days = Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;
 
-            // Check max days for leave type
             let maxDays = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.maxDays || 30;
             let needsAttachment = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.needsAttachment || false;
 
@@ -1363,7 +1361,7 @@
             editingLeaveId = null;
         }
 
-        // ========== Save Leave Edit ==========
+        // ========== Save Leave Edit (FIXED) ==========
         function saveLeaveEdit() {
             if (!editingLeaveId) return;
             let req = leaveRequests.find(r => r.id === editingLeaveId);
@@ -1388,6 +1386,7 @@
                 return;
             }
 
+            // تحديث الطلب
             req.type = newType;
             req.start = newStart;
             req.end = newEnd;
@@ -1397,11 +1396,10 @@
 
             localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
 
-            // Update employee balance if approved
+            // تحديث الرصيد إذا كانت الحالة معتمدة
             if (newStatus === 'approved' && req.type !== 'بدون_راتب' && req.type !== 'زواج' && req.type !== 'مولود') {
                 let emp = employees.find(e => e.id === req.employeeId);
                 if (emp) {
-                    // Recalculate balance based on all approved leaves
                     let totalUsed = leaveRequests.filter(r => r.employeeId === req.employeeId && r.status === 'approved' && r
                         .type !== 'بدون_راتب' && r.type !== 'زواج' && r.type !== 'مولود')
                         .reduce((sum, r) => sum + r.days, 0);
