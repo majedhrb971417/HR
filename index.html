@@ -199,6 +199,7 @@
         .badge-manager { background: #fef3c7; color: #92400e; }
         .badge-inactive { background: #e2e8f0; color: #475569; }
         .badge-employee { background: #e0e7ff; color: #3730a3; }
+        .badge-modified { background: #fce4ec; color: #880e4f; }
 
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; }
@@ -218,7 +219,6 @@
             font-weight: 700;
         }
 
-        /* Clearance */
         .clearance-box {
             background: white;
             border-radius: 24px;
@@ -325,6 +325,22 @@
             border-radius: 12px;
         }
 
+        .employee-response-box {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .employee-response-box.modified {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+        .employee-response-box.rejected {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
         @media (max-width: 800px) {
             .services-grid { grid-template-columns: 1fr; }
             .nav-btn { padding: 6px 12px; font-size: 0.8rem; }
@@ -340,7 +356,7 @@
     <div id="notification" class="notification-popup"></div>
     <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧 English</button>
 
-    <!-- ====================== صفحة تسجيل الدخول ====================== -->
+    <!-- Login Page -->
     <div id="loginPage" class="login-container">
         <h1 id="loginTitle">🏢 نظام الموارد البشرية</h1>
         <p id="loginSubtitle">تسجيل الدخول باستخدام الرقم الوظيفي</p>
@@ -350,7 +366,7 @@
         <div id="loginError" class="login-error"></div>
     </div>
 
-    <!-- ====================== الواجهة الرئيسية ====================== -->
+    <!-- Main App -->
     <div id="mainApp" class="main-app">
         <div class="header">
             <h1 id="appTitle">🏢 نظام إدارة الموارد البشرية</h1>
@@ -363,14 +379,14 @@
 
         <div class="nav-menu" id="navMenu"></div>
 
-        <!-- ===== Dashboard ===== -->
+        <!-- Dashboard -->
         <div id="dashboardPage" class="page">
             <div class="card"><div class="card-title" id="dashboardTitle">📊 لوحة التحكم</div><div id="dashboardStats"></div></div>
             <div class="card"><div class="card-title" id="recentTitle">📋 آخر طلباتي</div><div id="recentRequests"></div></div>
             <div class="card"><div class="card-title" id="notifTitle">🔔 الإشعارات</div><div id="notificationsList"></div></div>
         </div>
 
-        <!-- ===== الخدمات الذاتية ===== -->
+        <!-- Self Services -->
         <div id="selfservicesPage" class="page">
             <div class="card"><div class="card-title" id="selfTitle">📝 الخدمات الذاتية</div><div class="services-grid" id="selfServicesGrid"></div></div>
             <div id="requestFormContainer" style="display:none;">
@@ -383,34 +399,34 @@
             </div>
         </div>
 
-        <!-- ===== طلباتي ===== -->
+        <!-- My Requests -->
         <div id="myrequestsPage" class="page">
             <div class="card"><div class="card-title" id="requestsTitle">📋 طلباتي</div><div id="myRequestsList"></div></div>
         </div>
 
-        <!-- ===== فريقي ===== -->
+        <!-- My Team -->
         <div id="myteamPage" class="page">
             <div class="card"><div class="card-title" id="teamTitle">👥 فريقي</div><div id="teamMembers"></div></div>
         </div>
 
-        <!-- ===== ملف الموظف ===== -->
+        <!-- Employee Profile -->
         <div id="employeeprofilePage" class="page">
             <div class="card"><div class="card-title" id="profileTitle">👤 ملف الموظف</div><div id="employeeProfileInfo"></div></div>
             <div class="card"><div class="card-title" id="empRequestsTitle">📋 طلبات الموظف</div><div id="employeeRequestsList"></div></div>
             <button class="btn btn-primary" onclick="showPage('myteam')" id="backBtn">🔙 العودة</button>
         </div>
 
-        <!-- ===== المزايا ===== -->
+        <!-- Benefits -->
         <div id="benefitsPage" class="page">
             <div class="card"><div class="card-title" id="benefitsTitle">🎁 المزايا والبدلات</div><div id="benefitsInfo"></div></div>
         </div>
 
-        <!-- ===== الأدوات ===== -->
+        <!-- Tools -->
         <div id="toolsPage" class="page">
             <div class="card"><div class="card-title" id="toolsTitle">🛠️ الأدوات</div><div class="services-grid" id="toolsGrid"></div></div>
         </div>
 
-        <!-- ===== إدارة الموظفين (HR فقط) ===== -->
+        <!-- Employees Management -->
         <div id="employeesPage" class="page">
             <div class="card">
                 <div class="card-title" id="addEmpTitle">➕ إضافة موظف جديد</div>
@@ -438,12 +454,12 @@
             </div>
         </div>
 
-        <!-- ===== إدارة الإجازات (HR فقط) ===== -->
+        <!-- Leave Management -->
         <div id="leavemanagementPage" class="page">
             <div class="card"><div class="card-title" id="leaveMgmtTitle">📅 إدارة الإجازات (جميع الموظفين)</div><div id="leaveManagementContainer"></div></div>
         </div>
 
-        <!-- ===== تغيير الرقم السري ===== -->
+        <!-- Change Password -->
         <div id="changepasswordPage" class="page">
             <div class="card">
                 <div class="card-title" id="cpTitle">🔑 تغيير الرقم السري</div>
@@ -466,7 +482,7 @@
             </div>
         </div>
 
-        <!-- ===== إنهاء الخدمة (HR فقط) ===== -->
+        <!-- Termination (HR) -->
         <div id="terminationPage" class="page">
             <div class="card">
                 <div class="card-title" id="termTitle">📋 إنهاء عقد العمل</div>
@@ -491,12 +507,12 @@
                 <button class="btn btn-primary" onclick="submitTermination()" id="termSubmitBtn">📤 رفع طلب إنهاء خدمة</button>
             </div>
             <div class="card">
-                <div class="card-title" id="termRequestsTitle">📋 طلبات إنهاء الخدمة المعلقة</div>
+                <div class="card-title" id="termRequestsTitle">📋 طلبات إنهاء الخدمة</div>
                 <div id="terminationRequestsList"></div>
             </div>
         </div>
 
-        <!-- ===== المخالصات ===== -->
+        <!-- Clearance -->
         <div id="clearancePage" class="page">
             <div class="card">
                 <div class="card-title" id="clearanceTitle">📄 المخالصات المالية</div>
@@ -505,7 +521,7 @@
             <div id="clearanceDetailContainer"></div>
         </div>
 
-        <!-- ===== NEW: متابعة الطلبات (جميع الطلبات) ===== -->
+        <!-- All Requests -->
         <div id="allrequestsPage" class="page">
             <div class="card">
                 <div class="card-title" id="allReqsTitle">📋 جميع طلبات النظام</div>
@@ -513,7 +529,7 @@
             </div>
         </div>
 
-        <!-- ===== تقييم الأداء (HR فقط) ===== -->
+        <!-- Performance Review -->
         <div id="performancereviewPage" class="page">
             <div class="card">
                 <div class="card-title" id="prTitle">📊 تقييم الأداء</div>
@@ -539,7 +555,7 @@
         </div>
     </div>
 
-    <!-- ====================== نافذة عرض المرفق ====================== -->
+    <!-- Attachment Modal -->
     <div id="attachmentModal" class="modal">
         <div class="modal-content" style="max-width:700px;">
             <h2 id="attachTitle" style="text-align:center;margin-bottom:20px;">📎 المرفق</h2>
@@ -550,7 +566,7 @@
         </div>
     </div>
 
-    <!-- ====================== نافذة تفاصيل الإجازة ====================== -->
+    <!-- Leave Detail Modal -->
     <div id="leaveDetailModal" class="modal">
         <div class="modal-content">
             <h2 id="leaveDetailTitle" style="text-align:center;margin-bottom:20px;">📋 تفاصيل الإجازة</h2>
@@ -563,20 +579,33 @@
         </div>
     </div>
 
-    <!-- ====================== نافذة إنهاء الخدمة (للموظف) ====================== -->
+    <!-- ===== NEW: Termination Response Modal (Employee) ===== -->
     <div id="terminationResponseModal" class="modal">
         <div class="modal-content">
             <h2 id="termRespTitle" style="text-align:center;margin-bottom:20px;">📋 طلب إنهاء خدمة</h2>
             <div id="termResponseContent"></div>
             <div class="modal-actions" id="termResponseActions">
-                <button class="btn btn-success" onclick="approveTermination()" id="termApproveBtn">✅ موافقة</button>
-                <button class="btn btn-warning" onclick="showTerminationEdit()" id="termEditBtn">✏️ تعديل</button>
-                <button class="btn btn-danger" onclick="rejectTermination()" id="termRejectBtn">❌ رفض</button>
+                <button class="btn btn-success" onclick="employeeApproveTermination()" id="termApproveBtn">✅ موافقة</button>
+                <button class="btn btn-warning" onclick="employeeEditTermination()" id="termEditBtn">✏️ تعديل وإرسال</button>
+                <button class="btn btn-danger" onclick="employeeRejectTermination()" id="termRejectBtn">❌ رفض</button>
             </div>
         </div>
     </div>
 
-    <!-- ====================== نافذة تفاصيل الطلب (لجميع الصلاحيات) ====================== -->
+    <!-- ===== NEW: HR Decision Modal for Termination ===== -->
+    <div id="hrTerminationModal" class="modal">
+        <div class="modal-content">
+            <h2 id="hrTermTitle" style="text-align:center;margin-bottom:20px;">📋 قرار HR بشأن إنهاء الخدمة</h2>
+            <div id="hrTermContent"></div>
+            <div class="modal-actions" id="hrTermActions">
+                <button class="btn btn-success" onclick="hrApproveTermination()" id="hrApproveBtn">✅ اعتماد</button>
+                <button class="btn btn-danger" onclick="hrRejectTermination()" id="hrRejectBtn">❌ رفض</button>
+                <button class="btn btn-primary" onclick="closeHrTermModal()" id="hrCloseBtn">🔙 إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Detail Modal -->
     <div id="requestDetailModal" class="modal">
         <div class="modal-content">
             <h2 id="reqDetailTitle" style="text-align:center;margin-bottom:20px;">📋 تفاصيل الطلب</h2>
@@ -589,7 +618,7 @@
         </div>
     </div>
 
-    <!-- ====================== نافذة تعديل بيانات الموظف ====================== -->
+    <!-- Edit Employee Modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <h2 id="editModalTitle" style="text-align:center;margin-bottom:20px;">✏️ تعديل بيانات الموظف</h2>
@@ -621,7 +650,7 @@
     </div>
 
     <script>
-        // ========== قاعدة بيانات الموظفين ==========
+        // ========== Database ==========
         let employees = [
             { id: "10001", name: "المدير العام", pass: "10001", role: "مدير", title: "مدير عام", salary: 20000, dept: "الإدارة",
                 leaveBalance: 30, managerId: null, startDate: "2020-01-01", email: "ceo@company.com", phone: "0500000000",
@@ -656,8 +685,8 @@
         let currentTerminationId = null;
         let viewingRequestId = null;
         let viewingRequestType = null;
+        let currentHrTermId = null;
 
-        // ========== توليد رقم طلب فريد ==========
         let requestCounter = parseInt(localStorage.getItem('hr_requestCounter')) || 1;
 
         function generateRequestCode() {
@@ -669,7 +698,7 @@
             return code;
         }
 
-        // ========== أنماط الإجازات ==========
+        // ========== Leave Types ==========
         const leaveTypes = {
             ar: { سنوية: { maxDays: 30, needsAttachment: false }, مرضية: { maxDays: 30, needsAttachment: true },
                 بدون_راتب: { maxDays: 30, needsAttachment: false }, زواج: { maxDays: 5, needsAttachment: false },
@@ -682,7 +711,7 @@
                 'زواج', 'مولود'
             ] };
 
-        // ========== الخدمات ==========
+        // ========== Services ==========
         const servicesData = {
             ar: [
                 { id: "leave", name: "📅 طلب إجازة", desc: "تقديم طلب إجازة سنوية، مرضية، زواج، مولود، أو بدون راتب",
@@ -756,7 +785,7 @@
             ]
         };
 
-        // ========== دوال الترجمة ==========
+        // ========== Language ==========
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.body.classList.toggle('en', currentLang === 'en');
@@ -836,8 +865,8 @@
             t('termDateLabel').innerHTML = currentLang === 'ar' ? '📅 آخر يوم عمل' : '📅 Last Working Day';
             t('termNotesLabel').innerHTML = currentLang === 'ar' ? '📝 ملاحظات' : '📝 Notes';
             t('termSubmitBtn').innerHTML = currentLang === 'ar' ? '📤 رفع طلب إنهاء خدمة' : '📤 Submit Termination Request';
-            t('termRequestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلبات إنهاء الخدمة المعلقة' :
-                '📋 Pending Termination Requests';
+            t('termRequestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلبات إنهاء الخدمة' :
+                '📋 Termination Requests';
 
             // Clearance
             t('clearanceTitle').innerHTML = currentLang === 'ar' ? '📄 المخالصات المالية' : '📄 Financial Settlements';
@@ -868,6 +897,19 @@
             t('reqRejectBtn').innerHTML = currentLang === 'ar' ? '❌ رفض' : '❌ Reject';
             t('reqCloseBtn').innerHTML = currentLang === 'ar' ? '🔙 إغلاق' : '🔙 Close';
 
+            // Termination Response (Employee)
+            t('termRespTitle').innerHTML = currentLang === 'ar' ? '📋 طلب إنهاء خدمة' : '📋 Termination Request';
+            t('termApproveBtn').innerHTML = currentLang === 'ar' ? '✅ موافقة' : '✅ Approve';
+            t('termEditBtn').innerHTML = currentLang === 'ar' ? '✏️ تعديل وإرسال' : '✏️ Edit & Send';
+            t('termRejectBtn').innerHTML = currentLang === 'ar' ? '❌ رفض' : '❌ Reject';
+
+            // HR Termination Decision
+            t('hrTermTitle').innerHTML = currentLang === 'ar' ? '📋 قرار HR بشأن إنهاء الخدمة' :
+                '📋 HR Decision on Termination';
+            t('hrApproveBtn').innerHTML = currentLang === 'ar' ? '✅ اعتماد' : '✅ Approve';
+            t('hrRejectBtn').innerHTML = currentLang === 'ar' ? '❌ رفض' : '❌ Reject';
+            t('hrCloseBtn').innerHTML = currentLang === 'ar' ? '🔙 إغلاق' : '🔙 Close';
+
             // Performance Review
             t('prTitle').innerHTML = currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance Review';
             t('prStep1Desc').innerHTML = currentLang === 'ar' ? 'اختر الموظفين الذين أكملوا 6 أشهر لإرسال تقييم لهم' :
@@ -880,7 +922,7 @@
             t('prSubmitSelfBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال التقييم الذاتي' : '📤 Submit Self Evaluation';
         }
 
-        // ========== الإشعارات ==========
+        // ========== Notifications ==========
         function showNotification(message, type = 'success') {
             let notif = document.getElementById('notification');
             notif.textContent = message;
@@ -933,7 +975,7 @@
             `).join('');
         }
 
-        // ========== دوال مساعدة ==========
+        // ========== Helpers ==========
         function getNextId() {
             let max = 10006;
             employees.forEach(e => {
@@ -972,7 +1014,8 @@
                 'pending_hr': currentLang === 'ar' ? 'قيد مراجعة HR' : 'Pending HR',
                 'pending_employee': currentLang === 'ar' ? 'قيد مراجعة الموظف' : 'Pending Employee',
                 'approved': currentLang === 'ar' ? 'معتمد' : 'Approved',
-                'rejected': currentLang === 'ar' ? 'مرفوض' : 'Rejected'
+                'rejected': currentLang === 'ar' ? 'مرفوض' : 'Rejected',
+                'pending_hr_modified': currentLang === 'ar' ? 'قيد مراجعة HR (معدل من الموظف)' : 'Pending HR (Modified by Employee)'
             };
             return map[status] || status;
         }
@@ -983,19 +1026,13 @@
                 'pending_hr': 'badge-hr',
                 'pending_employee': 'badge-employee',
                 'approved': 'badge-approved',
-                'rejected': 'badge-rejected'
+                'rejected': 'badge-rejected',
+                'pending_hr_modified': 'badge-modified'
             };
             return map[status] || 'badge-pending';
         }
 
-        function getRequestType(type) {
-            if (type.includes('إجازة') || type.includes('Leave')) return 'إجازة';
-            if (type.includes('إنهاء') || type.includes('Termination')) return 'إنهاء خدمة';
-            if (type.includes('تذكرة') || type.includes('Ticket')) return 'تذكرة';
-            return type;
-        }
-
-        // ========== تسجيل الدخول ==========
+        // ========== Login ==========
         function doLogin() {
             let id = document.getElementById('loginId').value.trim();
             let pass = document.getElementById('loginPass').value.trim();
@@ -1015,7 +1052,6 @@
                 renderPerformanceReview();
                 showPage('dashboard');
                 showNotification(currentLang === 'ar' ? `✅ مرحباً ${currentUser.name}` : `✅ Welcome ${currentUser.name}`);
-                // Check for pending notifications
                 checkPendingNotifications();
             } else {
                 document.getElementById('loginError').innerHTML = currentLang === 'ar' ?
@@ -1096,7 +1132,7 @@
             let pendingReviews = performanceReviews.filter(r => r.status === 'pending_manager' || r.status === 'pending_hr')
                 .length;
             let pendingTerminations = terminationRequests.filter(r => r.status === 'pending_employee' || r.status ===
-                'pending_hr').length;
+                'pending_hr' || r.status === 'pending_hr_modified').length;
             let activeCount = getActiveEmployees().length;
             let inactiveCount = getInactiveEmployees().length;
             let allRequestsCount = leaveRequests.length + terminationRequests.length;
@@ -1111,7 +1147,7 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== الخدمات الذاتية ==========
+        // ========== Self Services ==========
         let currentRequestType = null;
         let selectedAttachment = null;
         let selectedAttachmentName = null;
@@ -1266,7 +1302,6 @@
             leaveRequests.unshift(newRequest);
             localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
 
-            // إشعار للمدير
             addNotification(manager.id,
                 currentLang === 'ar' ? `طلب إجازة جديد من ${currentUser.name}` : `New leave request from ${currentUser.name}`,
                 `${currentLang === 'ar' ? 'نوع' : 'Type'}: ${type}, ${currentLang === 'ar' ? 'من' : 'From'}: ${start} ${currentLang === 'ar' ? 'إلى' : 'to'}: ${end}`,
@@ -1281,7 +1316,7 @@
             );
         }
 
-        // ========== طلباتي ==========
+        // ========== My Requests ==========
         function renderMyRequests() {
             let my = leaveRequests.filter(r => r.employeeId === currentUser.id);
             let statusText = (s) => getRequestStatusText(s);
@@ -1292,13 +1327,12 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== الموافقات ==========
+        // ========== Leave Approvals ==========
         function approveAsManager(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (req && req.status === 'pending_manager') {
                 req.status = 'pending_hr';
                 localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
-                // إشعار لـ HR
                 let hrUser = employees.find(e => e.role === 'hr');
                 if (hrUser) {
                     addNotification(hrUser.id,
@@ -1326,7 +1360,6 @@
                 }
                 localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
                 localStorage.setItem('hr_employees', JSON.stringify(employees));
-                // إشعار للموظف
                 addNotification(req.employeeId,
                     currentLang === 'ar' ? `تم اعتماد إجازتك` : `Your leave has been approved`,
                     `${currentLang === 'ar' ? 'نوع' : 'Type'}: ${req.type}, ${currentLang === 'ar' ? 'مدة' : 'Duration'}: ${req.days} ${currentLang === 'ar' ? 'يوم' : 'days'}`,
@@ -1349,7 +1382,6 @@
             if (req && (req.status === 'pending_manager' || req.status === 'pending_hr')) {
                 req.status = 'rejected';
                 localStorage.setItem('hr_leaveRequests', JSON.stringify(leaveRequests));
-                // إشعار للموظف
                 addNotification(req.employeeId,
                     currentLang === 'ar' ? `تم رفض طلب الإجازة` : `Leave request rejected`,
                     `${currentLang === 'ar' ? 'نوع' : 'Type'}: ${req.type}`,
@@ -1365,7 +1397,7 @@
             }
         }
 
-        // ========== عرض المرفق ==========
+        // ========== View Attachment ==========
         function viewAttachment(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (req && req.attachment) {
@@ -1390,7 +1422,7 @@
             document.getElementById('attachmentContent').innerHTML = '';
         }
 
-        // ========== الفريق ==========
+        // ========== Team ==========
         function renderTeam() {
             if (currentUser.role !== 'مدير' && currentUser.role !== 'hr') {
                 document.getElementById('teamMembers').innerHTML = `<p>${currentLang === 'ar' ? 'غير مصرح' : 'Unauthorized'}</p>`;
@@ -1451,7 +1483,7 @@
             document.getElementById('teamMembers').innerHTML = html;
         }
 
-        // ========== ملف الموظف ==========
+        // ========== Employee Profile ==========
         function viewEmployeeProfile(empId) {
             selectedEmployeeId = empId;
             renderEmployeeProfile();
@@ -1474,7 +1506,7 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== إدارة الإجازات (HR) ==========
+        // ========== Leave Management ==========
         function renderLeaveManagement() {
             if (currentUser.role !== 'hr') return;
             let allRequests = leaveRequests;
@@ -1524,7 +1556,7 @@
             document.getElementById('leaveManagementContainer').innerHTML = html;
         }
 
-        // ========== تفاصيل الإجازة ==========
+        // ========== Leave Detail ==========
         function openLeaveDetail(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (!req) return;
@@ -1635,7 +1667,7 @@
             showNotification(currentLang === 'ar' ? '🗑️ تم حذف الإجازة بنجاح' : '🗑️ Leave deleted successfully', 'warning');
         }
 
-        // ========== تغيير الرقم السري ==========
+        // ========== Change Password ==========
         function loadProfileData() {
             if (!currentUser) return;
             document.getElementById('epName').value = currentUser.name || '';
@@ -1732,7 +1764,7 @@
             }
         }
 
-        // ========== إدارة الموظفين ==========
+        // ========== Employee Management ==========
         function updateManagerSelect() {
             let select = document.getElementById('newManagerId');
             if (select) {
@@ -1787,7 +1819,6 @@
 
             localStorage.setItem('hr_employees', JSON.stringify(employees));
 
-            // إشعار للمدير الجديد
             if (managerId) {
                 let manager = getEmployeeById(managerId);
                 if (manager) {
@@ -1841,7 +1872,6 @@
             }, 10000);
         }
 
-        // ========== تصدير Excel ==========
         function exportEmployeesExcel() {
             let data = employees.map(e => ({
                 'الرقم الوظيفي': e.id,
@@ -2021,7 +2051,7 @@
             document.getElementById('inactiveEmployeesList').innerHTML = html;
         }
 
-        // ========== المزايا والأدوات ==========
+        // ========== Benefits & Tools ==========
         function renderBenefits() {
             document.getElementById('benefitsInfo').innerHTML =
                 `<div class="services-grid"><div class="service-card"><h4>🩺 ${currentLang === 'ar' ? 'التأمين الطبي' : 'Medical Insurance'}</h4><p>${currentLang === 'ar' ? 'تأمين بوبا شامل' : 'Comprehensive Bupa insurance'}</p></div><div class="service-card"><h4>✈️ ${currentLang === 'ar' ? 'تذكرة سفر' : 'Travel Ticket'}</h4><p>${currentLang === 'ar' ? 'سنوية للموظف وعائلته' : 'Annual for employee and family'}</p></div><div class="service-card"><h4>🎓 ${currentLang === 'ar' ? 'بدل التعليم' : 'Education Allowance'}</h4><p>${currentLang === 'ar' ? 'دعم تعليمي 5000 ريال' : '5000 SAR educational support'}</p></div><div class="service-card"><h4>🏠 ${currentLang === 'ar' ? 'بدل السكن' : 'Housing Allowance'}</h4><p>${currentLang === 'ar' ? 'حسب المسمى الوظيفي' : 'Based on job title'}</p></div></div>`;
@@ -2035,7 +2065,7 @@
         }
 
         // ============================================================
-        // ========== إنهاء الخدمة ==========
+        // ========== TERMINATION SYSTEM (المصحح) ==========
         // ============================================================
 
         function updateTerminationSelect() {
@@ -2057,27 +2087,34 @@
             }
             updateTerminationSelect();
 
-            let pending = terminationRequests.filter(r => r.status === 'pending_employee' || r.status === 'pending_hr');
+            let allRequests = terminationRequests;
             let html = '';
-            if (pending.length === 0) {
-                html = `<p>${currentLang === 'ar' ? 'لا توجد طلبات إنهاء خدمة معلقة' : 'No pending termination requests'}</p>`;
+            if (allRequests.length === 0) {
+                html = `<p>${currentLang === 'ar' ? 'لا توجد طلبات إنهاء خدمة' : 'No termination requests'}</p>`;
             } else {
-                pending.forEach(r => {
+                allRequests.forEach(r => {
                     let emp = getEmployeeById(r.employeeId);
                     let statusText = getRequestStatusText(r.status);
                     let badgeClass = getRequestBadgeClass(r.status);
+                    let modifiedBadge = r.status === 'pending_hr_modified' ?
+                        `<span class="badge badge-modified">${currentLang === 'ar' ? 'معدل من الموظف' : 'Modified by Employee'}</span>` :
+                        '';
                     html += `
-                        <div class="request-card" style="border:2px solid #2563eb;">
+                        <div class="request-card" style="border:2px solid ${r.status === 'pending_hr_modified' ? '#f59e0b' : '#2563eb'};">
                             <span class="req-code-small">${r.code || 'N/A'}</span>
                             <strong>👤 ${emp ? emp.name : r.employeeId}</strong><br>
                             ⚖️ ${r.reason}<br>
                             📅 ${r.endDate}<br>
                             <small>${r.notes || ''}</small><br>
-                            <span class="badge ${badgeClass}">${statusText}</span>
-                            ${r.status === 'pending_hr' ? `
+                            <span class="badge ${badgeClass}">${statusText}</span> ${modifiedBadge}
+                            ${r.status === 'pending_hr' || r.status === 'pending_hr_modified' ? `
                                 <div style="margin-top:10px;">
-                                    <button class="btn-success" style="padding:5px 12px;border:none;border-radius:12px;" onclick="finalApproveTermination('${r.id}')">✅ ${currentLang === 'ar' ? 'اعتماد نهائي' : 'Final Approve'}</button>
-                                    <button class="btn-danger" style="padding:5px 12px;border:none;border-radius:12px;margin-right:10px;" onclick="rejectTerminationHR('${r.id}')">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
+                                    <button class="btn-success" style="padding:5px 12px;border:none;border-radius:12px;" onclick="openHrTerminationModal('${r.id}')">📋 ${currentLang === 'ar' ? 'اتخاذ قرار' : 'Make Decision'}</button>
+                                </div>
+                            ` : ''}
+                            ${r.status === 'pending_employee' ? `
+                                <div style="margin-top:10px;">
+                                    <span class="badge badge-employee">${currentLang === 'ar' ? 'في انتظار رد الموظف' : 'Waiting for Employee'}</span>
                                 </div>
                             ` : ''}
                         </div>
@@ -2087,6 +2124,7 @@
             document.getElementById('terminationRequestsList').innerHTML = html;
         }
 
+        // ========== Submit Termination (HR) ==========
         function submitTermination() {
             if (currentUser.role !== 'hr') {
                 alert(currentLang === 'ar' ? '❌ غير مصرح لك' : '❌ Unauthorized');
@@ -2124,7 +2162,15 @@
                 employeeResponse: null,
                 employeeModified: false,
                 hrApproved: false,
-                requestType: 'termination'
+                requestType: 'termination',
+                // بيانات HR الأصلية
+                hrOriginal: {
+                    reason: reason,
+                    endDate: endDate,
+                    notes: notes
+                },
+                // بيانات الموظف المعدلة (إذا عدل)
+                employeeEdit: null
             };
 
             terminationRequests.unshift(newRequest);
@@ -2132,7 +2178,7 @@
 
             // إشعار للموظف
             addNotification(empId,
-                currentLang === 'ar' ? `تم رفع طلب إنهاء خدمتك` : `Termination request submitted for you`,
+                currentLang === 'ar' ? `📋 تم رفع طلب إنهاء خدمتك - يرجى الرد` : `📋 Termination request - Please respond`,
                 `${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${reason}, ${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last working day'}: ${endDate}`,
                 '#'
             );
@@ -2147,8 +2193,17 @@
                 `${currentLang === 'ar' ? `✅ تم رفع طلب إنهاء خدمة للموظف ${emp.name}` :
                     `✅ Termination request submitted to ${emp.name}`}`
             );
+
+            // إظهار الطلب للموظف إذا كان متصلاً
+            if (currentUser.id !== empId) {
+                showNotification(
+                    `${currentLang === 'ar' ? `📢 تم إرسال الطلب إلى الموظف ${emp.name} للموافقة` :
+                        `📢 Request sent to ${emp.name} for approval`}`, 'warning'
+                );
+            }
         }
 
+        // ========== Employee: Show Termination Request ==========
         function showTerminationToEmployee(empId) {
             let req = terminationRequests.find(r => r.employeeId === empId && r.status === 'pending_employee');
             if (!req) return;
@@ -2157,12 +2212,12 @@
 
             let html = `
                 <div class="form-grid">
-                    <div class="form-group"><label>${currentLang === 'ar' ? 'الرمز' : 'Code'}</label><input type="text" value="${req.code || 'N/A'}" readonly></div>
-                    <div class="form-group"><label>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</label><input type="text" value="${req.employeeName}" readonly></div>
-                    <div class="form-group"><label>${currentLang === 'ar' ? 'سبب الإنهاء' : 'Reason'}</label><input type="text" value="${req.reason}" readonly></div>
-                    <div class="form-group"><label>${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last Working Day'}</label><input type="date" id="termResponseEndDate" value="${req.endDate}"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'الرمز' : 'Code'}</label><input type="text" value="${req.code || 'N/A'}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</label><input type="text" value="${req.employeeName}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'سبب الإنهاء (من HR)' : 'Termination Reason (from HR)'}</label><input type="text" value="${req.reason}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'آخر يوم عمل (من HR)' : 'Last Working Day (from HR)'}</label><input type="date" id="termResponseEndDate" value="${req.endDate}"></div>
                     <div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات' : 'Notes'}</label><textarea id="termResponseNotes" rows="2">${req.notes || ''}</textarea></div>
-                    <div class="form-group full-width"><label>${currentLang === 'ar' ? 'سبب الإنهاء (يمكن التعديل)' : 'Reason (can be modified)'}</label>
+                    <div class="form-group full-width"><label>${currentLang === 'ar' ? 'تعديل سبب الإنهاء (اختياري)' : 'Modify Termination Reason (Optional)'}</label>
                         <select id="termResponseReason">
                             <option value="استقالة" ${req.reason === 'استقالة' ? 'selected' : ''}>استقالة</option>
                             <option value="فصل_مادة80" ${req.reason === 'فصل_مادة80' ? 'selected' : ''}>فصل - المادة 80</option>
@@ -2174,12 +2229,54 @@
                         </select>
                     </div>
                 </div>
+                <div style="background:#fef3c7;padding:15px;border-radius:12px;margin-top:10px;">
+                    <p style="font-weight:bold;color:#92400e;">${currentLang === 'ar' ? '📌 خياراتك:' : '📌 Your Options:'}</p>
+                    <ul style="padding-right:20px;">
+                        <li>${currentLang === 'ar' ? '✅ موافقة - الموافقة على الطلب كما هو' : '✅ Approve - Accept the request as is'}</li>
+                        <li>${currentLang === 'ar' ? '✏️ تعديل وإرسال - تعديل التاريخ/السبب وإرساله لـ HR' : '✏️ Edit & Send - Modify date/reason and send to HR'}</li>
+                        <li>${currentLang === 'ar' ? '❌ رفض - رفض الطلب نهائياً' : '❌ Reject - Reject the request'}</li>
+                    </ul>
+                </div>
             `;
             document.getElementById('termResponseContent').innerHTML = html;
             document.getElementById('termResponseActions').style.display = 'flex';
         }
 
-        function approveTermination() {
+        // ========== Employee: Approve Termination ==========
+        function employeeApproveTermination() {
+            if (!currentTerminationId) return;
+            let req = terminationRequests.find(r => r.id === currentTerminationId);
+            if (!req) return;
+
+            // الموظف يوافق على الطلب كما هو (بدون تعديل)
+            req.status = 'pending_hr';
+            req.employeeResponse = 'approved';
+            req.employeeModified = false;
+            req.employeeEdit = null;
+
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+            document.getElementById('termResponseModal').classList.remove('active');
+
+            // إشعار لـ HR
+            let hrUser = employees.find(e => e.role === 'hr');
+            if (hrUser) {
+                addNotification(hrUser.id,
+                    currentLang === 'ar' ? `✅ الموظف ${req.employeeName} وافق على إنهاء الخدمة` :
+                    `✅ ${req.employeeName} approved termination`,
+                    `${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${req.reason}`,
+                    '#'
+                );
+            }
+
+            renderTerminationPage();
+            showNotification(
+                `${currentLang === 'ar' ? '✅ تمت الموافقة، الطلب الآن في انتظار قرار HR' :
+                    '✅ Approved, request is now pending HR decision'}`
+            );
+        }
+
+        // ========== Employee: Edit Termination ==========
+        function employeeEditTermination() {
             if (!currentTerminationId) return;
             let req = terminationRequests.find(r => r.id === currentTerminationId);
             if (!req) return;
@@ -2188,35 +2285,39 @@
             let newNotes = document.getElementById('termResponseNotes').value;
             let newReason = document.getElementById('termResponseReason').value;
 
-            req.endDate = newEndDate || req.endDate;
-            req.notes = newNotes || req.notes;
-            req.reason = newReason || req.reason;
-            req.status = 'pending_hr';
-            req.employeeResponse = 'approved';
-            req.employeeModified = false;
+            // الموظف يعدل البيانات ويرسل لـ HR
+            req.employeeEdit = {
+                reason: newReason || req.reason,
+                endDate: newEndDate || req.endDate,
+                notes: newNotes || req.notes
+            };
+            req.status = 'pending_hr_modified';
+            req.employeeResponse = 'modified';
+            req.employeeModified = true;
 
             localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
             document.getElementById('termResponseModal').classList.remove('active');
-            renderTerminationPage();
 
             // إشعار لـ HR
             let hrUser = employees.find(e => e.role === 'hr');
             if (hrUser) {
                 addNotification(hrUser.id,
-                    currentLang === 'ar' ? `تمت موافقة الموظف ${req.employeeName} على إنهاء الخدمة` :
-                    `${req.employeeName} approved termination`,
-                    `${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${req.reason}`,
+                    currentLang === 'ar' ? `✏️ الموظف ${req.employeeName} عدل طلب إنهاء الخدمة` :
+                    `✏️ ${req.employeeName} modified termination request`,
+                    `${currentLang === 'ar' ? 'السبب الجديد' : 'New Reason'}: ${newReason || req.reason}`,
                     '#'
                 );
             }
 
+            renderTerminationPage();
             showNotification(
-                `${currentLang === 'ar' ? '✅ تمت الموافقة على إنهاء الخدمة، الطلب الآن في انتظار HR' :
-                    '✅ Termination approved, waiting for HR final approval'}`
+                `${currentLang === 'ar' ? '✅ تم تعديل الطلب وإرساله إلى HR لقرار نهائي' :
+                    '✅ Request modified and sent to HR for final decision'}`
             );
         }
 
-        function rejectTermination() {
+        // ========== Employee: Reject Termination ==========
+        function employeeRejectTermination() {
             if (!currentTerminationId) return;
             let req = terminationRequests.find(r => r.id === currentTerminationId);
             if (!req) return;
@@ -2225,62 +2326,102 @@
             req.employeeResponse = 'rejected';
             localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
             document.getElementById('termResponseModal').classList.remove('active');
-            renderTerminationPage();
-            showNotification(
-                `${currentLang === 'ar' ? '❌ تم رفض طلب إنهاء الخدمة' : '❌ Termination request rejected'}`, 'error'
-            );
-        }
-
-        function showTerminationEdit() {
-            if (!currentTerminationId) return;
-            let req = terminationRequests.find(r => r.id === currentTerminationId);
-            if (!req) return;
-
-            let newEndDate = document.getElementById('termResponseEndDate').value;
-            let newNotes = document.getElementById('termResponseNotes').value;
-            let newReason = document.getElementById('termResponseReason').value;
-
-            req.endDate = newEndDate || req.endDate;
-            req.notes = newNotes || req.notes;
-            req.reason = newReason || req.reason;
-            req.status = 'pending_hr';
-            req.employeeResponse = 'modified';
-            req.employeeModified = true;
-
-            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
-            document.getElementById('termResponseModal').classList.remove('active');
-            renderTerminationPage();
 
             // إشعار لـ HR
             let hrUser = employees.find(e => e.role === 'hr');
             if (hrUser) {
                 addNotification(hrUser.id,
-                    currentLang === 'ar' ? `تم تعديل طلب إنهاء الخدمة من قبل ${req.employeeName}` :
-                    `${req.employeeName} modified termination request`,
+                    currentLang === 'ar' ? `❌ الموظف ${req.employeeName} رفض طلب إنهاء الخدمة` :
+                    `❌ ${req.employeeName} rejected termination request`,
                     `${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${req.reason}`,
                     '#'
                 );
             }
 
+            renderTerminationPage();
             showNotification(
-                `${currentLang === 'ar' ? '✅ تم تعديل الطلب وإرساله إلى HR' :
-                    '✅ Request modified and sent to HR'}`
+                `${currentLang === 'ar' ? '❌ تم رفض طلب إنهاء الخدمة من قبل الموظف' :
+                    '❌ Termination request rejected by employee'}`, 'error'
             );
         }
 
-        function finalApproveTermination(id) {
+        // ========== HR: Open Termination Decision Modal ==========
+        function openHrTerminationModal(id) {
             let req = terminationRequests.find(r => r.id === id);
             if (!req) return;
+            currentHrTermId = id;
+            document.getElementById('hrTermModal').classList.add('active');
+
+            let emp = getEmployeeById(req.employeeId);
+            let isModified = req.status === 'pending_hr_modified';
+            let modifiedInfo = '';
+            if (isModified && req.employeeEdit) {
+                modifiedInfo = `
+                    <div class="employee-response-box modified" style="margin-top:10px;">
+                        <h4>${currentLang === 'ar' ? '✏️ تعديلات الموظف:' : '✏️ Employee Modifications:'}</h4>
+                        <p><strong>${currentLang === 'ar' ? 'السبب المعدل' : 'Modified Reason'}:</strong> ${req.employeeEdit.reason}</p>
+                        <p><strong>${currentLang === 'ar' ? 'آخر يوم عمل معدل' : 'Modified Last Day'}:</strong> ${req.employeeEdit.endDate}</p>
+                        <p><strong>${currentLang === 'ar' ? 'ملاحظات معدلة' : 'Modified Notes'}:</strong> ${req.employeeEdit.notes || '-'}</p>
+                    </div>
+                `;
+            }
+
+            let html = `
+                <div class="form-grid">
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'الرمز' : 'Code'}</label><input type="text" value="${req.code || 'N/A'}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</label><input type="text" value="${emp ? emp.name : req.employeeId}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'السبب الأصلي (HR)' : 'Original Reason (HR)'}</label><input type="text" value="${req.reason}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'آخر يوم عمل (HR)' : 'Original Last Day (HR)'}</label><input type="text" value="${req.endDate}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات HR' : 'HR Notes'}</label><textarea readonly style="background:#f1f5f9;">${req.notes || '-'}</textarea></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'حالة الطلب' : 'Status'}</label><input type="text" value="${getRequestStatusText(req.status)}" readonly style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'رد الموظف' : 'Employee Response'}</label><input type="text" value="${req.employeeResponse === 'approved' ? (currentLang === 'ar' ? '✅ موافقة' : '✅ Approved') : req.employeeResponse === 'modified' ? (currentLang === 'ar' ? '✏️ تعديل' : '✏️ Modified') : req.employeeResponse === 'rejected' ? (currentLang === 'ar' ? '❌ رفض' : '❌ Rejected') : (currentLang === 'ar' ? 'في الانتظار' : 'Pending')}" readonly style="background:#f1f5f9;"></div>
+                </div>
+                ${modifiedInfo}
+                <div style="background:#dbeafe;padding:15px;border-radius:12px;margin-top:10px;">
+                    <p style="font-weight:bold;color:#1e40af;">${currentLang === 'ar' ? '📌 قرار HR:' : '📌 HR Decision:'}</p>
+                    <ul style="padding-right:20px;">
+                        <li>${currentLang === 'ar' ? '✅ اعتماد - الموافقة على الطلب (إذا كان معدل، يتم اعتماد تعديل الموظف)' : '✅ Approve - Accept the request (if modified, accept employee edits)'}</li>
+                        <li>${currentLang === 'ar' ? '❌ رفض - رفض الطلب نهائياً (يبقى الموظف في الخدمة)' : '❌ Reject - Reject the request (employee stays)'}</li>
+                    </ul>
+                    ${isModified ? `<p style="color:#92400e;font-weight:bold;">${currentLang === 'ar' ? '⚠️ إذا اخترت "اعتماد"، سيتم اعتماد تعديلات الموظف. إذا اخترت "رفض"، سيتم تجاهل تعديلات الموظف ويعتمد الطلب الأصلي من HR.' : '⚠️ If you choose "Approve", employee edits will be accepted. If you choose "Reject", employee edits will be ignored and original HR request will be used.'}</p>` : ''}
+                </div>
+            `;
+            document.getElementById('hrTermContent').innerHTML = html;
+            document.getElementById('hrTermActions').style.display = 'flex';
+        }
+
+        function closeHrTermModal() {
+            document.getElementById('hrTermModal').classList.remove('active');
+            currentHrTermId = null;
+        }
+
+        // ========== HR: Approve Termination ==========
+        function hrApproveTermination() {
+            if (!currentHrTermId) return;
+            let req = terminationRequests.find(r => r.id === currentHrTermId);
+            if (!req) return;
+
+            let isModified = req.status === 'pending_hr_modified';
+
+            if (isModified && req.employeeEdit) {
+                // HR يوافق على تعديل الموظف
+                req.reason = req.employeeEdit.reason;
+                req.endDate = req.employeeEdit.endDate;
+                req.notes = req.employeeEdit.notes || req.notes;
+                req.employeeModified = true;
+            }
 
             req.status = 'approved';
             req.hrApproved = true;
             localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
 
+            // تغيير حالة الموظف إلى "منهية خدمات"
             let emp = getEmployeeById(req.employeeId);
             if (emp) {
                 emp.status = 'منهية خدمات';
                 localStorage.setItem('hr_employees', JSON.stringify(employees));
 
+                // حساب المخالصة
                 let clearanceData = calculateClearanceForEmployee(emp, req);
                 clearedEmployees.push({
                     id: emp.id,
@@ -2293,35 +2434,44 @@
 
                 // إشعار للموظف
                 addNotification(req.employeeId,
-                    currentLang === 'ar' ? `تم اعتماد إنهاء خدمتك نهائياً` : `Your termination has been finalized`,
+                    currentLang === 'ar' ? `✅ تم اعتماد إنهاء خدمتك نهائياً` : `✅ Your termination has been finalized`,
                     `${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last working day'}: ${req.endDate}`,
                     '#'
                 );
             }
 
+            closeHrTermModal();
             renderTerminationPage();
             renderClearancePage();
             renderEmployeesList();
             renderInactiveEmployees();
             updateTerminationSelect();
+
+            let decisionText = isModified && req.employeeEdit ?
+                (currentLang === 'ar' ? 'تم اعتماد تعديلات الموظف' : 'Employee modifications approved') :
+                (currentLang === 'ar' ? 'تم اعتماد الطلب الأصلي' : 'Original request approved');
+
             showNotification(
-                `${currentLang === 'ar' ? `✅ تم اعتماد إنهاء خدمة ${req.employeeName} نهائياً` :
-                    `✅ Termination for ${req.employeeName} finalized`}`
+                `${currentLang === 'ar' ? `✅ تم اعتماد إنهاء خدمة ${req.employeeName} نهائياً (${decisionText})` :
+                    `✅ Termination for ${req.employeeName} finalized (${decisionText})`}`
             );
         }
 
-        function rejectTerminationHR(id) {
-            let req = terminationRequests.find(r => r.id === id);
+        // ========== HR: Reject Termination ==========
+        function hrRejectTermination() {
+            if (!currentHrTermId) return;
+            let req = terminationRequests.find(r => r.id === currentHrTermId);
             if (!req) return;
 
             req.status = 'rejected';
             req.hrApproved = false;
             localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+            closeHrTermModal();
             renderTerminationPage();
 
             // إشعار للموظف
             addNotification(req.employeeId,
-                currentLang === 'ar' ? `تم رفض طلب إنهاء الخدمة من قبل HR` : `Termination request rejected by HR`,
+                currentLang === 'ar' ? `❌ تم رفض طلب إنهاء الخدمة من قبل HR` : `❌ Termination request rejected by HR`,
                 `${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${req.reason}`,
                 '#'
             );
@@ -2332,6 +2482,7 @@
             );
         }
 
+        // ========== Calculate Clearance ==========
         function calculateClearanceForEmployee(emp, req) {
             let startDate = new Date(emp.startDate);
             let endDate = new Date(req.endDate);
@@ -2380,7 +2531,7 @@
         }
 
         // ============================================================
-        // ========== المخالصات ==========
+        // ========== Clearance ==========
         // ============================================================
 
         function renderClearancePage() {
@@ -2564,7 +2715,7 @@
         }
 
         // ============================================================
-        // ========== جميع طلبات النظام ==========
+        // ========== All Requests ==========
         // ============================================================
 
         function renderAllRequests() {
@@ -2574,10 +2725,8 @@
                 return;
             }
 
-            // جمع جميع الطلبات من جميع المصادر
             let allRequests = [];
 
-            // طلبات الإجازات
             leaveRequests.forEach(r => {
                 allRequests.push({
                     id: r.id,
@@ -2596,7 +2745,6 @@
                 });
             });
 
-            // طلبات إنهاء الخدمة
             terminationRequests.forEach(r => {
                 allRequests.push({
                     id: r.id,
@@ -2615,7 +2763,6 @@
                 });
             });
 
-            // ترتيب حسب التاريخ (الأحدث أولاً)
             allRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (allRequests.length === 0) {
@@ -2640,12 +2787,13 @@
                 let typeDisplay = r.requestType === 'leave' ? (currentLang === 'ar' ? 'إجازة' : 'Leave') : (currentLang ===
                     'ar' ? 'إنهاء خدمة' : 'Termination');
 
-                // تحديد موقف الطلب
                 let position = '';
                 if (r.status === 'pending_manager') {
                     position = currentLang === 'ar' ? `عند المدير (${r.managerName || '-'})` : `With Manager (${r.managerName || '-'})`;
                 } else if (r.status === 'pending_hr') {
                     position = currentLang === 'ar' ? 'عند HR' : 'With HR';
+                } else if (r.status === 'pending_hr_modified') {
+                    position = currentLang === 'ar' ? 'عند HR (معدل من الموظف)' : 'With HR (Modified by Employee)';
                 } else if (r.status === 'pending_employee') {
                     position = currentLang === 'ar' ? `عند الموظف (${r.employeeName})` : `With Employee (${r.employeeName})`;
                 } else if (r.status === 'approved') {
@@ -2673,7 +2821,7 @@
             document.getElementById('allRequestsContainer').innerHTML = html;
         }
 
-        // ========== عرض تفاصيل الطلب (من جميع الطلبات) ==========
+        // ========== Request Detail ==========
         function openRequestDetail(id, type) {
             let req = null;
             if (type === 'leave') {
@@ -2708,31 +2856,57 @@
                 html += `<div class="form-group"><label>${currentLang === 'ar' ? 'الحالة' : 'Status'}</label><input type="text" value="${getRequestStatusText(req.status)}" readonly style="background:#f1f5f9;"></div>`;
                 html += `<div class="form-group"><label>${currentLang === 'ar' ? 'موقف الطلب' : 'Position'}</label><input type="text" value="${req.status === 'pending_manager' ? (currentLang === 'ar' ? `عند المدير (${req.managerName})` : `With Manager (${req.managerName})`) : req.status === 'pending_hr' ? (currentLang === 'ar' ? 'عند HR' : 'With HR') : req.status === 'pending_employee' ? (currentLang === 'ar' ? `عند الموظف (${req.employeeName})` : `With Employee (${req.employeeName})`) : req.status === 'approved' ? (currentLang === 'ar' ? '✅ معتمد' : '✅ Approved') : (currentLang === 'ar' ? '❌ مرفوض' : '❌ Rejected')}" readonly style="background:#f1f5f9;"></div>`;
             } else {
-                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'سبب الإنهاء' : 'Reason'}</label><input type="text" value="${req.reason}" readonly style="background:#f1f5f9;"></div>`;
-                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last Working Day'}</label><input type="text" value="${req.endDate}" readonly style="background:#f1f5f9;"></div>`;
-                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات' : 'Notes'}</label><textarea readonly style="background:#f1f5f9;">${req.notes || '-'}</textarea></div>`;
+                let isModified = req.status === 'pending_hr_modified';
+                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'سبب الإنهاء (HR)' : 'Termination Reason (HR)'}</label><input type="text" value="${req.reason}" readonly style="background:#f1f5f9;"></div>`;
+                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'آخر يوم عمل (HR)' : 'Last Working Day (HR)'}</label><input type="text" value="${req.endDate}" readonly style="background:#f1f5f9;"></div>`;
+                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات HR' : 'HR Notes'}</label><textarea readonly style="background:#f1f5f9;">${req.notes || '-'}</textarea></div>`;
+                if (isModified && req.employeeEdit) {
+                    html +=
+                        `<div class="form-group full-width" style="border:2px solid #f59e0b;padding:15px;border-radius:12px;grid-column:span 2;">
+                            <h4 style="color:#92400e;">✏️ ${currentLang === 'ar' ? 'تعديلات الموظف:' : 'Employee Modifications:'}</h4>
+                            <p><strong>${currentLang === 'ar' ? 'السبب المعدل' : 'Modified Reason'}:</strong> ${req.employeeEdit.reason}</p>
+                            <p><strong>${currentLang === 'ar' ? 'آخر يوم عمل معدل' : 'Modified Last Day'}:</strong> ${req.employeeEdit.endDate}</p>
+                            <p><strong>${currentLang === 'ar' ? 'ملاحظات معدلة' : 'Modified Notes'}:</strong> ${req.employeeEdit.notes || '-'}</p>
+                            <p><strong>${currentLang === 'ar' ? 'رد الموظف' : 'Employee Response'}:</strong> ${req.employeeResponse === 'modified' ? (currentLang === 'ar' ? '✏️ طلب تعديل' : '✏️ Requested modification') : '-'}</p>
+                        </div>`;
+                }
+                if (req.employeeResponse === 'approved') {
+                    html +=
+                        `<div class="form-group full-width" style="border:2px solid #22c55e;padding:15px;border-radius:12px;grid-column:span 2;">
+                            <h4 style="color:#166534;">✅ ${currentLang === 'ar' ? 'رد الموظف' : 'Employee Response'}: ${currentLang === 'ar' ? 'موافقة' : 'Approved'}</h4>
+                        </div>`;
+                }
+                if (req.employeeResponse === 'rejected') {
+                    html +=
+                        `<div class="form-group full-width" style="border:2px solid #ef4444;padding:15px;border-radius:12px;grid-column:span 2;">
+                            <h4 style="color:#991b1b;">❌ ${currentLang === 'ar' ? 'رد الموظف' : 'Employee Response'}: ${currentLang === 'ar' ? 'رفض' : 'Rejected'}</h4>
+                        </div>`;
+                }
                 html += `<div class="form-group"><label>${currentLang === 'ar' ? 'الحالة' : 'Status'}</label><input type="text" value="${getRequestStatusText(req.status)}" readonly style="background:#f1f5f9;"></div>`;
-                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'موقف الطلب' : 'Position'}</label><input type="text" value="${req.status === 'pending_employee' ? (currentLang === 'ar' ? `عند الموظف (${req.employeeName})` : `With Employee (${req.employeeName})`) : req.status === 'pending_hr' ? (currentLang === 'ar' ? 'عند HR' : 'With HR') : req.status === 'approved' ? (currentLang === 'ar' ? '✅ معتمد' : '✅ Approved') : (currentLang === 'ar' ? '❌ مرفوض' : '❌ Rejected')}" readonly style="background:#f1f5f9;"></div>`;
+                html += `<div class="form-group"><label>${currentLang === 'ar' ? 'موقف الطلب' : 'Position'}</label><input type="text" value="${req.status === 'pending_employee' ? (currentLang === 'ar' ? `عند الموظف (${req.employeeName})` : `With Employee (${req.employeeName})`) : req.status === 'pending_hr' ? (currentLang === 'ar' ? 'عند HR' : 'With HR') : req.status === 'pending_hr_modified' ? (currentLang === 'ar' ? 'عند HR (معدل)' : 'With HR (Modified)') : req.status === 'approved' ? (currentLang === 'ar' ? '✅ معتمد' : '✅ Approved') : (currentLang === 'ar' ? '❌ مرفوض' : '❌ Rejected')}" readonly style="background:#f1f5f9;"></div>`;
             }
 
             html += `</div>`;
             document.getElementById('requestDetailContent').innerHTML = html;
             document.getElementById('requestDetailModal').classList.add('active');
 
-            // إظهار أو إخفاء أزرار الموافقة حسب الصلاحية
             let actions = document.getElementById('requestDetailActions');
             let approveBtn = document.getElementById('reqApproveBtn');
             let rejectBtn = document.getElementById('reqRejectBtn');
 
-            // تحديد إذا كان المستخدم الحالي يستطيع الموافقة
             let canApprove = false;
-            if (currentUser.role === 'hr' && (req.status === 'pending_hr' || (type === 'termination' && req.status ===
-                    'pending_hr'))) {
-                canApprove = true;
-            } else if (currentUser.role === 'مدير' && req.status === 'pending_manager') {
-                canApprove = true;
-            } else if (currentUser.role === 'موظف' && req.status === 'pending_employee') {
-                canApprove = true;
+            if (type === 'leave') {
+                if (currentUser.role === 'hr' && req.status === 'pending_hr') canApprove = true;
+                else if (currentUser.role === 'مدير' && req.status === 'pending_manager') canApprove = true;
+            } else if (type === 'termination') {
+                if (currentUser.role === 'hr' && (req.status === 'pending_hr' || req.status === 'pending_hr_modified'))
+                    canApprove = true;
+                else if (currentUser.role === 'موظف' && req.status === 'pending_employee') {
+                    // للموظف: نغلق النافذة ونفتح نافذة الرد
+                    closeRequestDetail();
+                    showTerminationToEmployee(currentUser.id);
+                    return;
+                }
             }
 
             if (canApprove) {
@@ -2765,12 +2939,10 @@
             } else if (viewingRequestType === 'termination') {
                 let req = terminationRequests.find(r => r.id === viewingRequestId);
                 if (req) {
-                    if (currentUser.role === 'hr' && req.status === 'pending_hr') {
-                        finalApproveTermination(req.id);
-                    } else if (currentUser.role === 'موظف' && req.status === 'pending_employee') {
-                        // نحتاج لفتح نافذة الموافقة للموظف
+                    if (currentUser.role === 'hr' && (req.status === 'pending_hr' || req.status === 'pending_hr_modified')) {
+                        // فتح نافذة قرار HR
                         closeRequestDetail();
-                        showTerminationToEmployee(currentUser.id);
+                        openHrTerminationModal(req.id);
                         return;
                     }
                 }
@@ -2795,10 +2967,8 @@
             } else if (viewingRequestType === 'termination') {
                 let req = terminationRequests.find(r => r.id === viewingRequestId);
                 if (req) {
-                    if (currentUser.role === 'hr' && req.status === 'pending_hr') {
-                        rejectTerminationHR(req.id);
-                    } else if (currentUser.role === 'موظف' && req.status === 'pending_employee') {
-                        rejectTermination();
+                    if (currentUser.role === 'hr' && (req.status === 'pending_hr' || req.status === 'pending_hr_modified')) {
+                        hrRejectTermination();
                         closeRequestDetail();
                         return;
                     }
@@ -2811,7 +2981,7 @@
         }
 
         // ============================================================
-        // ========== تقييم الأداء ==========
+        // ========== Performance Review ==========
         // ============================================================
 
         function renderPerformanceReview() {
@@ -3044,7 +3214,7 @@
             renderAll();
         }
 
-        // ========== فحص الإشعارات المعلقة ==========
+        // ========== Check Notifications ==========
         function checkPendingNotifications() {
             let userNotifs = getNotifications(currentUser.id).filter(n => !n.read);
             if (userNotifs.length > 0) {
@@ -3055,7 +3225,7 @@
             }
         }
 
-        // ========== فحص جلسة المستخدم ==========
+        // ========== Check Session ==========
         let saved = localStorage.getItem('hr_currentUser');
         if (saved) {
             let parsed = JSON.parse(saved);
@@ -3077,24 +3247,21 @@
             }
         }
 
-        // ========== عرض طلب إنهاء الخدمة للموظف ==========
+        // ========== Check Termination for Employee ==========
         function checkTerminationForEmployee() {
             if (currentUser.role !== 'موظف') return;
             let pending = terminationRequests.find(r => r.employeeId === currentUser.id && r.status === 'pending_employee');
             if (pending) {
-                // إشعار للموظف
                 showNotification(
-                    `${currentLang === 'ar' ? '📋 لديك طلب إنهاء خدمة في انتظار موافقتك' : '📋 You have a pending termination request'}`,
+                    `${currentLang === 'ar' ? '📋 لديك طلب إنهاء خدمة في انتظار ردك' : '📋 You have a pending termination request'}`,
                     'warning'
                 );
-                // فتح النافذة تلقائياً
                 setTimeout(() => {
                     showTerminationToEmployee(currentUser.id);
                 }, 1000);
             }
         }
 
-        // استدعاء الدالة عند التبديل بين الصفحات
         let originalShowPage = showPage;
         showPage = function(pageId) {
             originalShowPage(pageId);
@@ -3103,7 +3270,6 @@
             }
         };
 
-        // التحقق عند تحميل الصفحة
         setTimeout(checkTerminationForEmployee, 500);
     </script>
 
