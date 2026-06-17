@@ -21,7 +21,6 @@
         body.en { direction: ltr; }
         body.en .card-title { border-right: none; border-left: 4px solid #2563eb; padding-right: 0; padding-left: 15px; }
 
-        /* ===== زر الترجمة ===== */
         .lang-toggle {
             position: fixed;
             top: 20px;
@@ -37,7 +36,6 @@
         }
         body.en .lang-toggle { left: auto; right: 20px; }
 
-        /* ===== صفحة تسجيل الدخول ===== */
         .login-container {
             max-width: 500px;
             margin: 100px auto;
@@ -71,7 +69,6 @@
         }
         .login-error { color: #dc2626; margin-top: 15px; }
 
-        /* ===== التطبيق الرئيسي ===== */
         .main-app { display: none; max-width: 1400px; margin: 0 auto; padding-top: 20px; }
         .header {
             background: white;
@@ -87,7 +84,6 @@
         .user-badge { background: #e2e8f0; padding: 6px 16px; border-radius: 30px; font-weight: bold; margin: 0 5px; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 18px; border-radius: 30px; cursor: pointer; }
 
-        /* ===== القائمة العلوية ===== */
         .nav-menu {
             background: white;
             border-radius: 60px;
@@ -108,12 +104,10 @@
         }
         .nav-btn.active { background: #2563eb; color: white; }
 
-        /* ===== الصفحات ===== */
         .page { display: none; animation: fadeIn 0.3s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ===== الكروت ===== */
         .card {
             background: white;
             border-radius: 24px;
@@ -129,7 +123,6 @@
             margin-bottom: 20px;
         }
 
-        /* ===== النماذج ===== */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -146,7 +139,6 @@
         }
         input:focus, select:focus { outline: none; border-color: #2563eb; }
 
-        /* ===== الأزرار ===== */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -159,7 +151,6 @@
         .btn-danger { background: #ef4444; color: white; }
         .btn-warning { background: #f59e0b; color: white; }
 
-        /* ===== الخدمات ===== */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -177,7 +168,6 @@
         .service-card h4 { margin-bottom: 8px; color: #1e293b; }
         .service-card p { font-size: 0.8rem; color: #64748b; }
 
-        /* ===== طلبات ===== */
         .request-card {
             border: 1px solid #e2e8f0;
             border-radius: 16px;
@@ -196,8 +186,8 @@
         .badge-approved { background: #dcfce7; color: #166534; }
         .badge-hr { background: #dbeafe; color: #1e40af; }
         .badge-rejected { background: #fee2e2; color: #991b1b; }
+        .badge-inactive { background: #e2e8f0; color: #475569; }
 
-        /* ===== الجداول ===== */
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; }
         th { background: #f1f5f9; font-weight: 700; }
@@ -206,7 +196,7 @@
             padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;
         }
 
-        /* ===== المخالصة ===== */
+        /* المخالصة */
         .clearance-box {
             background: white;
             border-radius: 24px;
@@ -280,7 +270,6 @@
             cursor: pointer;
         }
 
-        /* ===== نافذة منبثقة ===== */
         .modal {
             display: none;
             position: fixed;
@@ -341,6 +330,11 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
+        /* حالة الموظف */
+        .status-active { color: #10b981; font-weight: bold; }
+        .status-terminated { color: #ef4444; font-weight: bold; }
+        .status-inactive { color: #94a3b8; font-weight: bold; }
+
         @media (max-width: 800px) {
             .services-grid { grid-template-columns: 1fr; }
             .nav-btn { padding: 6px 12px; font-size: 0.8rem; }
@@ -379,13 +373,13 @@
 
         <div class="nav-menu" id="navMenu"></div>
 
-        <!-- ===== Dashboard ===== -->
+        <!-- Dashboard -->
         <div id="dashboardPage" class="page">
             <div class="card"><div class="card-title" id="dashboardTitle">📊 لوحة التحكم</div><div id="dashboardStats"></div></div>
             <div class="card"><div class="card-title" id="recentTitle">📋 آخر طلباتي</div><div id="recentRequests"></div></div>
         </div>
 
-        <!-- ===== الخدمات الذاتية ===== -->
+        <!-- الخدمات الذاتية -->
         <div id="selfservicesPage" class="page">
             <div class="card"><div class="card-title" id="selfTitle">📝 الخدمات الذاتية</div><div class="services-grid" id="selfServicesGrid"></div></div>
             <div id="requestFormContainer" style="display:none;">
@@ -398,29 +392,29 @@
             </div>
         </div>
 
-        <!-- ===== طلباتي ===== -->
+        <!-- طلباتي -->
         <div id="myrequestsPage" class="page">
             <div class="card"><div class="card-title" id="requestsTitle">📋 طلباتي</div><div id="myRequestsList"></div></div>
         </div>
 
-        <!-- ===== فريقي ===== -->
+        <!-- فريقي -->
         <div id="myteamPage" class="page">
             <div class="card"><div class="card-title" id="teamTitle">👥 فريقي</div><div id="teamMembers"></div></div>
         </div>
 
-        <!-- ===== ملف الموظف ===== -->
+        <!-- ملف الموظف -->
         <div id="employeeprofilePage" class="page">
             <div class="card"><div class="card-title" id="profileTitle">👤 ملف الموظف</div><div id="employeeProfileInfo"></div></div>
             <div class="card"><div class="card-title" id="empRequestsTitle">📋 طلبات الموظف</div><div id="employeeRequestsList"></div></div>
             <button class="btn btn-primary" onclick="showPage('myteam')" id="backBtn">🔙 العودة</button>
         </div>
 
-        <!-- ===== المزايا ===== -->
+        <!-- المزايا -->
         <div id="benefitsPage" class="page">
             <div class="card"><div class="card-title" id="benefitsTitle">🎁 المزايا والبدلات</div><div id="benefitsInfo"></div></div>
         </div>
 
-        <!-- ===== الأدوات ===== -->
+        <!-- الأدوات -->
         <div id="toolsPage" class="page">
             <div class="card"><div class="card-title" id="toolsTitle">🛠️ الأدوات</div><div class="services-grid" id="toolsGrid"></div></div>
         </div>
@@ -440,16 +434,24 @@
                     <div><label id="phoneLabel">📱 رقم الجوال</label><input type="text" id="newPhone" placeholder="05xxxxxxxx"></div>
                 </div>
                 <button class="btn btn-primary" onclick="addEmployee()" id="addEmpBtn">➕ إضافة موظف</button>
+                <div id="newEmployeeResult" style="margin-top:15px;padding:15px;border-radius:16px;display:none;"></div>
             </div>
-            <div class="card"><div class="card-title" id="empListTitle">📋 قائمة الموظفين</div><div id="employeesList"></div></div>
+            <div class="card">
+                <div class="card-title" id="empListTitle">📋 قائمة الموظفين</div>
+                <div id="employeesList"></div>
+            </div>
+            <div class="card">
+                <div class="card-title" id="inactiveTitle">📋 الموظفين المنهية خدماتهم</div>
+                <div id="inactiveEmployeesList"></div>
+            </div>
         </div>
 
-        <!-- ===== إدارة الإجازات (HR فقط) ===== -->
+        <!-- إدارة الإجازات (HR فقط) -->
         <div id="leavemanagementPage" class="page">
             <div class="card"><div class="card-title" id="leaveMgmtTitle">📅 إدارة الإجازات (جميع الموظفين)</div><div id="leaveManagementContainer"></div></div>
         </div>
 
-        <!-- ===== تغيير الرقم السري ===== -->
+        <!-- تغيير الرقم السري -->
         <div id="changepasswordPage" class="page">
             <div class="card">
                 <div class="card-title" id="cpTitle">🔑 تغيير الرقم السري</div>
@@ -472,11 +474,10 @@
             </div>
         </div>
 
-        <!-- ===== إنهاء الخدمة (HR فقط) ===== -->
+        <!-- إنهاء الخدمة (HR فقط) -->
         <div id="terminationPage" class="page">
             <div class="card">
                 <div class="card-title" id="termTitle">📋 إنهاء عقد العمل</div>
-                
                 <div class="form-grid">
                     <div class="form-group"><label id="termEmpLabel">👤 اختيار الموظف</label>
                         <select id="termEmployeeSelect"><option value="">-- اختر الموظف --</option></select>
@@ -497,14 +498,13 @@
                 </div>
                 <button class="btn btn-primary" onclick="submitTermination()" id="termSubmitBtn">📤 رفع طلب إنهاء خدمة</button>
             </div>
-
             <div class="card">
                 <div class="card-title" id="termRequestsTitle">📋 طلبات إنهاء الخدمة المعلقة</div>
                 <div id="terminationRequestsList"></div>
             </div>
         </div>
 
-        <!-- ===== المخالصات ===== -->
+        <!-- المخالصات -->
         <div id="clearancePage" class="page">
             <div class="card">
                 <div class="card-title" id="clearanceTitle">📄 المخالصات المالية</div>
@@ -513,7 +513,7 @@
             <div id="clearanceDetailContainer"></div>
         </div>
 
-        <!-- ===== تقييم الأداء (HR فقط) ===== -->
+        <!-- تقييم الأداء (HR فقط) -->
         <div id="performancereviewPage" class="page">
             <div class="card">
                 <div class="card-title" id="prTitle">📊 تقييم الأداء</div>
@@ -541,7 +541,7 @@
 
     <!-- ====================== نافذة عرض المرفق ====================== -->
     <div id="attachmentModal" class="modal">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content" style="max-width:700px;">
             <h2 id="attachTitle" style="text-align:center;margin-bottom:20px;">📎 المرفق</h2>
             <div id="attachmentContent" style="text-align:center;"></div>
             <div class="modal-actions">
@@ -593,6 +593,12 @@
                 </select></div>
                 <div class="form-group"><label id="editEmailLabel">📧 البريد الإلكتروني</label><input type="email" id="editEmail"></div>
                 <div class="form-group"><label id="editPhoneLabel">📱 رقم الجوال</label><input type="text" id="editPhone"></div>
+                <div class="form-group"><label id="editStatusLabel">الحالة</label>
+                    <select id="editStatus">
+                        <option value="نشط">نشط</option>
+                        <option value="منهية خدمات">منهية خدمات</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-actions">
                 <button class="btn btn-success" onclick="saveEmployeeEdit()" id="editSaveBtn">💾 حفظ التعديلات</button>
@@ -605,22 +611,23 @@
         // ========== قاعدة بيانات الموظفين ==========
         let employees = [
             { id: "10001", name: "المدير العام", pass: "10001", role: "مدير", title: "مدير عام", salary: 20000, dept: "الإدارة",
-                leaveBalance: 30, managerId: null, startDate: "2020-01-01", email: "ceo@company.com", phone: "0500000000" },
+                leaveBalance: 30, managerId: null, startDate: "2020-01-01", email: "ceo@company.com", phone: "0500000000",
+                status: "نشط" },
             { id: "10002", name: "ماجد الحربي", pass: "10002", role: "hr", title: "مدير الموارد البشرية", salary: 15000,
                 dept: "الموارد البشرية", leaveBalance: 30, managerId: "10001", startDate: "2020-02-01",
-                email: "majed@company.com", phone: "0501111111" },
+                email: "majed@company.com", phone: "0501111111", status: "نشط" },
             { id: "10003", name: "وليد الحربي", pass: "10003", role: "موظف", title: "محاسب", salary: 8000, dept: "المالية",
                 leaveBalance: 30, managerId: "10001", startDate: "2021-01-21", email: "waleed@company.com",
-                phone: "0502222222" },
+                phone: "0502222222", status: "نشط" },
             { id: "10004", name: "بجاد الحربي", pass: "10004", role: "موظف", title: "مبرمج", salary: 9000, dept: "تقنية المعلومات",
                 leaveBalance: 30, managerId: "10001", startDate: "2021-01-22", email: "bajad@company.com",
-                phone: "0503333333" },
+                phone: "0503333333", status: "نشط" },
             { id: "10005", name: "محمد الحربي", pass: "10005", role: "موظف", title: "مسوق", salary: 7000, dept: "التسويق",
                 leaveBalance: 30, managerId: "10001", startDate: "2021-01-20", email: "mohammed@company.com",
-                phone: "0504444444" },
+                phone: "0504444444", status: "نشط" },
             { id: "10006", name: "خالد العرجاني", pass: "10006", role: "موظف", title: "مندوب مبيعات", salary: 6500,
                 dept: "المبيعات", leaveBalance: 30, managerId: "10001", startDate: "2021-01-23",
-                email: "khalid@company.com", phone: "0505555555" }
+                email: "khalid@company.com", phone: "0505555555", status: "نشط" }
         ];
 
         let leaveRequests = JSON.parse(localStorage.getItem('hr_leaveRequests')) || [];
@@ -753,6 +760,8 @@
             t('toolsTitle').innerHTML = currentLang === 'ar' ? '🛠️ الأدوات' : '🛠️ Tools';
             t('addEmpTitle').innerHTML = currentLang === 'ar' ? '➕ إضافة موظف' : '➕ Add Employee';
             t('empListTitle').innerHTML = currentLang === 'ar' ? '📋 قائمة الموظفين' : '📋 Employees';
+            t('inactiveTitle').innerHTML = currentLang === 'ar' ? '📋 الموظفين المنهية خدماتهم' :
+                '📋 Terminated Employees';
             t('backBtn').innerHTML = currentLang === 'ar' ? '🔙 العودة' : '🔙 Back';
             t('submitBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال' : '📤 Submit';
             t('cancelBtn').innerHTML = currentLang === 'ar' ? 'إلغاء' : 'Cancel';
@@ -765,6 +774,7 @@
             t('managerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Manager';
             t('emailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
             t('phoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+            t('editStatusLabel').innerHTML = currentLang === 'ar' ? 'الحالة' : 'Status';
 
             // Change Password
             t('cpTitle').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' : '🔑 Change Password';
@@ -812,6 +822,7 @@
             t('editRoleLabel').innerHTML = currentLang === 'ar' ? 'الصلاحية' : 'Role';
             t('editEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
             t('editPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+            t('editStatusLabel').innerHTML = currentLang === 'ar' ? 'الحالة' : 'Status';
             t('editSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' : '💾 Save Changes';
             t('editCancelBtn').innerHTML = currentLang === 'ar' ? '❌ إلغاء' : '❌ Cancel';
 
@@ -843,9 +854,13 @@
         }
 
         // ========== دوال مساعدة ==========
-        function getNextId() { let max = 10006;
-            employees.forEach(e => { if (parseInt(e.id) > max) max = parseInt(e.id); });
-            return (max + 1).toString(); }
+        function getNextId() {
+            let max = 10006;
+            employees.forEach(e => {
+                if (parseInt(e.id) > max) max = parseInt(e.id);
+            });
+            return (max + 1).toString();
+        }
 
         function isEligibleForReview(startDate) {
             let start = new Date(startDate);
@@ -863,11 +878,19 @@
             return employees.find(e => e.id === id);
         }
 
+        function getActiveEmployees() {
+            return employees.filter(e => e.status !== 'منهية خدمات');
+        }
+
+        function getInactiveEmployees() {
+            return employees.filter(e => e.status === 'منهية خدمات');
+        }
+
         // ========== تسجيل الدخول ==========
         function doLogin() {
             let id = document.getElementById('loginId').value.trim();
             let pass = document.getElementById('loginPass').value.trim();
-            let user = employees.find(e => e.id === id && e.pass === pass);
+            let user = employees.find(e => e.id === id && e.pass === pass && e.status === 'نشط');
             if (user) {
                 currentUser = user;
                 localStorage.setItem('hr_currentUser', JSON.stringify(currentUser));
@@ -885,8 +908,8 @@
                 showNotification(currentLang === 'ar' ? `✅ مرحباً ${currentUser.name}` : `✅ Welcome ${currentUser.name}`);
             } else {
                 document.getElementById('loginError').innerHTML = currentLang === 'ar' ?
-                    '❌ الرقم الوظيفي أو الرقم السري غير صحيح' :
-                    '❌ Invalid ID or Password';
+                    '❌ الرقم الوظيفي أو الرقم السري غير صحيح أو الحساب غير نشط' :
+                    '❌ Invalid ID, Password, or account is inactive';
             }
         }
 
@@ -932,6 +955,10 @@
             if (pageId === 'changepassword') loadProfileData();
             if (pageId === 'termination') renderTerminationPage();
             if (pageId === 'clearance') renderClearancePage();
+            if (pageId === 'employees') {
+                updateTerminationSelect();
+                renderInactiveEmployees();
+            }
         }
 
         function renderAll() {
@@ -945,6 +972,7 @@
             updateManagerSelect();
             if (selectedEmployeeId) renderEmployeeProfile();
             updateTerminationSelect();
+            renderInactiveEmployees();
         }
 
         // ========== Dashboard ==========
@@ -954,8 +982,10 @@
                 .length;
             let pendingTerminations = terminationRequests.filter(r => r.status === 'pending_employee' || r.status ===
                 'pending_hr').length;
+            let activeCount = getActiveEmployees().length;
+            let inactiveCount = getInactiveEmployees().length;
             document.getElementById('dashboardStats').innerHTML =
-                `<div class="services-grid"><div class="service-card"><h4>👥 ${currentLang === 'ar' ? 'إجمالي الموظفين' : 'Total Employees'}</h4><p style="font-size:2rem;">${employees.length}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'طلباتي' : 'My Requests'}</h4><p style="font-size:2rem;">${myRequests}</p></div><div class="service-card"><h4>📊 ${currentLang === 'ar' ? 'تقييمات معلقة' : 'Pending Reviews'}</h4><p style="font-size:2rem;">${pendingReviews}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'إنهاء خدمات معلق' : 'Pending Terminations'}</h4><p style="font-size:2rem;">${pendingTerminations}</p></div></div>`;
+                `<div class="services-grid"><div class="service-card"><h4>👥 ${currentLang === 'ar' ? 'الموظفين النشطين' : 'Active Employees'}</h4><p style="font-size:2rem;">${activeCount}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'منهية خدماتهم' : 'Terminated'}</h4><p style="font-size:2rem;">${inactiveCount}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'طلباتي' : 'My Requests'}</h4><p style="font-size:2rem;">${myRequests}</p></div><div class="service-card"><h4>📊 ${currentLang === 'ar' ? 'تقييمات معلقة' : 'Pending Reviews'}</h4><p style="font-size:2rem;">${pendingReviews}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'إنهاء خدمات معلق' : 'Pending Terminations'}</h4><p style="font-size:2rem;">${pendingTerminations}</p></div></div>`;
             let recent = leaveRequests.filter(r => r.employeeId === currentUser.id).slice(-5).reverse();
             let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
                     'Pending Manager') :
@@ -1232,7 +1262,7 @@
                 return;
             }
             let team = employees.filter(e => e.managerId === currentUser.id || (currentUser.role === 'hr' && e.id !== currentUser
-                .id));
+                .id && e.status === 'نشط'));
 
             let pendingRequests = [];
             if (currentUser.role === 'مدير') {
@@ -1274,7 +1304,7 @@
             } else {
                 html += `<p>${currentLang === 'ar' ? 'لا توجد طلبات معلقة' : 'No pending requests'}</p>`;
             }
-            html += `</div><div class="card"><h4>👥 ${currentLang === 'ar' ? 'الموظفين' : 'Employees'}</h4><table><thead><tr><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</th><th></th></tr></thead><tbody>`;
+            html += `</div><div class="card"><h4>👥 ${currentLang === 'ar' ? 'الموظفين النشطين' : 'Active Employees'}</h4><table><thead><tr><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</th><th></th></tr></thead><tbody>`;
             team.forEach(e => {
                 html +=
                     `<tr><td style="font-weight:bold;">${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${e.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button></td></tr>`;
@@ -1301,8 +1331,9 @@
                     currentLang === 'ar' ? 'معتمد' : 'Approved') : (currentLang === 'ar' ? 'مرفوض' : 'Rejected')));
             let badgeClass = (s) => s === 'pending_manager' ? 'badge-pending' : (s === 'pending_hr' ? 'badge-hr' : (s ===
                 'approved' ? 'badge-approved' : 'badge-rejected'));
+            let statusClass = emp.status === 'نشط' ? 'status-active' : 'status-terminated';
             document.getElementById('employeeProfileInfo').innerHTML =
-                `<div class="services-grid"><div class="service-card"><h4>🆔 ${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</h4><p>${emp.id}</p></div><div class="service-card"><h4>👤 ${currentLang === 'ar' ? 'الاسم' : 'Name'}</h4><p>${emp.name}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'المسمى' : 'Title'}</h4><p>${emp.title}</p></div><div class="service-card"><h4>🏢 ${currentLang === 'ar' ? 'القسم' : 'Dept'}</h4><p>${emp.dept}</p></div><div class="service-card"><h4>💰 ${currentLang === 'ar' ? 'الراتب' : 'Salary'}</h4><p>${emp.salary} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</p></div><div class="service-card"><h4>👨‍💼 ${currentLang === 'ar' ? 'المدير المباشر' : 'Manager'}</h4><p>${manager ? manager.name : '-'}</p></div><div class="service-card"><h4>📅 ${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</h4><p>${emp.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</p></div><div class="service-card"><h4>📧 ${currentLang === 'ar' ? 'البريد الإلكتروني' : 'Email'}</h4><p>${emp.email || '-'}</p></div><div class="service-card"><h4>📱 ${currentLang === 'ar' ? 'رقم الجوال' : 'Phone'}</h4><p>${emp.phone || '-'}</p></div></div>`;
+                `<div class="services-grid"><div class="service-card"><h4>🆔 ${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</h4><p>${emp.id}</p></div><div class="service-card"><h4>👤 ${currentLang === 'ar' ? 'الاسم' : 'Name'}</h4><p>${emp.name}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'المسمى' : 'Title'}</h4><p>${emp.title}</p></div><div class="service-card"><h4>🏢 ${currentLang === 'ar' ? 'القسم' : 'Dept'}</h4><p>${emp.dept}</p></div><div class="service-card"><h4>💰 ${currentLang === 'ar' ? 'الراتب' : 'Salary'}</h4><p>${emp.salary} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</p></div><div class="service-card"><h4>👨‍💼 ${currentLang === 'ar' ? 'المدير المباشر' : 'Manager'}</h4><p>${manager ? manager.name : '-'}</p></div><div class="service-card"><h4>📅 ${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave Balance'}</h4><p>${emp.leaveBalance} ${currentLang === 'ar' ? 'يوم' : 'days'}</p></div><div class="service-card"><h4>📧 ${currentLang === 'ar' ? 'البريد الإلكتروني' : 'Email'}</h4><p>${emp.email || '-'}</p></div><div class="service-card"><h4>📱 ${currentLang === 'ar' ? 'رقم الجوال' : 'Phone'}</h4><p>${emp.phone || '-'}</p></div><div class="service-card"><h4>📌 ${currentLang === 'ar' ? 'الحالة' : 'Status'}</h4><p class="${statusClass}">${emp.status}</p></div></div>`;
             document.getElementById('employeeRequestsList').innerHTML = empRequests.length ? empRequests.map(r =>
                     `<div class="request-card"><strong>${r.type}</strong> - ${r.start} - ${r.end}<br><small>${currentLang === 'ar' ? 'السبب' : 'Reason'}: ${r.reason || '-'}</small><br><span class="badge ${badgeClass(r.status)}">${statusText(r.status)}</span></div>`
                 ).join('') :
@@ -1569,18 +1600,18 @@
             }
         }
 
-        // ========== إدارة الموظفين ==========
+        // ========== إدارة الموظفين (مع خاصية إنشاء حساب تلقائي) ==========
         function updateManagerSelect() {
             let select = document.getElementById('newManagerId');
             if (select) {
-                let managers = employees.filter(e => e.role === 'مدير' || e.role === 'hr');
+                let managers = employees.filter(e => (e.role === 'مدير' || e.role === 'hr') && e.status === 'نشط');
                 select.innerHTML = '<option value="">-- ' + (currentLang === 'ar' ? 'اختر المدير' : 'Select Manager') +
                     ' --</option>' + managers.map(m =>
                         `<option value="${m.id}">${m.name} (${m.title})</option>`).join('');
             }
             let editSelect = document.getElementById('editManagerId');
             if (editSelect) {
-                let managers = employees.filter(e => e.role === 'مدير' || e.role === 'hr');
+                let managers = employees.filter(e => (e.role === 'مدير' || e.role === 'hr') && e.status === 'نشط');
                 editSelect.innerHTML = '<option value="">-- ' + (currentLang === 'ar' ? 'اختر المدير' : 'Select Manager') +
                     ' --</option>' + managers.map(m =>
                         `<option value="${m.id}">${m.name} (${m.title})</option>`).join('');
@@ -1588,23 +1619,28 @@
         }
 
         function addEmployee() {
-            let name = document.getElementById('newName').value.trim(),
-                title = document.getElementById('newTitle').value.trim(),
-                dept = document.getElementById('newDept').value.trim(),
-                salary = parseInt(document.getElementById('newSalary').value),
-                startDate = document.getElementById('newStartDate').value,
-                managerId = document.getElementById('newManagerId').value,
-                email = document.getElementById('newEmail').value.trim(),
-                phone = document.getElementById('newPhone').value.trim();
+            let name = document.getElementById('newName').value.trim();
+            let title = document.getElementById('newTitle').value.trim();
+            let dept = document.getElementById('newDept').value.trim();
+            let salary = parseInt(document.getElementById('newSalary').value);
+            let startDate = document.getElementById('newStartDate').value;
+            let managerId = document.getElementById('newManagerId').value;
+            let email = document.getElementById('newEmail').value.trim();
+            let phone = document.getElementById('newPhone').value.trim();
+
             if (!name || !title || !dept || !startDate || !email || !phone) {
                 alert(currentLang === 'ar' ? '❌ املأ جميع الحقول' : '❌ Fill all fields');
                 return;
             }
+
+            // توليد رقم وظيفي جديد (متسلسل)
             let newId = getNextId();
-            employees.push({
+
+            // إنشاء الموظف الجديد مع حساب نشط ورقم سري = الرقم الوظيفي
+            let newEmployee = {
                 id: newId,
                 name: name,
-                pass: newId,
+                pass: newId, // الرقم السري = الرقم الوظيفي
                 role: 'موظف',
                 title: title,
                 salary: salary,
@@ -1613,11 +1649,41 @@
                 managerId: managerId || null,
                 startDate: startDate,
                 email: email,
-                phone: phone
-            });
+                phone: phone,
+                status: 'نشط' // الحساب نشط فوراً
+            };
+
+            employees.push(newEmployee);
+
+            // حفظ في localStorage
+            localStorage.setItem('hr_employees', JSON.stringify(employees));
+
+            // تحديث الواجهة
             renderEmployeesList();
             updateManagerSelect();
             updateTerminationSelect();
+            renderInactiveEmployees();
+            renderAll();
+
+            // إظهار رسالة نجاح مع بيانات الدخول
+            let resultDiv = document.getElementById('newEmployeeResult');
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = '#dcfce7';
+            resultDiv.style.border = '2px solid #10b981';
+            resultDiv.style.borderRadius = '16px';
+            resultDiv.innerHTML = `
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <span style="font-size:1.5rem;">✅</span>
+                    <div>
+                        <p style="font-weight:bold;color:#065f46;">${currentLang === 'ar' ? '✅ تم إضافة الموظف بنجاح' : '✅ Employee added successfully'}</p>
+                        <p><strong>${currentLang === 'ar' ? 'الرقم الوظيفي' : 'Employee ID'}:</strong> ${newId}</p>
+                        <p><strong>${currentLang === 'ar' ? 'الرقم السري' : 'Password'}:</strong> ${newId} (${currentLang === 'ar' ? 'يمكن تغييره من صفحة تغيير الرقم السري' : 'can be changed from Change Password page'})</p>
+                        <p style="color:#065f46;">${currentLang === 'ar' ? '📧 تم إرسال بيانات الدخول إلى بريد الموظف الإلكتروني' : '📧 Login credentials sent to employee email'}</p>
+                    </div>
+                </div>
+            `;
+
+            // تصفير الحقول
             document.getElementById('newName').value = '';
             document.getElementById('newTitle').value = '';
             document.getElementById('newDept').value = '';
@@ -1626,9 +1692,16 @@
             document.getElementById('newManagerId').value = '';
             document.getElementById('newEmail').value = '';
             document.getElementById('newPhone').value = '';
+
             showNotification(
-                `${currentLang === 'ar' ? `✅ تم إضافة الموظف ${name} برقم وظيفي ${newId}` : `✅ Employee ${name} added with ID ${newId}`}`
-                );
+                `${currentLang === 'ar' ? `✅ تم إضافة الموظف ${name} برقم وظيفي ${newId} والرقم السري ${newId}` :
+                    `✅ Employee ${name} added with ID ${newId} and password ${newId}`}`
+            );
+
+            // إخفاء الرسالة بعد 10 ثواني
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 10000);
         }
 
         function openEditModal(empId) {
@@ -1644,6 +1717,7 @@
             document.getElementById('editRole').value = emp.role || 'موظف';
             document.getElementById('editEmail').value = emp.email || '';
             document.getElementById('editPhone').value = emp.phone || '';
+            document.getElementById('editStatus').value = emp.status || 'نشط';
             updateManagerSelect();
             let editSelect = document.getElementById('editManagerId');
             if (emp.managerId) {
@@ -1672,6 +1746,7 @@
             let newManagerId = document.getElementById('editManagerId').value;
             let newEmail = document.getElementById('editEmail').value.trim();
             let newPhone = document.getElementById('editPhone').value.trim();
+            let newStatus = document.getElementById('editStatus').value;
 
             if (!newName || !newTitle || !newDept || !newStartDate || !newEmail || !newPhone) {
                 alert(currentLang === 'ar' ? '❌ الرجاء ملء جميع الحقول' : '❌ Please fill all fields');
@@ -1684,6 +1759,44 @@
                 }
             }
 
+            // إذا كانت الحالة تتغير إلى "منهية خدمات"، نقوم بإنهاء خدمة الموظف
+            if (emp.status === 'نشط' && newStatus === 'منهية خدمات') {
+                if (!confirm(currentLang === 'ar' ? '⚠️ أنت على وشك إنهاء خدمة هذا الموظف. هل أنت متأكد؟' :
+                        '⚠️ You are about to terminate this employee. Are you sure?')) {
+                    return;
+                }
+                // إضافة الموظف إلى قائمة المخالصات تلقائياً
+                let terminationData = {
+                    id: Date.now().toString(),
+                    employeeId: emp.id,
+                    employeeName: emp.name,
+                    reason: 'تعديل_حالة_يدوي',
+                    endDate: new Date().toISOString().split('T')[0],
+                    notes: 'تم إنهاء الخدمة يدوياً من قبل HR',
+                    status: 'approved',
+                    createdBy: currentUser.id,
+                    createdAt: new Date().toISOString(),
+                    hrApproved: true
+                };
+                terminationRequests.unshift(terminationData);
+                localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+
+                // حساب المخالصة
+                let clearanceData = calculateClearanceForEmployee(emp, terminationData);
+                clearedEmployees.push({
+                    id: emp.id,
+                    name: emp.name,
+                    ...clearanceData,
+                    terminationId: terminationData.id,
+                    approvedAt: new Date().toISOString()
+                });
+                localStorage.setItem('hr_clearedEmployees', JSON.stringify(clearedEmployees));
+                showNotification(
+                    `${currentLang === 'ar' ? `✅ تم إنهاء خدمة ${emp.name} تلقائياً` :
+                        `✅ ${emp.name} has been terminated automatically`}`
+                );
+            }
+
             emp.name = newName;
             emp.title = newTitle;
             emp.dept = newDept;
@@ -1693,6 +1806,7 @@
             emp.managerId = newManagerId || null;
             emp.email = newEmail;
             emp.phone = newPhone;
+            emp.status = newStatus;
 
             if (emp.id === currentUser.id) {
                 currentUser = emp;
@@ -1712,6 +1826,7 @@
             localStorage.setItem('hr_employees', JSON.stringify(employees));
             closeEditModal();
             renderEmployeesList();
+            renderInactiveEmployees();
             renderAll();
             updateTerminationSelect();
             showNotification(
@@ -1720,15 +1835,33 @@
         }
 
         function renderEmployeesList() {
+            let active = getActiveEmployees();
             let html =
                 `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'المدير' : 'Manager'}</th><th>${currentLang === 'ar' ? 'رصيد الإجازات' : 'Leave'}</th><th>📧</th><th>📱</th><th></th></tr></thead><tbody>`;
-            employees.forEach(e => {
+            active.forEach(e => {
                 let manager = employees.find(m => m.id === e.managerId);
                 html +=
                     `<tr><td style="font-weight:bold;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${manager ? manager.name : '-'}</td><td>${e.leaveBalance}</td><td>${e.email || '-'}</td><td>${e.phone || '-'}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')" style="margin-left:5px;">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button><button class="btn-warning" style="padding:4px 12px;border:none;border-radius:12px;cursor:pointer;margin-left:5px;" onclick="openEditModal('${e.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button></td></tr>`;
             });
             html += `</tbody></table>`;
             document.getElementById('employeesList').innerHTML = html;
+        }
+
+        function renderInactiveEmployees() {
+            let inactive = getInactiveEmployees();
+            if (inactive.length === 0) {
+                document.getElementById('inactiveEmployeesList').innerHTML =
+                    `<p>${currentLang === 'ar' ? 'لا يوجد موظفين منهية خدماتهم' : 'No terminated employees'}</p>`;
+                return;
+            }
+            let html =
+                `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'المسمى' : 'Title'}</th><th>${currentLang === 'ar' ? 'القسم' : 'Dept'}</th><th>${currentLang === 'ar' ? 'حالة' : 'Status'}</th><th></th></tr></thead><tbody>`;
+            inactive.forEach(e => {
+                html +=
+                    `<tr><td style="font-weight:bold;color:#ef4444;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td><span class="status-terminated">${e.status}</span></td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button></td></tr>`;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('inactiveEmployeesList').innerHTML = html;
         }
 
         // ========== المزايا والأدوات ==========
@@ -1751,7 +1884,8 @@
         function updateTerminationSelect() {
             let select = document.getElementById('termEmployeeSelect');
             if (select) {
-                let activeEmployees = employees.filter(e => e.role !== 'مدير' && e.role !== 'hr' && e.id !== currentUser.id);
+                let activeEmployees = employees.filter(e => e.role !== 'مدير' && e.role !== 'hr' && e.id !== currentUser.id && e
+                    .status === 'نشط');
                 select.innerHTML = '<option value="">-- ' + (currentLang === 'ar' ? 'اختر الموظف' : 'Select Employee') +
                     ' --</option>' +
                     activeEmployees.map(e => `<option value="${e.id}">${e.id} - ${e.name}</option>`).join('');
@@ -1766,7 +1900,6 @@
             }
             updateTerminationSelect();
 
-            // عرض طلبات إنهاء الخدمة المعلقة
             let pending = terminationRequests.filter(r => r.status === 'pending_employee' || r.status === 'pending_hr');
             let html = '';
             if (pending.length === 0) {
@@ -1827,7 +1960,7 @@
                 reason: reason,
                 endDate: endDate,
                 notes: notes,
-                status: 'pending_employee', // يذهب للموظف أولاً
+                status: 'pending_employee',
                 createdBy: currentUser.id,
                 createdAt: new Date().toISOString(),
                 employeeResponse: null,
@@ -1848,6 +1981,14 @@
                 `${currentLang === 'ar' ? `✅ تم رفع طلب إنهاء خدمة للموظف ${emp.name}` :
                     `✅ Termination request submitted to ${emp.name}`}`
                 );
+
+            // إظهار الطلب للموظف إذا كان متصلاً
+            if (currentUser.id !== empId) {
+                showNotification(
+                    `${currentLang === 'ar' ? `📢 تم إرسال الطلب إلى الموظف ${emp.name} للموافقة` :
+                        `📢 Request sent to ${emp.name} for approval`}`, 'warning'
+                    );
+            }
         }
 
         // ========== عرض طلب إنهاء الخدمة للموظف ==========
@@ -1928,7 +2069,6 @@
             let req = terminationRequests.find(r => r.id === currentTerminationId);
             if (!req) return;
 
-            // السماح للموظف بتعديل التاريخ والسبب
             let newEndDate = document.getElementById('termResponseEndDate').value;
             let newNotes = document.getElementById('termResponseNotes').value;
             let newReason = document.getElementById('termResponseReason').value;
@@ -1958,9 +2098,12 @@
             req.hrApproved = true;
             localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
 
-            // إضافة الموظف إلى قائمة المخالصات
+            // تغيير حالة الموظف إلى "منهية خدمات"
             let emp = getEmployeeById(req.employeeId);
             if (emp) {
+                emp.status = 'منهية خدمات';
+                localStorage.setItem('hr_employees', JSON.stringify(employees));
+
                 // حساب المخالصة
                 let clearanceData = calculateClearanceForEmployee(emp, req);
                 clearedEmployees.push({
@@ -1975,6 +2118,9 @@
 
             renderTerminationPage();
             renderClearancePage();
+            renderEmployeesList();
+            renderInactiveEmployees();
+            updateTerminationSelect();
             showNotification(
                 `${currentLang === 'ar' ? `✅ تم اعتماد إنهاء خدمة ${req.employeeName} نهائياً` :
                     `✅ Termination for ${req.employeeName} finalized`}`
@@ -2008,7 +2154,6 @@
             let vacationDays = emp.leaveBalance || 0;
             let deductions = 0;
 
-            // حساب مكافأة نهاية الخدمة حسب سبب الإنهاء
             let baseEos = totalYears <= 5 ? totalYears * (salary / 2) : (5 * (salary / 2)) + ((totalYears - 5) * salary);
             let finalEos = 0;
             let reason = req.reason;
@@ -2066,11 +2211,22 @@
             let html =
                 `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'سبب الإنهاء' : 'Reason'}</th><th>${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last Day'}</th><th>${currentLang === 'ar' ? 'إجمالي المستحق' : 'Total'}</th><th></th></tr></thead><tbody>`;
             clearedEmployees.forEach(e => {
+                let reasonMap = {
+                    'استقالة': 'استقالة',
+                    'فصل_مادة80': 'فصل - مادة 80',
+                    'عدم_تجديد': 'عدم تجديد عقد',
+                    'اتفاق_الطرفين': 'اتفاق الطرفين',
+                    'تقاعد': 'تقاعد',
+                    'وفاة_مادة79': 'وفاة - مادة 79',
+                    'انهاء_مادة77': 'إنهاء - مادة 77',
+                    'تعديل_حالة_يدوي': 'تعديل حالة يدوي'
+                };
+                let reasonDisplay = reasonMap[e.reason] || e.reason;
                 html += `
                     <tr>
                         <td>${e.id}</td>
                         <td>${e.name}</td>
-                        <td>${e.reasonDisplay || e.reason}</td>
+                        <td>${reasonDisplay}</td>
                         <td>${e.endDate}</td>
                         <td style="font-weight:bold;color:#059669;">${e.totalSettlement.toFixed(2)} ريال</td>
                         <td><button class="view-btn" onclick="showClearanceDetail('${e.id}')">📄 عرض المخالصة</button></td>
@@ -2088,14 +2244,12 @@
                 return;
             }
 
-            // استخدام الدالة الموجودة لحساب المخالصة وعرضها
             let container = document.getElementById('clearanceDetailContainer');
             container.innerHTML = generateClearanceHTML(emp);
             container.scrollIntoView({ behavior: 'smooth' });
         }
 
         function generateClearanceHTML(data) {
-            let reasonDisplay = data.reasonDisplay || data.reason;
             let reasonMap = {
                 'استقالة': 'استقالة',
                 'فصل_مادة80': 'فصل - المادة 80',
@@ -2103,15 +2257,15 @@
                 'اتفاق_الطرفين': 'اتفاق الطرفين',
                 'تقاعد': 'تقاعد',
                 'وفاة_مادة79': 'وفاة - المادة 79',
-                'انهاء_مادة77': 'إنهاء - المادة 77'
+                'انهاء_مادة77': 'إنهاء - المادة 77',
+                'تعديل_حالة_يدوي': 'تعديل حالة يدوي'
             };
-            let reasonText = reasonMap[reasonDisplay] || reasonDisplay;
+            let reasonText = reasonMap[data.reason] || data.reason;
 
             let years = Math.floor(data.totalYears);
             let months = Math.floor((data.totalYears - years) * 12);
             let durationText = `${years} ${currentLang === 'ar' ? 'سنة' : 'years'} ${months} ${currentLang === 'ar' ? 'شهر' : 'months'}`;
 
-            // حساب تفاصيل المخالصة
             let salary = data.salary || 5000;
             let vacationDays = data.vacationDays || 0;
             let deductions = data.deductions || 0;
@@ -2233,6 +2387,7 @@
 
             let eligible = employees.filter(e =>
                 e.role === 'موظف' &&
+                e.status === 'نشط' &&
                 isEligibleForReview(e.startDate) &&
                 !performanceReviews.some(r => r.employeeId === e.id && r.status !== 'rejected')
             );
@@ -2457,7 +2612,7 @@
         let saved = localStorage.getItem('hr_currentUser');
         if (saved) {
             let parsed = JSON.parse(saved);
-            let exists = employees.find(e => e.id === parsed.id);
+            let exists = employees.find(e => e.id === parsed.id && e.status === 'نشط');
             if (exists) {
                 currentUser = exists;
                 document.getElementById('loginPage').style.display = 'none';
@@ -2476,7 +2631,6 @@
         }
 
         // ========== عرض طلب إنهاء الخدمة للموظف ==========
-        // التحقق من وجود طلبات إنهاء خدمة للموظف الحالي
         function checkTerminationForEmployee() {
             if (currentUser.role !== 'موظف') return;
             let pending = terminationRequests.find(r => r.employeeId === currentUser.id && r.status === 'pending_employee');
