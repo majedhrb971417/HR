@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الموارد البشرية | HR Portal</title>
+    <title>نظام الموارد البشرية المتكامل | HR Portal</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== الأنماط الأساسية ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -17,16 +18,10 @@
             padding: 20px;
             direction: rtl;
         }
-        body.en {
-            direction: ltr;
-        }
-        body.en .card-title {
-            border-right: none;
-            border-left: 4px solid #2563eb;
-            padding-right: 0;
-            padding-left: 15px;
-        }
+        body.en { direction: ltr; }
+        body.en .card-title { border-right: none; border-left: 4px solid #2563eb; padding-right: 0; padding-left: 15px; }
 
+        /* ===== زر الترجمة ===== */
         .lang-toggle {
             position: fixed;
             top: 20px;
@@ -38,13 +33,11 @@
             font-weight: bold;
             cursor: pointer;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        body.en .lang-toggle {
-            left: auto;
-            right: 20px;
-        }
+        body.en .lang-toggle { left: auto; right: 20px; }
 
+        /* ===== صفحة تسجيل الدخول ===== */
         .login-container {
             max-width: 500px;
             margin: 100px auto;
@@ -52,12 +45,9 @@
             border-radius: 32px;
             padding: 45px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         }
-        .login-container h1 {
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
+        .login-container h1 { color: #1e293b; margin-bottom: 10px; }
         .login-container input {
             width: 100%;
             padding: 15px;
@@ -79,16 +69,10 @@
             cursor: pointer;
             margin-top: 15px;
         }
-        .login-error {
-            color: #dc2626;
-            margin-top: 15px;
-        }
-        .main-app {
-            display: none;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 20px;
-        }
+        .login-error { color: #dc2626; margin-top: 15px; }
+
+        /* ===== التطبيق الرئيسي ===== */
+        .main-app { display: none; max-width: 1400px; margin: 0 auto; padding-top: 20px; }
         .header {
             background: white;
             border-radius: 24px;
@@ -99,25 +83,11 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        .header h1 {
-            font-size: 1.3rem;
-            color: #1e293b;
-        }
-        .user-badge {
-            background: #e2e8f0;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-weight: bold;
-            margin: 0 5px;
-        }
-        .logout-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
+        .header h1 { font-size: 1.3rem; color: #1e293b; }
+        .user-badge { background: #e2e8f0; padding: 6px 16px; border-radius: 30px; font-weight: bold; margin: 0 5px; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 18px; border-radius: 30px; cursor: pointer; }
+
+        /* ===== القائمة العلوية ===== */
         .nav-menu {
             background: white;
             border-radius: 60px;
@@ -136,25 +106,14 @@
             font-weight: 700;
             cursor: pointer;
         }
-        .nav-btn.active {
-            background: #2563eb;
-            color: white;
-        }
-        .page {
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-        .page.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+        .nav-btn.active { background: #2563eb; color: white; }
+
+        /* ===== الصفحات ===== */
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ===== الكروت ===== */
         .card {
             background: white;
             border-radius: 24px;
@@ -169,30 +128,25 @@
             padding-right: 15px;
             margin-bottom: 20px;
         }
+
+        /* ===== النماذج ===== */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            font-weight: 700;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            color: #475569;
-        }
-        input,
-        select,
-        textarea {
+        .form-group { display: flex; flex-direction: column; }
+        label { font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: #475569; }
+        input, select, textarea {
             padding: 12px 16px;
             border: 2px solid #e2e8f0;
             border-radius: 16px;
             font-size: 0.9rem;
         }
+        input:focus, select:focus { outline: none; border-color: #2563eb; }
+
+        /* ===== الأزرار ===== */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -200,31 +154,12 @@
             font-weight: 700;
             cursor: pointer;
         }
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-        .btn-warning {
-            background: #f59e0b;
-            color: white;
-        }
-        .btn-edit {
-            background: #2563eb;
-            color: white;
-            padding: 4px 12px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+
+        /* ===== الخدمات ===== */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -238,19 +173,11 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .service-card:hover {
-            background: #eff6ff;
-            border-color: #2563eb;
-            transform: translateY(-3px);
-        }
-        .service-card h4 {
-            margin-bottom: 8px;
-            color: #1e293b;
-        }
-        .service-card p {
-            font-size: 0.8rem;
-            color: #64748b;
-        }
+        .service-card:hover { background: #eff6ff; border-color: #2563eb; transform: translateY(-3px); }
+        .service-card h4 { margin-bottom: 8px; color: #1e293b; }
+        .service-card p { font-size: 0.8rem; color: #64748b; }
+
+        /* ===== طلبات ===== */
         .request-card {
             border: 1px solid #e2e8f0;
             border-radius: 16px;
@@ -265,107 +192,118 @@
             font-weight: 700;
             display: inline-block;
         }
-        .badge-pending {
-            background: #fed7aa;
-            color: #9a3412;
+        .badge-pending { background: #fed7aa; color: #9a3412; }
+        .badge-approved { background: #dcfce7; color: #166534; }
+        .badge-hr { background: #dbeafe; color: #1e40af; }
+        .badge-rejected { background: #fee2e2; color: #991b1b; }
+
+        /* ===== الجداول ===== */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; font-weight: 700; }
+        .view-btn {
+            background: #2563eb; color: white; border: none;
+            padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;
         }
-        .badge-approved {
-            background: #dcfce7;
-            color: #166534;
+
+        /* ===== المخالصة ===== */
+        .clearance-box {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid #1d3557;
         }
-        .badge-hr {
-            background: #dbeafe;
-            color: #1e40af;
+        .clearance-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #1d3557;
+            padding-bottom: 20px;
         }
-        .badge-rejected {
-            background: #fee2e2;
-            color: #991b1b;
+        .clearance-header h3 {
+            font-size: 26px;
+            color: #1d3557;
+            font-weight: 700;
         }
-        table {
+        .info-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .info-summary div {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #dee2e6;
+            padding-bottom: 8px;
+        }
+        .clearance-table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 30px;
         }
-        th,
-        td {
-            padding: 12px;
-            text-align: right;
-            border-bottom: 1px solid #e2e8f0;
+        .clearance-table, .clearance-table th, .clearance-table td {
+            border: 1px solid #adb5bd;
         }
-        th {
-            background: #f1f5f9;
+        .clearance-table th, .clearance-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #212529;
+        }
+        .clearance-table th {
+            background: #e9ecef;
+            color: #1d3557;
             font-weight: 700;
+            text-align: center;
         }
-        .view-btn {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.75rem;
+        .total-row { font-weight: bold; background: #e8f1f5; }
+        .deduction-row td { color: #e63946; font-weight: bold; background: #fff5f5; }
+
+        .signatures { display: flex; justify-content: space-between; margin-top: 50px; }
+        .sig-block {
+            width: 48%;
+            border: 1px dashed #adb5bd;
+            padding: 20px;
+            border-radius: 6px;
+            background: #fafafa;
+            font-size: 14px;
+            line-height: 2;
         }
-        .edit-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .edit-modal.active {
-            display: flex;
-        }
-        .edit-modal-content {
-            background: white;
-            border-radius: 32px;
-            padding: 35px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .edit-modal-content .form-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-        .edit-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-        .approve-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-        .approve-btn:hover {
-            background: #059669;
-        }
-        .reject-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-        .reject-btn:hover {
-            background: #dc2625;
-        }
+
         .attachment-link {
             color: #2563eb;
             text-decoration: underline;
             cursor: pointer;
         }
+
+        /* ===== نافذة منبثقة ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            padding: 35px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content .form-grid { grid-template-columns: 1fr 1fr; }
+        .modal-actions { display: flex; gap: 15px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+
         .leave-type-badge {
             padding: 2px 10px;
             border-radius: 12px;
@@ -373,27 +311,12 @@
             font-weight: 700;
             display: inline-block;
         }
-        .leave-type-سنوية {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        .leave-type-مرضية {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .leave-type-بدون_راتب {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .leave-type-زواج {
-            background: #fce4ec;
-            color: #880e4f;
-        }
-        .leave-type-مولود {
-            background: #e0f7fa;
-            color: #00695c;
-        }
-        /* رسالة التنبيه */
+        .leave-type-سنوية { background: #dbeafe; color: #1e40af; }
+        .leave-type-مرضية { background: #fee2e2; color: #991b1b; }
+        .leave-type-بدون_راتب { background: #fef3c7; color: #92400e; }
+        .leave-type-زواج { background: #fce4ec; color: #880e4f; }
+        .leave-type-مولود { background: #e0f7fa; color: #00695c; }
+
         .notification-popup {
             position: fixed;
             top: 20px;
@@ -407,51 +330,33 @@
             z-index: 3000;
             display: none;
             animation: slideDown 0.5s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             max-width: 90%;
             text-align: center;
         }
-        .notification-popup.error {
-            background: #ef4444;
-        }
-        .notification-popup.warning {
-            background: #f59e0b;
-        }
+        .notification-popup.error { background: #ef4444; }
+        .notification-popup.warning { background: #f59e0b; }
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+            from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
+
         @media (max-width: 800px) {
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-            .nav-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-            .edit-modal-content .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .notification-popup {
-                font-size: 0.8rem;
-                padding: 12px 20px;
-            }
+            .services-grid { grid-template-columns: 1fr; }
+            .nav-btn { padding: 6px 12px; font-size: 0.8rem; }
+            .modal-content .form-grid { grid-template-columns: 1fr; }
+            .info-summary { grid-template-columns: 1fr; }
+            .signatures { flex-direction: column; gap: 15px; }
+            .sig-block { width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <div id="notification" class="notification-popup"></div>
-
     <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧 English</button>
 
-    <!-- Login Page -->
+    <!-- ====================== صفحة تسجيل الدخول ====================== -->
     <div id="loginPage" class="login-container">
         <h1 id="loginTitle">🏢 نظام الموارد البشرية</h1>
         <p id="loginSubtitle">تسجيل الدخول باستخدام الرقم الوظيفي</p>
@@ -461,7 +366,7 @@
         <div id="loginError" class="login-error"></div>
     </div>
 
-    <!-- Main App -->
+    <!-- ====================== الواجهة الرئيسية ====================== -->
     <div id="mainApp" class="main-app">
         <div class="header">
             <h1 id="appTitle">🏢 نظام إدارة الموارد البشرية</h1>
@@ -474,24 +379,15 @@
 
         <div class="nav-menu" id="navMenu"></div>
 
-        <!-- Dashboard -->
+        <!-- ===== Dashboard ===== -->
         <div id="dashboardPage" class="page">
-            <div class="card">
-                <div class="card-title" id="dashboardTitle">📊 لوحة التحكم</div>
-                <div id="dashboardStats"></div>
-            </div>
-            <div class="card">
-                <div class="card-title" id="recentTitle">📋 آخر طلباتي</div>
-                <div id="recentRequests"></div>
-            </div>
+            <div class="card"><div class="card-title" id="dashboardTitle">📊 لوحة التحكم</div><div id="dashboardStats"></div></div>
+            <div class="card"><div class="card-title" id="recentTitle">📋 آخر طلباتي</div><div id="recentRequests"></div></div>
         </div>
 
-        <!-- Self Services -->
+        <!-- ===== الخدمات الذاتية ===== -->
         <div id="selfservicesPage" class="page">
-            <div class="card">
-                <div class="card-title" id="selfTitle">📝 الخدمات الذاتية</div>
-                <div class="services-grid" id="selfServicesGrid"></div>
-            </div>
+            <div class="card"><div class="card-title" id="selfTitle">📝 الخدمات الذاتية</div><div class="services-grid" id="selfServicesGrid"></div></div>
             <div id="requestFormContainer" style="display:none;">
                 <div class="card">
                     <div class="card-title" id="formTitle"></div>
@@ -502,52 +398,34 @@
             </div>
         </div>
 
-        <!-- My Requests -->
+        <!-- ===== طلباتي ===== -->
         <div id="myrequestsPage" class="page">
-            <div class="card">
-                <div class="card-title" id="requestsTitle">📋 طلباتي</div>
-                <div id="myRequestsList"></div>
-            </div>
+            <div class="card"><div class="card-title" id="requestsTitle">📋 طلباتي</div><div id="myRequestsList"></div></div>
         </div>
 
-        <!-- My Team -->
+        <!-- ===== فريقي ===== -->
         <div id="myteamPage" class="page">
-            <div class="card">
-                <div class="card-title" id="teamTitle">👥 فريقي</div>
-                <div id="teamMembers"></div>
-            </div>
+            <div class="card"><div class="card-title" id="teamTitle">👥 فريقي</div><div id="teamMembers"></div></div>
         </div>
 
-        <!-- Employee Profile -->
+        <!-- ===== ملف الموظف ===== -->
         <div id="employeeprofilePage" class="page">
-            <div class="card">
-                <div class="card-title" id="profileTitle">👤 ملف الموظف</div>
-                <div id="employeeProfileInfo"></div>
-            </div>
-            <div class="card">
-                <div class="card-title" id="empRequestsTitle">📋 طلبات الموظف</div>
-                <div id="employeeRequestsList"></div>
-            </div>
+            <div class="card"><div class="card-title" id="profileTitle">👤 ملف الموظف</div><div id="employeeProfileInfo"></div></div>
+            <div class="card"><div class="card-title" id="empRequestsTitle">📋 طلبات الموظف</div><div id="employeeRequestsList"></div></div>
             <button class="btn btn-primary" onclick="showPage('myteam')" id="backBtn">🔙 العودة</button>
         </div>
 
-        <!-- Benefits -->
+        <!-- ===== المزايا ===== -->
         <div id="benefitsPage" class="page">
-            <div class="card">
-                <div class="card-title" id="benefitsTitle">🎁 المزايا والبدلات</div>
-                <div id="benefitsInfo"></div>
-            </div>
+            <div class="card"><div class="card-title" id="benefitsTitle">🎁 المزايا والبدلات</div><div id="benefitsInfo"></div></div>
         </div>
 
-        <!-- Tools -->
+        <!-- ===== الأدوات ===== -->
         <div id="toolsPage" class="page">
-            <div class="card">
-                <div class="card-title" id="toolsTitle">🛠️ الأدوات</div>
-                <div class="services-grid" id="toolsGrid"></div>
-            </div>
+            <div class="card"><div class="card-title" id="toolsTitle">🛠️ الأدوات</div><div class="services-grid" id="toolsGrid"></div></div>
         </div>
 
-        <!-- Employees Management -->
+        <!-- ===== إدارة الموظفين (HR فقط) ===== -->
         <div id="employeesPage" class="page">
             <div class="card">
                 <div class="card-title" id="addEmpTitle">➕ إضافة موظف جديد</div>
@@ -563,58 +441,79 @@
                 </div>
                 <button class="btn btn-primary" onclick="addEmployee()" id="addEmpBtn">➕ إضافة موظف</button>
             </div>
-            <div class="card">
-                <div class="card-title" id="empListTitle">📋 قائمة الموظفين</div>
-                <div id="employeesList"></div>
-            </div>
+            <div class="card"><div class="card-title" id="empListTitle">📋 قائمة الموظفين</div><div id="employeesList"></div></div>
         </div>
 
-        <!-- Leave Management (HR) -->
+        <!-- ===== إدارة الإجازات (HR فقط) ===== -->
         <div id="leavemanagementPage" class="page">
-            <div class="card">
-                <div class="card-title" id="leaveMgmtTitle">📅 إدارة الإجازات (جميع الموظفين)</div>
-                <div id="leaveManagementContainer"></div>
-            </div>
+            <div class="card"><div class="card-title" id="leaveMgmtTitle">📅 إدارة الإجازات (جميع الموظفين)</div><div id="leaveManagementContainer"></div></div>
         </div>
 
-        <!-- Leave Detail Modal -->
-        <div id="leaveDetailModal" class="edit-modal">
-            <div class="edit-modal-content">
-                <h2 id="leaveDetailTitle" style="text-align:center;margin-bottom:20px;">📋 تفاصيل الإجازة</h2>
-                <div id="leaveDetailContent"></div>
-                <div class="edit-actions" id="leaveDetailActions">
-                    <button class="btn btn-success" onclick="saveLeaveEdit()" id="leaveSaveBtn">💾 حفظ التعديلات</button>
-                    <button class="btn btn-danger" onclick="deleteLeaveRequest()" id="leaveDeleteBtn">🗑️ حذف الإجازة</button>
-                    <button class="btn btn-primary" onclick="closeLeaveDetail()" id="leaveCloseBtn">🔙 إغلاق</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========== NEW: Change Password & Edit Profile ========== -->
+        <!-- ===== تغيير الرقم السري ===== -->
         <div id="changepasswordPage" class="page">
             <div class="card">
                 <div class="card-title" id="cpTitle">🔑 تغيير الرقم السري</div>
                 <div class="form-grid">
-                    <div class="form-group"><label id="cpCurrentLabel">الرقم السري الحالي</label><input type="password" id="cpCurrentPassword" placeholder="أدخل الرقم السري الحالي"></div>
-                    <div class="form-group"><label id="cpNewLabel">الرقم السري الجديد</label><input type="password" id="cpNewPassword" placeholder="أدخل الرقم السري الجديد"></div>
-                    <div class="form-group"><label id="cpConfirmLabel">تأكيد الرقم السري الجديد</label><input type="password" id="cpConfirmPassword" placeholder="أعد إدخال الرقم السري الجديد"></div>
+                    <div class="form-group"><label id="cpCurrentLabel">الرقم السري الحالي</label><input type="password" id="cpCurrentPassword"></div>
+                    <div class="form-group"><label id="cpNewLabel">الرقم السري الجديد</label><input type="password" id="cpNewPassword"></div>
+                    <div class="form-group"><label id="cpConfirmLabel">تأكيد الرقم السري الجديد</label><input type="password" id="cpConfirmPassword"></div>
                 </div>
                 <button class="btn btn-primary" onclick="changePassword()" id="cpChangeBtn">🔑 تغيير الرقم السري</button>
             </div>
-
             <div class="card">
                 <div class="card-title" id="editProfileTitle">✏️ تعديل المعلومات الشخصية</div>
                 <div class="form-grid">
                     <div class="form-group"><label id="epNameLabel">الاسم</label><input type="text" id="epName"></div>
-                    <div class="form-group"><label id="epEmailLabel">📧 البريد الإلكتروني</label><input type="email" id="epEmail" placeholder="example@domain.com"></div>
-                    <div class="form-group"><label id="epPhoneLabel">📱 رقم الجوال</label><input type="text" id="epPhone" placeholder="05xxxxxxxx"></div>
-                    <div class="form-group"><label id="epPassLabel">الرقم السري الحالي (للتأكيد)</label><input type="password" id="epCurrentPassword" placeholder="أدخل الرقم السري للتأكيد"></div>
+                    <div class="form-group"><label id="epEmailLabel">📧 البريد الإلكتروني</label><input type="email" id="epEmail"></div>
+                    <div class="form-group"><label id="epPhoneLabel">📱 رقم الجوال</label><input type="text" id="epPhone"></div>
+                    <div class="form-group"><label id="epPassLabel">الرقم السري الحالي (للتأكيد)</label><input type="password" id="epCurrentPassword"></div>
                 </div>
                 <button class="btn btn-success" onclick="updateProfile()" id="epSaveBtn">💾 حفظ التغييرات</button>
             </div>
         </div>
 
-        <!-- Performance Review -->
+        <!-- ===== إنهاء الخدمة (HR فقط) ===== -->
+        <div id="terminationPage" class="page">
+            <div class="card">
+                <div class="card-title" id="termTitle">📋 إنهاء عقد العمل</div>
+                
+                <div class="form-grid">
+                    <div class="form-group"><label id="termEmpLabel">👤 اختيار الموظف</label>
+                        <select id="termEmployeeSelect"><option value="">-- اختر الموظف --</option></select>
+                    </div>
+                    <div class="form-group"><label id="termReasonLabel">⚖️ سبب الإنهاء</label>
+                        <select id="termReason">
+                            <option value="استقالة">استقالة</option>
+                            <option value="فصل_مادة80">فصل - المادة 80</option>
+                            <option value="عدم_تجديد">عدم تجديد عقد</option>
+                            <option value="اتفاق_الطرفين">اتفاق الطرفين</option>
+                            <option value="تقاعد">تقاعد</option>
+                            <option value="وفاة_مادة79">وفاة - المادة 79</option>
+                            <option value="انهاء_مادة77">إنهاء - المادة 77</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label id="termDateLabel">📅 آخر يوم عمل</label><input type="date" id="termEndDate"></div>
+                    <div class="form-group"><label id="termNotesLabel">📝 ملاحظات</label><textarea id="termNotes" rows="2"></textarea></div>
+                </div>
+                <button class="btn btn-primary" onclick="submitTermination()" id="termSubmitBtn">📤 رفع طلب إنهاء خدمة</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title" id="termRequestsTitle">📋 طلبات إنهاء الخدمة المعلقة</div>
+                <div id="terminationRequestsList"></div>
+            </div>
+        </div>
+
+        <!-- ===== المخالصات ===== -->
+        <div id="clearancePage" class="page">
+            <div class="card">
+                <div class="card-title" id="clearanceTitle">📄 المخالصات المالية</div>
+                <div id="clearanceList"></div>
+            </div>
+            <div id="clearanceDetailContainer"></div>
+        </div>
+
+        <!-- ===== تقييم الأداء (HR فقط) ===== -->
         <div id="performancereviewPage" class="page">
             <div class="card">
                 <div class="card-title" id="prTitle">📊 تقييم الأداء</div>
@@ -640,9 +539,46 @@
         </div>
     </div>
 
-    <!-- Edit Employee Modal -->
-    <div id="editModal" class="edit-modal">
-        <div class="edit-modal-content">
+    <!-- ====================== نافذة عرض المرفق ====================== -->
+    <div id="attachmentModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <h2 id="attachTitle" style="text-align:center;margin-bottom:20px;">📎 المرفق</h2>
+            <div id="attachmentContent" style="text-align:center;"></div>
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="closeAttachmentModal()" id="attachCloseBtn">❌ إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== نافذة تفاصيل الإجازة ====================== -->
+    <div id="leaveDetailModal" class="modal">
+        <div class="modal-content">
+            <h2 id="leaveDetailTitle" style="text-align:center;margin-bottom:20px;">📋 تفاصيل الإجازة</h2>
+            <div id="leaveDetailContent"></div>
+            <div class="modal-actions" id="leaveDetailActions">
+                <button class="btn btn-success" onclick="saveLeaveEdit()" id="leaveSaveBtn">💾 حفظ التعديلات</button>
+                <button class="btn btn-danger" onclick="deleteLeaveRequest()" id="leaveDeleteBtn">🗑️ حذف الإجازة</button>
+                <button class="btn btn-primary" onclick="closeLeaveDetail()" id="leaveCloseBtn">🔙 إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== نافذة إنهاء الخدمة (للموظف) ====================== -->
+    <div id="terminationResponseModal" class="modal">
+        <div class="modal-content">
+            <h2 id="termRespTitle" style="text-align:center;margin-bottom:20px;">📋 طلب إنهاء خدمة</h2>
+            <div id="termResponseContent"></div>
+            <div class="modal-actions" id="termResponseActions">
+                <button class="btn btn-success" onclick="approveTermination()" id="termApproveBtn">✅ موافقة</button>
+                <button class="btn btn-warning" onclick="showTerminationEdit()" id="termEditBtn">✏️ تعديل</button>
+                <button class="btn btn-danger" onclick="rejectTermination()" id="termRejectBtn">❌ رفض</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== نافذة تعديل بيانات الموظف ====================== -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
             <h2 id="editModalTitle" style="text-align:center;margin-bottom:20px;">✏️ تعديل بيانات الموظف</h2>
             <div class="form-grid">
                 <div class="form-group"><label id="editNameLabel">الاسم</label><input type="text" id="editName"></div>
@@ -653,14 +589,12 @@
                 <div class="form-group"><label id="editDateLabel">تاريخ المباشرة</label><input type="date" id="editStartDate"></div>
                 <div class="form-group"><label id="editManagerLabel">المدير المباشر</label><select id="editManagerId"></select></div>
                 <div class="form-group"><label id="editRoleLabel">الصلاحية</label><select id="editRole">
-                    <option value="موظف">موظف</option>
-                    <option value="مدير">مدير</option>
-                    <option value="hr">موارد بشرية</option>
+                    <option value="موظف">موظف</option><option value="مدير">مدير</option><option value="hr">موارد بشرية</option>
                 </select></div>
                 <div class="form-group"><label id="editEmailLabel">📧 البريد الإلكتروني</label><input type="email" id="editEmail"></div>
                 <div class="form-group"><label id="editPhoneLabel">📱 رقم الجوال</label><input type="text" id="editPhone"></div>
             </div>
-            <div class="edit-actions">
+            <div class="modal-actions">
                 <button class="btn btn-success" onclick="saveEmployeeEdit()" id="editSaveBtn">💾 حفظ التعديلات</button>
                 <button class="btn btn-danger" onclick="closeEditModal()" id="editCancelBtn">❌ إلغاء</button>
             </div>
@@ -668,7 +602,7 @@
     </div>
 
     <script>
-        // ========== بيانات الموظفين ==========
+        // ========== قاعدة بيانات الموظفين ==========
         let employees = [
             { id: "10001", name: "المدير العام", pass: "10001", role: "مدير", title: "مدير عام", salary: 20000, dept: "الإدارة",
                 leaveBalance: 30, managerId: null, startDate: "2020-01-01", email: "ceo@company.com", phone: "0500000000" },
@@ -690,35 +624,29 @@
         ];
 
         let leaveRequests = JSON.parse(localStorage.getItem('hr_leaveRequests')) || [];
+        let terminationRequests = JSON.parse(localStorage.getItem('hr_terminationRequests')) || [];
+        let clearedEmployees = JSON.parse(localStorage.getItem('hr_clearedEmployees')) || [];
         let performanceReviews = JSON.parse(localStorage.getItem('hr_performanceReviews')) || [];
         let currentUser = null;
         let selectedEmployeeId = null;
         let editingEmployeeId = null;
         let currentLang = 'ar';
         let editingLeaveId = null;
+        let viewingAttachmentId = null;
+        let currentTerminationId = null;
 
-        // ========== Leave Types ==========
+        // ========== أنماط الإجازات ==========
         const leaveTypes = {
-            ar: {
-                سنوية: { maxDays: 30, needsAttachment: false },
-                مرضية: { maxDays: 30, needsAttachment: true },
-                بدون_راتب: { maxDays: 30, needsAttachment: false },
-                زواج: { maxDays: 5, needsAttachment: false },
-                مولود: { maxDays: 3, needsAttachment: false }
-            },
-            en: {
-                سنوية: { maxDays: 30, needsAttachment: false },
-                مرضية: { maxDays: 30, needsAttachment: true },
-                بدون_راتب: { maxDays: 30, needsAttachment: false },
-                زواج: { maxDays: 5, needsAttachment: false },
-                مولود: { maxDays: 3, needsAttachment: false }
-            }
+            ar: { سنوية: { maxDays: 30, needsAttachment: false }, مرضية: { maxDays: 30, needsAttachment: true },
+                بدون_راتب: { maxDays: 30, needsAttachment: false }, زواج: { maxDays: 5, needsAttachment: false },
+                مولود: { maxDays: 3, needsAttachment: false } },
+            en: { سنوية: { maxDays: 30, needsAttachment: false }, مرضية: { maxDays: 30, needsAttachment: true },
+                بدون_راتب: { maxDays: 30, needsAttachment: false }, زواج: { maxDays: 5, needsAttachment: false },
+                مولود: { maxDays: 3, needsAttachment: false } }
         };
-
-        const leaveTypeNames = {
-            ar: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود'],
-            en: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود']
-        };
+        const leaveTypeNames = { ar: ['سنوية', 'مرضية', 'بدون_راتب', 'زواج', 'مولود'], en: ['سنوية', 'مرضية', 'بدون_راتب',
+                'زواج', 'مولود'
+            ] };
 
         // ========== الخدمات ==========
         const servicesData = {
@@ -800,112 +728,110 @@
             document.body.classList.toggle('en', currentLang === 'en');
             document.querySelector('.lang-toggle').innerHTML = currentLang === 'ar' ? '🇬🇧 English' : '🇸🇦 عربي';
             updateTexts();
-            if (currentUser) {
-                renderSelfServices();
+            if (currentUser) { renderSelfServices();
                 renderTools();
                 renderAll();
-                renderPerformanceReview();
-            }
+                renderPerformanceReview(); }
         }
 
         function updateTexts() {
-            document.getElementById('loginTitle').innerHTML = currentLang === 'ar' ? '🏢 نظام الموارد البشرية' : '🏢 HR Portal';
-            document.getElementById('loginSubtitle').innerHTML = currentLang === 'ar' ? 'تسجيل الدخول باستخدام الرقم الوظيفي' :
+            const t = document.getElementById;
+            t('loginTitle').innerHTML = currentLang === 'ar' ? '🏢 نظام الموارد البشرية' : '🏢 HR Portal';
+            t('loginSubtitle').innerHTML = currentLang === 'ar' ? 'تسجيل الدخول باستخدام الرقم الوظيفي' :
                 'Login with Employee ID';
-            document.getElementById('loginBtn').innerHTML = currentLang === 'ar' ? '🚪 دخول' : '🚪 Login';
-            document.getElementById('appTitle').innerHTML = currentLang === 'ar' ? '🏢 نظام إدارة الموارد البشرية' :
-                '🏢 HR Management';
-            document.getElementById('logoutBtn').innerHTML = currentLang === 'ar' ? '🚪 خروج' : '🚪 Logout';
-            document.getElementById('dashboardTitle').innerHTML = currentLang === 'ar' ? '📊 لوحة التحكم' : '📊 Dashboard';
-            document.getElementById('recentTitle').innerHTML = currentLang === 'ar' ? '📋 آخر طلباتي' : '📋 Recent Requests';
-            document.getElementById('selfTitle').innerHTML = currentLang === 'ar' ? '📝 الخدمات الذاتية' : '📝 Self Services';
-            document.getElementById('requestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلباتي' : '📋 My Requests';
-            document.getElementById('teamTitle').innerHTML = currentLang === 'ar' ? '👥 فريقي' : '👥 My Team';
-            document.getElementById('profileTitle').innerHTML = currentLang === 'ar' ? '👤 ملف الموظف' : '👤 Profile';
-            document.getElementById('empRequestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلبات الموظف' :
-                '📋 Employee Requests';
-            document.getElementById('benefitsTitle').innerHTML = currentLang === 'ar' ? '🎁 المزايا' : '🎁 Benefits';
-            document.getElementById('toolsTitle').innerHTML = currentLang === 'ar' ? '🛠️ الأدوات' : '🛠️ Tools';
-            document.getElementById('addEmpTitle').innerHTML = currentLang === 'ar' ? '➕ إضافة موظف' : '➕ Add Employee';
-            document.getElementById('empListTitle').innerHTML = currentLang === 'ar' ? '📋 قائمة الموظفين' : '📋 Employees';
-            document.getElementById('backBtn').innerHTML = currentLang === 'ar' ? '🔙 العودة' : '🔙 Back';
-            document.getElementById('submitBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال' : '📤 Submit';
-            document.getElementById('cancelBtn').innerHTML = currentLang === 'ar' ? 'إلغاء' : 'Cancel';
-            document.getElementById('addEmpBtn').innerHTML = currentLang === 'ar' ? '➕ إضافة' : '➕ Add';
-            document.getElementById('nameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
-            document.getElementById('titleLabel').innerHTML = currentLang === 'ar' ? 'المسمى' : 'Title';
-            document.getElementById('deptLabel').innerHTML = currentLang === 'ar' ? 'القسم' : 'Dept';
-            document.getElementById('salaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
-            document.getElementById('dateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
-            document.getElementById('managerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Manager';
-            document.getElementById('emailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
-            document.getElementById('phoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+            t('loginBtn').innerHTML = currentLang === 'ar' ? '🚪 دخول' : '🚪 Login';
+            t('appTitle').innerHTML = currentLang === 'ar' ? '🏢 نظام إدارة الموارد البشرية' : '🏢 HR Management';
+            t('logoutBtn').innerHTML = currentLang === 'ar' ? '🚪 خروج' : '🚪 Logout';
+            t('dashboardTitle').innerHTML = currentLang === 'ar' ? '📊 لوحة التحكم' : '📊 Dashboard';
+            t('recentTitle').innerHTML = currentLang === 'ar' ? '📋 آخر طلباتي' : '📋 Recent Requests';
+            t('selfTitle').innerHTML = currentLang === 'ar' ? '📝 الخدمات الذاتية' : '📝 Self Services';
+            t('requestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلباتي' : '📋 My Requests';
+            t('teamTitle').innerHTML = currentLang === 'ar' ? '👥 فريقي' : '👥 My Team';
+            t('profileTitle').innerHTML = currentLang === 'ar' ? '👤 ملف الموظف' : '👤 Profile';
+            t('empRequestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلبات الموظف' : '📋 Employee Requests';
+            t('benefitsTitle').innerHTML = currentLang === 'ar' ? '🎁 المزايا' : '🎁 Benefits';
+            t('toolsTitle').innerHTML = currentLang === 'ar' ? '🛠️ الأدوات' : '🛠️ Tools';
+            t('addEmpTitle').innerHTML = currentLang === 'ar' ? '➕ إضافة موظف' : '➕ Add Employee';
+            t('empListTitle').innerHTML = currentLang === 'ar' ? '📋 قائمة الموظفين' : '📋 Employees';
+            t('backBtn').innerHTML = currentLang === 'ar' ? '🔙 العودة' : '🔙 Back';
+            t('submitBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال' : '📤 Submit';
+            t('cancelBtn').innerHTML = currentLang === 'ar' ? 'إلغاء' : 'Cancel';
+            t('addEmpBtn').innerHTML = currentLang === 'ar' ? '➕ إضافة' : '➕ Add';
+            t('nameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
+            t('titleLabel').innerHTML = currentLang === 'ar' ? 'المسمى' : 'Title';
+            t('deptLabel').innerHTML = currentLang === 'ar' ? 'القسم' : 'Dept';
+            t('salaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
+            t('dateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
+            t('managerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Manager';
+            t('emailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
+            t('phoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
 
             // Change Password
-            document.getElementById('cpTitle').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' : '🔑 Change Password';
-            document.getElementById('cpCurrentLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الحالي' :
-                'Current Password';
-            document.getElementById('cpNewLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الجديد' : 'New Password';
-            document.getElementById('cpConfirmLabel').innerHTML = currentLang === 'ar' ? 'تأكيد الرقم السري الجديد' :
-                'Confirm New Password';
-            document.getElementById('cpChangeBtn').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' :
-                '🔑 Change Password';
-            document.getElementById('editProfileTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل المعلومات الشخصية' :
-                '✏️ Edit Personal Information';
-            document.getElementById('epNameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
-            document.getElementById('epEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
-            document.getElementById('epPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
-            document.getElementById('epPassLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الحالي (للتأكيد)' :
-                'Current Password (for confirmation)';
-            document.getElementById('epSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التغييرات' : '💾 Save Changes';
+            t('cpTitle').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' : '🔑 Change Password';
+            t('cpCurrentLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الحالي' : 'Current Password';
+            t('cpNewLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الجديد' : 'New Password';
+            t('cpConfirmLabel').innerHTML = currentLang === 'ar' ? 'تأكيد الرقم السري الجديد' : 'Confirm New Password';
+            t('cpChangeBtn').innerHTML = currentLang === 'ar' ? '🔑 تغيير الرقم السري' : '🔑 Change Password';
+            t('editProfileTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل المعلومات الشخصية' : '✏️ Edit Personal Information';
+            t('epNameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
+            t('epEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
+            t('epPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+            t('epPassLabel').innerHTML = currentLang === 'ar' ? 'الرقم السري الحالي (للتأكيد)' : 'Current Password (for confirmation)';
+            t('epSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التغييرات' : '💾 Save Changes';
 
             // Leave Management
-            document.getElementById('leaveMgmtTitle').innerHTML = currentLang === 'ar' ? '📅 إدارة الإجازات (جميع الموظفين)' :
+            t('leaveMgmtTitle').innerHTML = currentLang === 'ar' ? '📅 إدارة الإجازات (جميع الموظفين)' :
                 '📅 Leave Management (All Employees)';
-            document.getElementById('leaveDetailTitle').innerHTML = currentLang === 'ar' ? '📋 تفاصيل الإجازة' :
-                '📋 Leave Details';
-            document.getElementById('leaveSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' :
-                '💾 Save Changes';
-            document.getElementById('leaveDeleteBtn').innerHTML = currentLang === 'ar' ? '🗑️ حذف الإجازة' :
-                '🗑️ Delete Leave';
-            document.getElementById('leaveCloseBtn').innerHTML = currentLang === 'ar' ? '🔙 إغلاق' : '🔙 Close';
+            t('leaveDetailTitle').innerHTML = currentLang === 'ar' ? '📋 تفاصيل الإجازة' : '📋 Leave Details';
+            t('leaveSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' : '💾 Save Changes';
+            t('leaveDeleteBtn').innerHTML = currentLang === 'ar' ? '🗑️ حذف الإجازة' : '🗑️ Delete Leave';
+            t('leaveCloseBtn').innerHTML = currentLang === 'ar' ? '🔙 إغلاق' : '🔙 Close';
 
-            // Performance Review
-            document.getElementById('prTitle').innerHTML = currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance Review';
-            document.getElementById('prStep1Desc').innerHTML = currentLang === 'ar' ?
-                'اختر الموظفين الذين أكملوا 6 أشهر لإرسال تقييم لهم' :
-                'Select employees who completed 6 months to send evaluation';
-            document.getElementById('prStep2Desc').innerHTML = currentLang === 'ar' ? 'قيم نفسك على المقاييس التالية' :
-                'Rate yourself on the following criteria';
-            document.getElementById('prStep3Desc').innerHTML = currentLang === 'ar' ? 'مراجعة تقييم الموظفين' :
-                'Review employee evaluations';
-            document.getElementById('prStep4Desc').innerHTML = currentLang === 'ar' ? 'التقييمات النهائية المعتمدة' :
-                'Final approved evaluations';
-            document.getElementById('prSendBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال تقييم للموظفين' :
-                '📤 Send Evaluation to Employees';
-            document.getElementById('prSubmitSelfBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال التقييم الذاتي' :
-                '📤 Submit Self Evaluation';
+            // Termination
+            t('termTitle').innerHTML = currentLang === 'ar' ? '📋 إنهاء عقد العمل' : '📋 Contract Termination';
+            t('termEmpLabel').innerHTML = currentLang === 'ar' ? '👤 اختيار الموظف' : '👤 Select Employee';
+            t('termReasonLabel').innerHTML = currentLang === 'ar' ? '⚖️ سبب الإنهاء' : '⚖️ Termination Reason';
+            t('termDateLabel').innerHTML = currentLang === 'ar' ? '📅 آخر يوم عمل' : '📅 Last Working Day';
+            t('termNotesLabel').innerHTML = currentLang === 'ar' ? '📝 ملاحظات' : '📝 Notes';
+            t('termSubmitBtn').innerHTML = currentLang === 'ar' ? '📤 رفع طلب إنهاء خدمة' : '📤 Submit Termination Request';
+            t('termRequestsTitle').innerHTML = currentLang === 'ar' ? '📋 طلبات إنهاء الخدمة المعلقة' :
+                '📋 Pending Termination Requests';
+
+            // Clearance
+            t('clearanceTitle').innerHTML = currentLang === 'ar' ? '📄 المخالصات المالية' : '📄 Financial Settlements';
 
             // Edit Modal
-            document.getElementById('editModalTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل بيانات الموظف' :
-                '✏️ Edit Employee Data';
-            document.getElementById('editNameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
-            document.getElementById('editIdLabel').innerHTML = currentLang === 'ar' ? 'الرقم الوظيفي' : 'Employee ID';
-            document.getElementById('editTitleLabel').innerHTML = currentLang === 'ar' ? 'المسمى الوظيفي' : 'Job Title';
-            document.getElementById('editDeptLabel').innerHTML = currentLang === 'ar' ? 'القسم' : 'Department';
-            document.getElementById('editSalaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
-            document.getElementById('editDateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
-            document.getElementById('editManagerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' :
-                'Direct Manager';
-            document.getElementById('editRoleLabel').innerHTML = currentLang === 'ar' ? 'الصلاحية' : 'Role';
-            document.getElementById('editEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
-            document.getElementById('editPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
-            document.getElementById('editSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' :
-                '💾 Save Changes';
-            document.getElementById('editCancelBtn').innerHTML = currentLang === 'ar' ? '❌ إلغاء' : '❌ Cancel';
+            t('editModalTitle').innerHTML = currentLang === 'ar' ? '✏️ تعديل بيانات الموظف' : '✏️ Edit Employee Data';
+            t('editNameLabel').innerHTML = currentLang === 'ar' ? 'الاسم' : 'Name';
+            t('editIdLabel').innerHTML = currentLang === 'ar' ? 'الرقم الوظيفي' : 'Employee ID';
+            t('editTitleLabel').innerHTML = currentLang === 'ar' ? 'المسمى الوظيفي' : 'Job Title';
+            t('editDeptLabel').innerHTML = currentLang === 'ar' ? 'القسم' : 'Department';
+            t('editSalaryLabel').innerHTML = currentLang === 'ar' ? 'الراتب' : 'Salary';
+            t('editDateLabel').innerHTML = currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date';
+            t('editManagerLabel').innerHTML = currentLang === 'ar' ? 'المدير المباشر' : 'Direct Manager';
+            t('editRoleLabel').innerHTML = currentLang === 'ar' ? 'الصلاحية' : 'Role';
+            t('editEmailLabel').innerHTML = currentLang === 'ar' ? '📧 البريد الإلكتروني' : '📧 Email';
+            t('editPhoneLabel').innerHTML = currentLang === 'ar' ? '📱 رقم الجوال' : '📱 Phone';
+            t('editSaveBtn').innerHTML = currentLang === 'ar' ? '💾 حفظ التعديلات' : '💾 Save Changes';
+            t('editCancelBtn').innerHTML = currentLang === 'ar' ? '❌ إلغاء' : '❌ Cancel';
+
+            // Attachment
+            t('attachTitle').innerHTML = currentLang === 'ar' ? '📎 المرفق' : '📎 Attachment';
+            t('attachCloseBtn').innerHTML = currentLang === 'ar' ? '❌ إغلاق' : '❌ Close';
+
+            // Performance Review
+            t('prTitle').innerHTML = currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance Review';
+            t('prStep1Desc').innerHTML = currentLang === 'ar' ? 'اختر الموظفين الذين أكملوا 6 أشهر لإرسال تقييم لهم' :
+                'Select employees who completed 6 months to send evaluation';
+            t('prStep2Desc').innerHTML = currentLang === 'ar' ? 'قيم نفسك على المقاييس التالية' :
+                'Rate yourself on the following criteria';
+            t('prStep3Desc').innerHTML = currentLang === 'ar' ? 'مراجعة تقييم الموظفين' : 'Review employee evaluations';
+            t('prStep4Desc').innerHTML = currentLang === 'ar' ? 'التقييمات النهائية المعتمدة' : 'Final approved evaluations';
+            t('prSendBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال تقييم للموظفين' : '📤 Send Evaluation to Employees';
+            t('prSubmitSelfBtn').innerHTML = currentLang === 'ar' ? '📤 إرسال التقييم الذاتي' : '📤 Submit Self Evaluation';
         }
 
-        // ========== دالة الإشعارات ==========
+        // ========== الإشعارات ==========
         function showNotification(message, type = 'success') {
             let notif = document.getElementById('notification');
             notif.textContent = message;
@@ -913,24 +839,28 @@
             if (type === 'error') notif.classList.add('error');
             if (type === 'warning') notif.classList.add('warning');
             notif.style.display = 'block';
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, 5000);
+            setTimeout(() => { notif.style.display = 'none'; }, 5000);
         }
 
-        function getNextId() {
-            let max = 10006;
-            employees.forEach(e => {
-                if (parseInt(e.id) > max) max = parseInt(e.id);
-            });
-            return (max + 1).toString();
-        }
+        // ========== دوال مساعدة ==========
+        function getNextId() { let max = 10006;
+            employees.forEach(e => { if (parseInt(e.id) > max) max = parseInt(e.id); });
+            return (max + 1).toString(); }
 
         function isEligibleForReview(startDate) {
             let start = new Date(startDate);
             let now = new Date();
             let diffMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
             return diffMonths >= 6;
+        }
+
+        function getEmployeeName(id) {
+            let emp = employees.find(e => e.id === id);
+            return emp ? emp.name : id;
+        }
+
+        function getEmployeeById(id) {
+            return employees.find(e => e.id === id);
         }
 
         // ========== تسجيل الدخول ==========
@@ -984,6 +914,8 @@
             if (currentUser.role === 'hr') {
                 items.push({ id: 'employees', name: currentLang === 'ar' ? '👥 إدارة الموظفين' : '👥 Employees' });
                 items.push({ id: 'leavemanagement', name: currentLang === 'ar' ? '📅 إدارة الإجازات' : '📅 Leave Mgmt' });
+                items.push({ id: 'termination', name: currentLang === 'ar' ? '📋 إنهاء الخدمة' : '📋 Termination' });
+                items.push({ id: 'clearance', name: currentLang === 'ar' ? '📄 المخالصات' : '📄 Clearance' });
                 items.push({ id: 'performancereview', name: currentLang === 'ar' ? '📊 تقييم الأداء' : '📊 Performance' });
             }
             nav.innerHTML = items.map(i => `<button class="nav-btn" onclick="showPage('${i.id}')">${i.name}</button>`).join('');
@@ -998,6 +930,8 @@
             if (pageId === 'performancereview') renderPerformanceReview();
             if (pageId === 'leavemanagement') renderLeaveManagement();
             if (pageId === 'changepassword') loadProfileData();
+            if (pageId === 'termination') renderTerminationPage();
+            if (pageId === 'clearance') renderClearancePage();
         }
 
         function renderAll() {
@@ -1010,6 +944,7 @@
             renderEmployeesList();
             updateManagerSelect();
             if (selectedEmployeeId) renderEmployeeProfile();
+            updateTerminationSelect();
         }
 
         // ========== Dashboard ==========
@@ -1017,8 +952,10 @@
             let myRequests = leaveRequests.filter(r => r.employeeId === currentUser.id).length;
             let pendingReviews = performanceReviews.filter(r => r.status === 'pending_manager' || r.status === 'pending_hr')
                 .length;
+            let pendingTerminations = terminationRequests.filter(r => r.status === 'pending_employee' || r.status ===
+                'pending_hr').length;
             document.getElementById('dashboardStats').innerHTML =
-                `<div class="services-grid"><div class="service-card"><h4>👥 ${currentLang === 'ar' ? 'إجمالي الموظفين' : 'Total Employees'}</h4><p style="font-size:2rem;">${employees.length}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'طلباتي' : 'My Requests'}</h4><p style="font-size:2rem;">${myRequests}</p></div><div class="service-card"><h4>📊 ${currentLang === 'ar' ? 'تقييمات معلقة' : 'Pending Reviews'}</h4><p style="font-size:2rem;">${pendingReviews}</p></div></div>`;
+                `<div class="services-grid"><div class="service-card"><h4>👥 ${currentLang === 'ar' ? 'إجمالي الموظفين' : 'Total Employees'}</h4><p style="font-size:2rem;">${employees.length}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'طلباتي' : 'My Requests'}</h4><p style="font-size:2rem;">${myRequests}</p></div><div class="service-card"><h4>📊 ${currentLang === 'ar' ? 'تقييمات معلقة' : 'Pending Reviews'}</h4><p style="font-size:2rem;">${pendingReviews}</p></div><div class="service-card"><h4>📋 ${currentLang === 'ar' ? 'إنهاء خدمات معلق' : 'Pending Terminations'}</h4><p style="font-size:2rem;">${pendingTerminations}</p></div></div>`;
             let recent = leaveRequests.filter(r => r.employeeId === currentUser.id).slice(-5).reverse();
             let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
                     'Pending Manager') :
@@ -1032,7 +969,7 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== Self Services ==========
+        // ========== الخدمات الذاتية ==========
         let currentRequestType = null;
         let selectedAttachment = null;
         let selectedAttachmentName = null;
@@ -1143,7 +1080,6 @@
             }
 
             let days = Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;
-
             let maxDays = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.maxDays || 30;
             let needsAttachment = leaveTypes[currentLang === 'ar' ? 'ar' : 'en'][type]?.needsAttachment || false;
 
@@ -1191,7 +1127,7 @@
                 );
         }
 
-        // ========== My Requests ==========
+        // ========== طلباتي ==========
         function renderMyRequests() {
             let my = leaveRequests.filter(r => r.employeeId === currentUser.id);
             let statusText = (s) => s === 'pending_manager' ? (currentLang === 'ar' ? 'قيد مراجعة المدير' :
@@ -1213,7 +1149,7 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== LEAVE APPROVALS ==========
+        // ========== الموافقات ==========
         function approveAsManager(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (req && req.status === 'pending_manager') {
@@ -1264,7 +1200,32 @@
             }
         }
 
-        // ========== Team ==========
+        // ========== عرض المرفق (مصلح لجميع الصلاحيات) ==========
+        function viewAttachment(id) {
+            let req = leaveRequests.find(r => r.id === id);
+            if (req && req.attachment) {
+                let container = document.getElementById('attachmentContent');
+                let title = document.getElementById('attachTitle');
+                if (req.attachment.startsWith('data:image')) {
+                    container.innerHTML =
+                        `<img src="${req.attachment}" style="max-width:100%;max-height:80vh;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">`;
+                } else {
+                    container.innerHTML =
+                        `<embed src="${req.attachment}" type="application/pdf" style="width:100%;height:80vh;border-radius:12px;">`;
+                }
+                title.textContent = `${currentLang === 'ar' ? '📎 المرفق' : '📎 Attachment'}: ${req.attachmentName || 'مرفق'}`;
+                document.getElementById('attachmentModal').classList.add('active');
+            } else {
+                alert(currentLang === 'ar' ? '❌ لا يوجد مرفق لهذا الطلب' : '❌ No attachment for this request');
+            }
+        }
+
+        function closeAttachmentModal() {
+            document.getElementById('attachmentModal').classList.remove('active');
+            document.getElementById('attachmentContent').innerHTML = '';
+        }
+
+        // ========== الفريق ==========
         function renderTeam() {
             if (currentUser.role !== 'مدير' && currentUser.role !== 'hr') {
                 document.getElementById('teamMembers').innerHTML = `<p>${currentLang === 'ar' ? 'غير مصرح' : 'Unauthorized'}</p>`;
@@ -1300,11 +1261,11 @@
                             ${attachHtml}
                             <div style="margin-top:10px;">
                                 ${currentUser.role === 'hr' ? `
-                                    <button class="approve-btn" onclick="approveAsHR(${r.id})">✅ ${currentLang === 'ar' ? 'اعتماد نهائي' : 'Final Approve'}</button>
-                                    <button class="reject-btn" onclick="rejectRequest(${r.id})" style="margin-right:10px;">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
+                                    <button class="btn-success" style="padding:5px 12px;border:none;border-radius:12px;" onclick="approveAsHR(${r.id})">✅ ${currentLang === 'ar' ? 'اعتماد نهائي' : 'Final Approve'}</button>
+                                    <button class="btn-danger" style="padding:5px 12px;border:none;border-radius:12px;margin-right:10px;" onclick="rejectRequest(${r.id})">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
                                 ` : `
-                                    <button class="approve-btn" onclick="approveAsManager(${r.id})">✅ ${currentLang === 'ar' ? 'موافقة مبدئية' : 'Initial Approve'}</button>
-                                    <button class="reject-btn" onclick="rejectRequest(${r.id})" style="margin-right:10px;">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
+                                    <button class="btn-success" style="padding:5px 12px;border:none;border-radius:12px;" onclick="approveAsManager(${r.id})">✅ ${currentLang === 'ar' ? 'موافقة مبدئية' : 'Initial Approve'}</button>
+                                    <button class="btn-danger" style="padding:5px 12px;border:none;border-radius:12px;margin-right:10px;" onclick="rejectRequest(${r.id})">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
                                 `}
                             </div>
                         </div>
@@ -1322,7 +1283,7 @@
             document.getElementById('teamMembers').innerHTML = html;
         }
 
-        // ========== Employee Profile ==========
+        // ========== ملف الموظف ==========
         function viewEmployeeProfile(empId) {
             selectedEmployeeId = empId;
             renderEmployeeProfile();
@@ -1348,7 +1309,7 @@
                 `<p>${currentLang === 'ar' ? 'لا توجد طلبات' : 'No requests'}</p>`;
         }
 
-        // ========== LEAVE MANAGEMENT (HR) ==========
+        // ========== إدارة الإجازات (HR) ==========
         function renderLeaveManagement() {
             if (currentUser.role !== 'hr') return;
             let allRequests = leaveRequests;
@@ -1391,8 +1352,8 @@
                         <td><span class="badge ${badgeClass}">${statusDisplay}</span></td>
                         <td>${attachHtml}</td>
                         <td>
-                            <button class="btn-edit" onclick="openLeaveDetail('${r.id}')">${currentLang === 'ar' ? '✏️ تعديل' : '✏️ Edit'}</button>
-                            <button class="btn-edit" style="background:#ef4444;" onclick="deleteLeaveRequestDirect('${r.id}')">🗑️</button>
+                            <button class="btn-warning" style="padding:4px 12px;border:none;border-radius:12px;cursor:pointer;" onclick="openLeaveDetail('${r.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button>
+                            <button class="btn-danger" style="padding:4px 12px;border:none;border-radius:12px;cursor:pointer;" onclick="deleteLeaveRequestDirect('${r.id}')">🗑️</button>
                         </td>
                     </tr>`;
                 });
@@ -1401,45 +1362,12 @@
             document.getElementById('leaveManagementContainer').innerHTML = html;
         }
 
-        // ========== View Attachment ==========
-        function viewAttachment(id) {
-            let req = leaveRequests.find(r => r.id === id);
-            if (req && req.attachment) {
-                let win = window.open('', '_blank');
-                if (win) {
-                    win.document.write(
-                        `<html><head><title>${req.attachmentName || 'مرفق'}</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;height:100vh;background:#f1f5f9;">`
-                        );
-                    if (req.attachment.startsWith('data:image')) {
-                        win.document.write(
-                            `<img src="${req.attachment}" style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">`
-                            );
-                    } else {
-                        win.document.write(
-                            `<embed src="${req.attachment}" type="application/pdf" style="width:90%;height:90%;border-radius:12px;">`
-                            );
-                    }
-                    win.document.write(`</body></html>`);
-                    win.document.close();
-                } else {
-                    alert(currentLang === 'ar' ? '❌ لا يمكن فتح المرفق' : '❌ Cannot open attachment');
-                }
-            } else {
-                alert(currentLang === 'ar' ? '❌ لا يوجد مرفق لهذا الطلب' : '❌ No attachment for this request');
-            }
-        }
-
-        // ========== Open Leave Detail (Edit) ==========
+        // ========== تفاصيل الإجازة ==========
         function openLeaveDetail(id) {
             let req = leaveRequests.find(r => r.id === id);
             if (!req) return;
             editingLeaveId = id;
             document.getElementById('leaveDetailModal').classList.add('active');
-
-            let typeDisplay = req.type;
-            if (currentLang === 'ar') {
-                if (req.type === 'بدون_راتب') typeDisplay = 'بدون راتب';
-            }
 
             let html = `<div class="form-grid">
                 <div class="form-group"><label>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</label><input type="text" value="${req.employeeName}" readonly style="background:#f1f5f9;"></div>
@@ -1476,7 +1404,6 @@
             editingLeaveId = null;
         }
 
-        // ========== Save Leave Edit ==========
         function saveLeaveEdit() {
             if (!editingLeaveId) return;
             let req = leaveRequests.find(r => r.id === editingLeaveId);
@@ -1527,7 +1454,6 @@
             showNotification(currentLang === 'ar' ? '✅ تم تحديث الإجازة بنجاح' : '✅ Leave updated successfully');
         }
 
-        // ========== Delete Leave ==========
         function deleteLeaveRequest() {
             if (!editingLeaveId) return;
             if (!confirm(currentLang === 'ar' ? '⚠️ هل أنت متأكد من حذف هذه الإجازة؟' :
@@ -1546,7 +1472,7 @@
             showNotification(currentLang === 'ar' ? '🗑️ تم حذف الإجازة بنجاح' : '🗑️ Leave deleted successfully', 'warning');
         }
 
-        // ========== CHANGE PASSWORD ==========
+        // ========== تغيير الرقم السري ==========
         function loadProfileData() {
             if (!currentUser) return;
             document.getElementById('epName').value = currentUser.name || '';
@@ -1585,7 +1511,6 @@
                 return;
             }
 
-            // تغيير الرقم السري
             let emp = employees.find(e => e.id === currentUser.id);
             if (emp) {
                 emp.pass = newPass;
@@ -1602,7 +1527,6 @@
             }
         }
 
-        // ========== UPDATE PROFILE ==========
         function updateProfile() {
             let name = document.getElementById('epName').value.trim();
             let email = document.getElementById('epEmail').value.trim();
@@ -1645,7 +1569,7 @@
             }
         }
 
-        // ========== Employees Management ==========
+        // ========== إدارة الموظفين ==========
         function updateManagerSelect() {
             let select = document.getElementById('newManagerId');
             if (select) {
@@ -1693,6 +1617,7 @@
             });
             renderEmployeesList();
             updateManagerSelect();
+            updateTerminationSelect();
             document.getElementById('newName').value = '';
             document.getElementById('newTitle').value = '';
             document.getElementById('newDept').value = '';
@@ -1788,6 +1713,7 @@
             closeEditModal();
             renderEmployeesList();
             renderAll();
+            updateTerminationSelect();
             showNotification(
                 `${currentLang === 'ar' ? `✅ تم تحديث بيانات الموظف ${emp.name} بنجاح` :
                     `✅ Employee ${emp.name} data updated successfully`}`);
@@ -1799,7 +1725,7 @@
             employees.forEach(e => {
                 let manager = employees.find(m => m.id === e.managerId);
                 html +=
-                    `<tr><td style="font-weight:bold;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${manager ? manager.name : '-'}</td><td>${e.leaveBalance}</td><td>${e.email || '-'}</td><td>${e.phone || '-'}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')" style="margin-left:5px;">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button><button class="btn-edit" onclick="openEditModal('${e.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button></td></tr>`;
+                    `<tr><td style="font-weight:bold;">${e.id}</td><td>${e.name}</td><td>${e.title}</td><td>${e.dept}</td><td>${manager ? manager.name : '-'}</td><td>${e.leaveBalance}</td><td>${e.email || '-'}</td><td>${e.phone || '-'}</td><td><button class="view-btn" onclick="viewEmployeeProfile('${e.id}')" style="margin-left:5px;">👁️ ${currentLang === 'ar' ? 'عرض' : 'View'}</button><button class="btn-warning" style="padding:4px 12px;border:none;border-radius:12px;cursor:pointer;margin-left:5px;" onclick="openEditModal('${e.id}')">✏️ ${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button></td></tr>`;
             });
             html += `</tbody></table>`;
             document.getElementById('employeesList').innerHTML = html;
@@ -1819,7 +1745,483 @@
         }
 
         // ============================================================
-        // ========== PERFORMANCE REVIEW SYSTEM ==========
+        // ========== إنهاء الخدمة (Termination) ==========
+        // ============================================================
+
+        function updateTerminationSelect() {
+            let select = document.getElementById('termEmployeeSelect');
+            if (select) {
+                let activeEmployees = employees.filter(e => e.role !== 'مدير' && e.role !== 'hr' && e.id !== currentUser.id);
+                select.innerHTML = '<option value="">-- ' + (currentLang === 'ar' ? 'اختر الموظف' : 'Select Employee') +
+                    ' --</option>' +
+                    activeEmployees.map(e => `<option value="${e.id}">${e.id} - ${e.name}</option>`).join('');
+            }
+        }
+
+        function renderTerminationPage() {
+            if (currentUser.role !== 'hr') {
+                document.getElementById('terminationRequestsList').innerHTML =
+                    `<p>${currentLang === 'ar' ? 'غير مصرح لك بعرض هذه الصفحة' : 'Unauthorized'}</p>`;
+                return;
+            }
+            updateTerminationSelect();
+
+            // عرض طلبات إنهاء الخدمة المعلقة
+            let pending = terminationRequests.filter(r => r.status === 'pending_employee' || r.status === 'pending_hr');
+            let html = '';
+            if (pending.length === 0) {
+                html = `<p>${currentLang === 'ar' ? 'لا توجد طلبات إنهاء خدمة معلقة' : 'No pending termination requests'}</p>`;
+            } else {
+                pending.forEach(r => {
+                    let emp = getEmployeeById(r.employeeId);
+                    let statusText = r.status === 'pending_hr' ? (currentLang === 'ar' ? 'قيد مراجعة HR' :
+                            'Pending HR') :
+                        (currentLang === 'ar' ? 'قيد مراجعة الموظف' : 'Pending Employee');
+                    let badgeClass = r.status === 'pending_hr' ? 'badge-hr' : 'badge-pending';
+                    html += `
+                        <div class="request-card" style="border:2px solid #2563eb;">
+                            <strong>👤 ${emp ? emp.name : r.employeeId}</strong><br>
+                            ⚖️ ${r.reason}<br>
+                            📅 ${r.endDate}<br>
+                            <small>${r.notes || ''}</small><br>
+                            <span class="badge ${badgeClass}">${statusText}</span>
+                            ${r.status === 'pending_hr' ? `
+                                <div style="margin-top:10px;">
+                                    <button class="btn-success" style="padding:5px 12px;border:none;border-radius:12px;" onclick="finalApproveTermination('${r.id}')">✅ ${currentLang === 'ar' ? 'اعتماد نهائي' : 'Final Approve'}</button>
+                                    <button class="btn-danger" style="padding:5px 12px;border:none;border-radius:12px;margin-right:10px;" onclick="rejectTerminationHR('${r.id}')">❌ ${currentLang === 'ar' ? 'رفض' : 'Reject'}</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('terminationRequestsList').innerHTML = html;
+        }
+
+        // ========== رفع طلب إنهاء خدمة من HR ==========
+        function submitTermination() {
+            if (currentUser.role !== 'hr') {
+                alert(currentLang === 'ar' ? '❌ غير مصرح لك' : '❌ Unauthorized');
+                return;
+            }
+            let empId = document.getElementById('termEmployeeSelect').value;
+            let reason = document.getElementById('termReason').value;
+            let endDate = document.getElementById('termEndDate').value;
+            let notes = document.getElementById('termNotes').value;
+
+            if (!empId || !reason || !endDate) {
+                alert(currentLang === 'ar' ? '❌ الرجاء ملء جميع الحقول' : '❌ Please fill all fields');
+                return;
+            }
+
+            let emp = getEmployeeById(empId);
+            if (!emp) {
+                alert(currentLang === 'ar' ? '❌ الموظف غير موجود' : '❌ Employee not found');
+                return;
+            }
+
+            let newRequest = {
+                id: Date.now().toString(),
+                employeeId: empId,
+                employeeName: emp.name,
+                reason: reason,
+                endDate: endDate,
+                notes: notes,
+                status: 'pending_employee', // يذهب للموظف أولاً
+                createdBy: currentUser.id,
+                createdAt: new Date().toISOString(),
+                employeeResponse: null,
+                employeeModified: false,
+                hrApproved: false
+            };
+
+            terminationRequests.unshift(newRequest);
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+
+            document.getElementById('termEmployeeSelect').value = '';
+            document.getElementById('termReason').value = 'استقالة';
+            document.getElementById('termEndDate').value = '';
+            document.getElementById('termNotes').value = '';
+
+            renderTerminationPage();
+            showNotification(
+                `${currentLang === 'ar' ? `✅ تم رفع طلب إنهاء خدمة للموظف ${emp.name}` :
+                    `✅ Termination request submitted to ${emp.name}`}`
+                );
+        }
+
+        // ========== عرض طلب إنهاء الخدمة للموظف ==========
+        function showTerminationToEmployee(empId) {
+            let req = terminationRequests.find(r => r.employeeId === empId && r.status === 'pending_employee');
+            if (!req) return;
+            currentTerminationId = req.id;
+            document.getElementById('termResponseModal').classList.add('active');
+
+            let html = `
+                <div class="form-grid">
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</label><input type="text" value="${req.employeeName}" readonly></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'سبب الإنهاء' : 'Reason'}</label><input type="text" value="${req.reason}" readonly></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last Working Day'}</label><input type="date" id="termResponseEndDate" value="${req.endDate}"></div>
+                    <div class="form-group"><label>${currentLang === 'ar' ? 'ملاحظات' : 'Notes'}</label><textarea id="termResponseNotes" rows="2">${req.notes || ''}</textarea></div>
+                    <div class="form-group full-width"><label>${currentLang === 'ar' ? 'سبب الإنهاء (يمكن التعديل)' : 'Reason (can be modified)'}</label>
+                        <select id="termResponseReason">
+                            <option value="استقالة" ${req.reason === 'استقالة' ? 'selected' : ''}>استقالة</option>
+                            <option value="فصل_مادة80" ${req.reason === 'فصل_مادة80' ? 'selected' : ''}>فصل - المادة 80</option>
+                            <option value="عدم_تجديد" ${req.reason === 'عدم_تجديد' ? 'selected' : ''}>عدم تجديد عقد</option>
+                            <option value="اتفاق_الطرفين" ${req.reason === 'اتفاق_الطرفين' ? 'selected' : ''}>اتفاق الطرفين</option>
+                            <option value="تقاعد" ${req.reason === 'تقاعد' ? 'selected' : ''}>تقاعد</option>
+                            <option value="وفاة_مادة79" ${req.reason === 'وفاة_مادة79' ? 'selected' : ''}>وفاة - المادة 79</option>
+                            <option value="انهاء_مادة77" ${req.reason === 'انهاء_مادة77' ? 'selected' : ''}>إنهاء - المادة 77</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            document.getElementById('termResponseContent').innerHTML = html;
+            document.getElementById('termResponseActions').style.display = 'flex';
+        }
+
+        // ========== موافقة الموظف على إنهاء الخدمة ==========
+        function approveTermination() {
+            if (!currentTerminationId) return;
+            let req = terminationRequests.find(r => r.id === currentTerminationId);
+            if (!req) return;
+
+            let newEndDate = document.getElementById('termResponseEndDate').value;
+            let newNotes = document.getElementById('termResponseNotes').value;
+            let newReason = document.getElementById('termResponseReason').value;
+
+            req.endDate = newEndDate || req.endDate;
+            req.notes = newNotes || req.notes;
+            req.reason = newReason || req.reason;
+            req.status = 'pending_hr';
+            req.employeeResponse = 'approved';
+            req.employeeModified = false;
+
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+            document.getElementById('termResponseModal').classList.remove('active');
+            renderTerminationPage();
+            showNotification(
+                `${currentLang === 'ar' ? '✅ تمت الموافقة على إنهاء الخدمة، الطلب الآن في انتظار HR' :
+                    '✅ Termination approved, waiting for HR final approval'}`
+                );
+        }
+
+        // ========== رفض الموظف ==========
+        function rejectTermination() {
+            if (!currentTerminationId) return;
+            let req = terminationRequests.find(r => r.id === currentTerminationId);
+            if (!req) return;
+
+            req.status = 'rejected';
+            req.employeeResponse = 'rejected';
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+            document.getElementById('termResponseModal').classList.remove('active');
+            renderTerminationPage();
+            showNotification(
+                `${currentLang === 'ar' ? '❌ تم رفض طلب إنهاء الخدمة' : '❌ Termination request rejected'}`, 'error'
+                );
+        }
+
+        // ========== تعديل الموظف ==========
+        function showTerminationEdit() {
+            if (!currentTerminationId) return;
+            let req = terminationRequests.find(r => r.id === currentTerminationId);
+            if (!req) return;
+
+            // السماح للموظف بتعديل التاريخ والسبب
+            let newEndDate = document.getElementById('termResponseEndDate').value;
+            let newNotes = document.getElementById('termResponseNotes').value;
+            let newReason = document.getElementById('termResponseReason').value;
+
+            req.endDate = newEndDate || req.endDate;
+            req.notes = newNotes || req.notes;
+            req.reason = newReason || req.reason;
+            req.status = 'pending_hr';
+            req.employeeResponse = 'modified';
+            req.employeeModified = true;
+
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+            document.getElementById('termResponseModal').classList.remove('active');
+            renderTerminationPage();
+            showNotification(
+                `${currentLang === 'ar' ? '✅ تم تعديل الطلب وإرساله إلى HR' :
+                    '✅ Request modified and sent to HR'}`
+                );
+        }
+
+        // ========== الموافقة النهائية من HR ==========
+        function finalApproveTermination(id) {
+            let req = terminationRequests.find(r => r.id === id);
+            if (!req) return;
+
+            req.status = 'approved';
+            req.hrApproved = true;
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+
+            // إضافة الموظف إلى قائمة المخالصات
+            let emp = getEmployeeById(req.employeeId);
+            if (emp) {
+                // حساب المخالصة
+                let clearanceData = calculateClearanceForEmployee(emp, req);
+                clearedEmployees.push({
+                    id: emp.id,
+                    name: emp.name,
+                    ...clearanceData,
+                    terminationId: req.id,
+                    approvedAt: new Date().toISOString()
+                });
+                localStorage.setItem('hr_clearedEmployees', JSON.stringify(clearedEmployees));
+            }
+
+            renderTerminationPage();
+            renderClearancePage();
+            showNotification(
+                `${currentLang === 'ar' ? `✅ تم اعتماد إنهاء خدمة ${req.employeeName} نهائياً` :
+                    `✅ Termination for ${req.employeeName} finalized`}`
+                );
+        }
+
+        // ========== رفض HR ==========
+        function rejectTerminationHR(id) {
+            let req = terminationRequests.find(r => r.id === id);
+            if (!req) return;
+
+            req.status = 'rejected';
+            req.hrApproved = false;
+            localStorage.setItem('hr_terminationRequests', JSON.stringify(terminationRequests));
+            renderTerminationPage();
+            showNotification(
+                `${currentLang === 'ar' ? '❌ تم رفض طلب إنهاء الخدمة من قبل HR' :
+                    '❌ Termination request rejected by HR'}`, 'error'
+                );
+        }
+
+        // ========== حساب المخالصة للموظف ==========
+        function calculateClearanceForEmployee(emp, req) {
+            let startDate = new Date(emp.startDate);
+            let endDate = new Date(req.endDate);
+            let diffTime = Math.abs(endDate - startDate);
+            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            let totalYears = diffDays / 365;
+
+            let salary = emp.salary || 5000;
+            let vacationDays = emp.leaveBalance || 0;
+            let deductions = 0;
+
+            // حساب مكافأة نهاية الخدمة حسب سبب الإنهاء
+            let baseEos = totalYears <= 5 ? totalYears * (salary / 2) : (5 * (salary / 2)) + ((totalYears - 5) * salary);
+            let finalEos = 0;
+            let reason = req.reason;
+
+            if (reason === 'استقالة') {
+                finalEos = totalYears < 2 ? 0 : (totalYears < 5 ? baseEos * (1 / 3) : (totalYears < 10 ? baseEos * (2 / 3) :
+                    baseEos));
+            } else if (reason === 'فصل_مادة80') {
+                finalEos = 0;
+            } else if (reason === 'اتفاق_الطرفين') {
+                finalEos = baseEos * 0.5;
+            } else if (reason === 'انهاء_مادة77') {
+                finalEos = baseEos + (salary * 6);
+            } else {
+                finalEos = baseEos;
+            }
+
+            let vacationCompensation = (salary / 30) * vacationDays;
+            let totalSettlement = finalEos + vacationCompensation - deductions;
+
+            return {
+                startDate: emp.startDate,
+                endDate: req.endDate,
+                totalYears: totalYears,
+                salary: salary,
+                vacationDays: vacationDays,
+                deductions: deductions,
+                finalEos: finalEos,
+                vacationCompensation: vacationCompensation,
+                totalSettlement: totalSettlement,
+                reason: reason,
+                reasonDisplay: reason,
+                diffDays: diffDays
+            };
+        }
+
+        // ============================================================
+        // ========== المخالصات (Clearance) ==========
+        // ============================================================
+
+        function renderClearancePage() {
+            if (currentUser.role !== 'hr') {
+                document.getElementById('clearanceList').innerHTML =
+                    `<p>${currentLang === 'ar' ? 'غير مصرح لك بعرض هذه الصفحة' : 'Unauthorized'}</p>`;
+                return;
+            }
+
+            if (clearedEmployees.length === 0) {
+                document.getElementById('clearanceList').innerHTML =
+                    `<p>${currentLang === 'ar' ? 'لا توجد مخالصات مسجلة' : 'No clearances recorded'}</p>`;
+                document.getElementById('clearanceDetailContainer').innerHTML = '';
+                return;
+            }
+
+            let html =
+                `<table><thead><tr><th>${currentLang === 'ar' ? 'الرقم الوظيفي' : 'ID'}</th><th>${currentLang === 'ar' ? 'الاسم' : 'Name'}</th><th>${currentLang === 'ar' ? 'سبب الإنهاء' : 'Reason'}</th><th>${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last Day'}</th><th>${currentLang === 'ar' ? 'إجمالي المستحق' : 'Total'}</th><th></th></tr></thead><tbody>`;
+            clearedEmployees.forEach(e => {
+                html += `
+                    <tr>
+                        <td>${e.id}</td>
+                        <td>${e.name}</td>
+                        <td>${e.reasonDisplay || e.reason}</td>
+                        <td>${e.endDate}</td>
+                        <td style="font-weight:bold;color:#059669;">${e.totalSettlement.toFixed(2)} ريال</td>
+                        <td><button class="view-btn" onclick="showClearanceDetail('${e.id}')">📄 عرض المخالصة</button></td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('clearanceList').innerHTML = html;
+        }
+
+        function showClearanceDetail(id) {
+            let emp = clearedEmployees.find(e => e.id === id);
+            if (!emp) {
+                alert(currentLang === 'ar' ? '❌ الموظف غير موجود' : '❌ Employee not found');
+                return;
+            }
+
+            // استخدام الدالة الموجودة لحساب المخالصة وعرضها
+            let container = document.getElementById('clearanceDetailContainer');
+            container.innerHTML = generateClearanceHTML(emp);
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function generateClearanceHTML(data) {
+            let reasonDisplay = data.reasonDisplay || data.reason;
+            let reasonMap = {
+                'استقالة': 'استقالة',
+                'فصل_مادة80': 'فصل - المادة 80',
+                'عدم_تجديد': 'عدم تجديد عقد',
+                'اتفاق_الطرفين': 'اتفاق الطرفين',
+                'تقاعد': 'تقاعد',
+                'وفاة_مادة79': 'وفاة - المادة 79',
+                'انهاء_مادة77': 'إنهاء - المادة 77'
+            };
+            let reasonText = reasonMap[reasonDisplay] || reasonDisplay;
+
+            let years = Math.floor(data.totalYears);
+            let months = Math.floor((data.totalYears - years) * 12);
+            let durationText = `${years} ${currentLang === 'ar' ? 'سنة' : 'years'} ${months} ${currentLang === 'ar' ? 'شهر' : 'months'}`;
+
+            // حساب تفاصيل المخالصة
+            let salary = data.salary || 5000;
+            let vacationDays = data.vacationDays || 0;
+            let deductions = data.deductions || 0;
+            let finalEos = data.finalEos || 0;
+            let vacationComp = data.vacationCompensation || 0;
+            let total = data.totalSettlement || 0;
+
+            return `
+                <div class="clearance-box" id="clearancePrintArea">
+                    <div class="clearance-header">
+                        <h3>📄 ${currentLang === 'ar' ? 'مخالصة مالية وإبراء ذمة نهائي' : 'Final Financial Settlement'}</h3>
+                        <p style="font-size: 14px; color: #555; margin: 5px 0 0 0;">
+                            ${currentLang === 'ar' ? 'وثيقة رسمية صادرة بموجب نظام العمل السعودي' : 'Official document issued under Saudi Labor Law'}
+                        </p>
+                    </div>
+
+                    <div class="info-summary">
+                        <div><strong>${currentLang === 'ar' ? 'اسم الموظف' : 'Employee Name'}:</strong> <span style="font-weight:bold;color:#1d3557;">${data.name}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'الرقم الوظيفي' : 'Employee ID'}:</strong> <span style="font-weight:bold;">${data.id}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'سبب إنهاء الخدمة' : 'Termination Reason'}:</strong> <span style="font-weight:bold;">${reasonText}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'مدة الخدمة' : 'Service Duration'}:</strong> <span style="font-weight:bold;">${durationText}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'تاريخ المباشرة' : 'Start Date'}:</strong> <span style="font-weight:bold;">${data.startDate}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'آخر يوم عمل' : 'Last Working Day'}:</strong> <span style="font-weight:bold;">${data.endDate}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'الراتب الأساسي' : 'Basic Salary'}:</strong> <span style="font-weight:bold;">${salary.toFixed(2)} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</span></div>
+                        <div><strong>${currentLang === 'ar' ? 'رصيد الإجازات المتبقي' : 'Remaining Vacation'}:</strong> <span style="font-weight:bold;">${vacationDays} ${currentLang === 'ar' ? 'يوم' : 'days'}</span></div>
+                    </div>
+
+                    <table class="clearance-table">
+                        <thead>
+                            <tr>
+                                <th style="width:25%;">${currentLang === 'ar' ? 'البند المالي' : 'Item'}</th>
+                                <th style="width:55%;">${currentLang === 'ar' ? 'التفاصيل' : 'Details'}</th>
+                                <th style="width:20%;">${currentLang === 'ar' ? 'المبلغ (ريال)' : 'Amount (SAR)'}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>${currentLang === 'ar' ? 'مكافأة نهاية الخدمة' : 'End of Service Benefit'}</b></td>
+                                <td>${currentLang === 'ar' ? 'محسوبة حسب مدة الخدمة وسبب الإنهاء' : 'Calculated based on service period and termination reason'}</td>
+                                <td style="text-align:center;font-weight:bold;">${finalEos.toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td><b>${currentLang === 'ar' ? 'تعويض الإجازات' : 'Vacation Compensation'}</b></td>
+                                <td>${currentLang === 'ar' ? `${vacationDays} يوم × (الراتب ÷ 30)` : `${vacationDays} days × (Salary ÷ 30)`}</td>
+                                <td style="text-align:center;font-weight:bold;">${vacationComp.toFixed(2)}</td>
+                            </tr>
+                            <tr class="deduction-row">
+                                <td><b>${currentLang === 'ar' ? 'الاستقطاعات' : 'Deductions'}</b></td>
+                                <td>${currentLang === 'ar' ? 'سُلف وعُهد وأقساط' : 'Loans and advances'}</td>
+                                <td style="text-align:center;font-weight:bold;">${deductions > 0 ? `- ${deductions.toFixed(2)}` : '0.00'}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><b>${currentLang === 'ar' ? 'صافي المستحق' : 'Net Payable'}</b></td>
+                                <td>${currentLang === 'ar' ? 'المبلغ الصافي للتحويل' : 'Net amount to be transferred'}</td>
+                                <td style="text-align:center;font-weight:bold;font-size:1.1rem;color:#1d3557;">${total.toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="signatures">
+                        <div class="sig-block">
+                            <b>${currentLang === 'ar' ? 'جهة العمل' : 'Employer'}</b><br><br>
+                            ${currentLang === 'ar' ? 'الاسم والتوقيع:' : 'Name & Signature:'}<br>
+                            ${currentLang === 'ar' ? 'التاريخ:' : 'Date:'} ${new Date().toLocaleDateString('ar-EG')}
+                        </div>
+                        <div class="sig-block">
+                            <b>${currentLang === 'ar' ? 'الموظف' : 'Employee'}</b><br><br>
+                            ${currentLang === 'ar' ? 'أقر باستلام كامل المستحقات:' : 'I acknowledge receipt of all dues:'}<br>
+                            ${currentLang === 'ar' ? 'التوقيع:' : 'Signature:'}
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;margin-top:20px;font-size:12px;color:#94a3b8;">
+                        ${currentLang === 'ar' ? 'هذه الوثيقة صادرة بنظام المخالصات الذكي' : 'This document is issued by the Smart Clearance System'}
+                    </div>
+
+                    <div style="text-align:center;margin-top:15px;">
+                        <button class="btn btn-primary" onclick="printClearance()">🖨️ ${currentLang === 'ar' ? 'طباعة المخالصة' : 'Print Clearance'}</button>
+                        <button class="btn btn-success" onclick="exportClearancePDF()" style="margin-right:10px;">📄 ${currentLang === 'ar' ? 'تصدير PDF' : 'Export PDF'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function printClearance() {
+            let printContent = document.getElementById('clearancePrintArea');
+            if (printContent) {
+                let originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContent.outerHTML;
+                window.print();
+                document.body.innerHTML = originalContents;
+                location.reload();
+            }
+        }
+
+        function exportClearancePDF() {
+            let element = document.getElementById('clearancePrintArea');
+            if (element) {
+                html2pdf().set({
+                    margin: 0.5,
+                    filename: `مخالصة_${Date.now()}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                }).from(element).save();
+            }
+        }
+
+        // ============================================================
+        // ========== تقييم الأداء ==========
         // ============================================================
 
         function renderPerformanceReview() {
@@ -2051,7 +2453,7 @@
             renderAll();
         }
 
-        // ========== Init ==========
+        // ========== فحص جلسة المستخدم ==========
         let saved = localStorage.getItem('hr_currentUser');
         if (saved) {
             let parsed = JSON.parse(saved);
@@ -2072,6 +2474,28 @@
                 showPage('dashboard');
             }
         }
+
+        // ========== عرض طلب إنهاء الخدمة للموظف ==========
+        // التحقق من وجود طلبات إنهاء خدمة للموظف الحالي
+        function checkTerminationForEmployee() {
+            if (currentUser.role !== 'موظف') return;
+            let pending = terminationRequests.find(r => r.employeeId === currentUser.id && r.status === 'pending_employee');
+            if (pending) {
+                showTerminationToEmployee(currentUser.id);
+            }
+        }
+
+        // استدعاء الدالة عند التبديل بين الصفحات
+        let originalShowPage = showPage;
+        showPage = function(pageId) {
+            originalShowPage(pageId);
+            if (pageId === 'dashboard' || pageId === 'myrequests') {
+                checkTerminationForEmployee();
+            }
+        };
+
+        // التحقق عند تحميل الصفحة
+        setTimeout(checkTerminationForEmployee, 500);
     </script>
 
 </body>
